@@ -156,7 +156,6 @@
       background: var(--primary-neon); color: #000; font-weight: 800; border: none;
     }
 
-    /* タイル型レイアウト（2列表示） */
     .user-tile-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -246,7 +245,6 @@
     }
     .back-btn { font-size: 18px; cursor: pointer; color: white; font-weight: 800; }
 
-    /* 3Dタロット */
     .tarot-scene { perspective: 1000px; width: 150px; height: 220px; margin: 16px auto; cursor: pointer; }
     .tarot-card-object { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.8s; }
     .tarot-card-object.is-flipped { transform: rotateY(180deg); }
@@ -254,7 +252,6 @@
     .tarot-face-back { background: linear-gradient(135deg, #17153b 0%, #2e236c 100%); color: #ffd700; }
     .tarot-face-front { background: #0f172a; color: #fcd34d; transform: rotateY(180deg); padding: 12px; text-align: center; }
 
-    /* AIスキャン */
     .scan-window {
       position: relative; width: 180px; height: 180px; margin: 16px auto; border-radius: 24px;
       background: #05070e; border: 2px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 50px;
@@ -419,7 +416,7 @@
         <div id="tarot-res-title" style="color: #fbbf24; font-weight: 800; font-size: 14px;"></div>
         <p id="tarot-res-desc" style="font-size: 12px; color: #cbd5e1; margin-top: 6px; line-height: 1.5;"></p>
         
-        <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="showMatchedUsersModal('タロット磁力マッチ（おすすめ女性）', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])">
+        <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="showMatchedUsersModal('タロット引き寄せ（おすすめ10名）')">
           ✨ 相性の良い女性（10名）を一覧で見る ➔
         </button>
       </div>
@@ -430,7 +427,7 @@
   <div id="view-scan-modal" class="full-screen-view">
     <div class="sub-header">
       <span class="back-btn" onclick="closeView('view-scan-modal')">✕</span>
-      <span id="scan-title" style="font-weight: 800; font-size: 14px; color: #34d399;">📷 AI解析</span>
+      <span id="scan-header-title" style="font-weight: 800; font-size: 14px; color: #34d399;">📷 AI解析</span>
       <span></span>
     </div>
     <div style="padding: 20px 16px; text-align: center;">
@@ -440,12 +437,13 @@
       </div>
       <p id="scan-status" style="font-size: 13px; color: #34d399; font-weight: 800;">特徴点をリアルタイムスキャン中...</p>
       
-      <div id="scan-result" style="display: none; background: var(--card-bg); border-radius: 20px; padding: 16px; text-align: left; margin-top: 16px; border: 1px solid rgba(52, 211, 153, 0.4);">
-        <h4 id="scan-res-title" style="color: #34d399; font-size: 14px;"></h4>
+      <div id="scan-result-box" style="display: none; background: var(--card-bg); border-radius: 20px; padding: 16px; text-align: left; margin-top: 16px; border: 1px solid rgba(52, 211, 153, 0.4);">
+        <h4 id="scan-res-title" style="color: #34d399; font-size: 14px; font-weight: 800;"></h4>
         <p id="scan-res-desc" style="font-size: 12px; color: #cbd5e1; margin-top: 6px; line-height: 1.5;"></p>
         
-        <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="showMatchedUsersModal('波長が合致する女性一覧', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])">
-          ✨ 適合するお相手を見る ➔
+        <!-- 🔥 ここに確実にボタンを出します！ -->
+        <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="showMatchedUsersModal('AI適合女性一覧（10名）')">
+          ✨ 適合するお相手（10名）を見る ➔
         </button>
       </div>
     </div>
@@ -468,7 +466,7 @@
           <p>・<strong>ソウルナンバー</strong>：<span id="num-soul" style="color: #fbbf24;"></span></p>
           <p>・<strong>日干本質</strong>：<span id="num-nikkan" style="color: #34d399;"></span></p>
           
-          <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="showMatchedUsersModal('陰陽・属性補完マッチ', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])">
+          <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="showMatchedUsersModal('陰陽・属性補完マッチ（10名）')">
             ✨ 属性を補い合えるお相手を見る ➔
           </button>
         </div>
@@ -485,13 +483,13 @@
     </div>
     <div style="padding: 24px 16px; text-align: center;">
       <h2 style="font-size: 18px; font-weight: 900;">磁力が合致するお相手</h2>
-      <button class="action-btn-glossy" style="width: 100%; padding: 14px; margin-top: 20px;" onclick="showMatchedUsersModal('アスペクト最適女性一覧', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])">
+      <button class="action-btn-glossy" style="width: 100%; padding: 14px; margin-top: 20px;" onclick="showMatchedUsersModal('アスペクト最適女性一覧（10名）')">
         ✨ 磁力一致のお相手を見る ➔
       </button>
     </div>
   </div>
 
-  <!-- 【重要：2列タイルの画面】 -->
+  <!-- 【2列タイルの画面】 -->
   <div id="view-matched-grid" class="full-screen-view">
     <div class="sub-header">
       <span class="back-btn" onclick="closeView('view-matched-grid')">✕</span>
@@ -501,7 +499,6 @@
     <div style="padding: 16px;">
       <p style="font-size: 11px; color: var(--text-sub);">あなたと相性の良いお相手が10名みつかりました。</p>
       
-      <!-- タイル表示コンテナ -->
       <div class="user-tile-grid" id="tile-container"></div>
     </div>
   </div>
@@ -618,17 +615,26 @@
     }
   }
 
+  /* 🔥 修正箇所：ボタンを壊さずにテキストだけ安全に更新する処理 */
   function openScanModal(type) {
     document.getElementById('scan-emoji').innerText = type === 'hand' ? '✋' : '👁️';
-    document.getElementById('scan-result').style.display = 'none';
+    document.getElementById('scan-header-title').innerText = type === 'hand' ? '📷 AIスマホ手相解析' : '👤 AI顔像・人相解剖学';
+    document.getElementById('scan-status').innerText = '特徴点をリアルタイムスキャン中...';
+    document.getElementById('scan-result-box').style.display = 'none';
     openView('view-scan-modal');
 
     setTimeout(() => {
       document.getElementById('scan-status').innerText = '解析完了！';
-      document.getElementById('scan-result').style.display = 'block';
-      document.getElementById('scan-res-title').innerText = '【分析完了】波長合致率 95%';
-      document.getElementById('scan-res-desc').innerText = 'お互いの個性を尊重し合える最高の相性傾向が出ています。';
-    }, 1500);
+      document.getElementById('scan-result-box').style.display = 'block';
+      
+      if (type === 'hand') {
+        document.getElementById('scan-res-title').innerText = '【分析】二重感情線 & 直感的頭脳線';
+        document.getElementById('scan-res-desc').innerText = '情熱的で一途な反面、一度心を開いた相手には執着しやすくなる一面も。お互いのパーソナルスペースを尊重することが長続きの秘訣です。';
+      } else {
+        document.getElementById('scan-res-title').innerText = '【分析】眉間幅広（オープン・誠実相）';
+        document.getElementById('scan-res-desc').innerText = '受容力が高く、人の話を聞くのが得意な相です。相手の感情の変化に敏感で、きめ細やかな配慮ができます。';
+      }
+    }, 1200);
   }
 
   function calculateNumerology() {
@@ -638,7 +644,7 @@
   }
 
   /* 🔥 10名の女性をタイル表示する関数 */
-  function showMatchedUsersModal(title, userIds) {
+  function showMatchedUsersModal(title) {
     document.getElementById('grid-modal-title').innerText = title;
     const container = document.getElementById('tile-container');
     container.innerHTML = '';
