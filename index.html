@@ -47,7 +47,6 @@
       overflow: hidden;
     }
 
-    /* アプリ枠（スマホ型ビューポート） */
     .app-frame {
       width: 100%;
       max-width: 414px;
@@ -63,9 +62,7 @@
       border: 1px solid #1a1f2c;
     }
 
-    /* ==========================================
-       2. ヘッダー
-       ========================================== */
+    /* Header */
     .app-header {
       width: 100%;
       height: 64px;
@@ -95,9 +92,7 @@
       cursor: pointer;
     }
 
-    /* ==========================================
-       3. メインコンテンツエリア
-       ========================================== */
+    /* Main Area */
     .app-main {
       flex: 1;
       padding: 16px;
@@ -119,7 +114,7 @@
     }
 
     /* ==========================================
-       4. タブ1: さがす（占いカード）
+       2. タブ1: さがす（マッチング・あやかカード）
        ========================================== */
     .odekake-container {
       background-color: #0e111a;
@@ -134,9 +129,6 @@
       color: var(--text-white);
       font-weight: bold;
       margin-bottom: 12px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
 
     .odekake-tags-wrapper {
@@ -152,7 +144,6 @@
       border-radius: 20px;
       font-size: 12px;
       font-weight: bold;
-      cursor: pointer;
     }
 
     .odekake-tag.disabled {
@@ -161,7 +152,6 @@
       color: var(--text-muted);
     }
 
-    /* マッチングカード */
     .match-card {
       background: linear-gradient(180deg, #09221a 0%, #0c1017 50%, #101420 100%);
       border-radius: 28px;
@@ -172,60 +162,29 @@
       transition: all 0.35s ease;
     }
 
-    .match-badge-container {
-      padding: 14px 16px 0;
-    }
-
+    .match-badge-container { padding: 14px 16px 0; }
     .match-badge {
       display: inline-flex;
-      align-items: center;
-      gap: 4px;
       background: rgba(0, 0, 0, 0.45);
       color: #ffc107;
       font-size: 12px;
       font-weight: bold;
       padding: 6px 12px;
       border-radius: 12px;
-      backdrop-filter: blur(4px);
     }
 
-    .card-avatar-section {
-      padding: 16px 0 8px;
-      display: flex;
-      justify-content: center;
-    }
-
+    .card-avatar-section { padding: 16px 0 8px; display: flex; justify-content: center; }
     .avatar-inner {
-      width: 90px;
-      height: 90px;
-      background-color: #202634;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      width: 90px; height: 90px;
+      background-color: #202634; border-radius: 50%;
+      display: flex; justify-content: center; align-items: center;
       font-size: 50px;
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
     }
 
-    .card-info-section {
-      padding: 12px 20px 20px;
-      text-align: left;
-    }
+    .card-info-section { padding: 12px 20px 20px; text-align: left; }
+    .user-name-text { font-size: 22px; font-weight: bold; color: var(--text-white); margin-bottom: 6px; }
+    .user-age-text { font-size: 15px; color: var(--text-muted); }
 
-    .user-name-text {
-      font-size: 22px;
-      font-weight: bold;
-      color: var(--text-white);
-      margin-bottom: 6px;
-    }
-
-    .user-age-text {
-      font-size: 15px;
-      color: var(--text-muted);
-      font-weight: normal;
-    }
-
-    /* 占い詳細要素 */
     .fortune-detail-box {
       background: rgba(255, 255, 255, 0.04);
       border-radius: 14px;
@@ -235,266 +194,178 @@
     }
 
     .fortune-item {
-      font-size: 12px;
-      color: #d1d5db;
-      margin-bottom: 6px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .fortune-item:last-child {
-      margin-bottom: 0;
+      font-size: 12px; color: #d1d5db; margin-bottom: 6px;
+      display: flex; justify-content: space-between;
     }
 
     .ai-judgment-text {
-      font-size: 12px;
-      color: var(--mint);
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 500;
+      font-size: 12px; color: var(--mint); margin-bottom: 16px; font-weight: 500;
     }
 
     .button-like-submit {
-      width: 100%;
-      padding: 15px;
-      border: none;
-      border-radius: 30px;
-      background: var(--gold-gradient);
-      color: #000000;
-      font-size: 15px;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 6px 20px rgba(226, 183, 64, 0.3);
+      width: 100%; padding: 15px; border: none; border-radius: 30px;
+      background: var(--gold-gradient); color: #000; font-size: 15px; font-weight: bold; cursor: pointer;
     }
 
-    .no-more-cards {
-      display: none;
-      text-align: center;
-      padding: 80px 20px;
-      color: var(--text-muted);
-    }
+    .no-more-cards { display: none; text-align: center; padding: 80px 20px; color: var(--text-muted); }
 
     /* ==========================================
-       5. タブ4: マイページ（調査項目フル実装）
+       3. 中央Linoボタン専用：占い・診断一覧ページ
        ========================================== */
-    .mypage-card-meishiki {
-      background: linear-gradient(135deg, var(--purple-bg) 0%, #1e1030 100%);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 16px;
+    .fortune-menu-header {
+      background: linear-gradient(135deg, #1e1030 0%, #0d1322 100%);
       border: 1px solid var(--purple-border);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
-    }
-
-    .mypage-card-meishiki h2 {
-      font-size: 18px;
-      color: var(--text-white);
-      margin-bottom: 12px;
-      font-weight: bold;
-    }
-
-    .meishiki-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      background: rgba(0, 0, 0, 0.25);
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 12px;
-      color: #d8c8ed;
-    }
-
-    .meishiki-grid div {
-      padding: 4px 0;
-    }
-
-    .mypage-edit-container {
-      background-color: var(--card-dark);
       border-radius: 20px;
       padding: 20px;
-      border: 1px solid var(--card-border);
+      margin-bottom: 20px;
+      text-align: center;
     }
 
-    .mypage-edit-container h3 {
-      font-size: 15px;
-      color: var(--text-gold);
-      margin-bottom: 16px;
+    .fortune-menu-title {
+      font-size: 20px;
       font-weight: bold;
+      color: var(--text-gold);
+      margin-bottom: 6px;
     }
 
-    .form-section-title {
+    .fortune-menu-sub {
       font-size: 12px;
-      color: var(--mint);
-      margin: 14px 0 8px;
-      padding-bottom: 4px;
-      border-bottom: 1px solid rgba(0, 230, 168, 0.2);
-    }
-
-    .form-field-group {
-      margin-bottom: 12px;
-    }
-
-    .form-field-group label {
-      display: block;
-      font-size: 11px;
       color: var(--text-muted);
-      margin-bottom: 4px;
     }
 
-    .form-field-group input, 
-    .form-field-group select {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #252c3d;
-      background-color: #06080c;
-      color: var(--text-white);
-      font-size: 13px;
+    .fortune-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
     }
 
-    .form-field-group input:focus,
-    .form-field-group select:focus {
-      outline: none;
+    .fortune-card-item {
+      background-color: var(--card-dark);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .fortune-card-item:active {
+      transform: scale(0.98);
       border-color: var(--gold-start);
     }
 
+    .fortune-icon-box {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: rgba(226, 183, 64, 0.1);
+      border: 1px solid rgba(226, 183, 64, 0.3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .fortune-info-box h4 {
+      font-size: 15px;
+      color: var(--text-white);
+      margin-bottom: 4px;
+    }
+
+    .fortune-info-box p {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ==========================================
+       4. タブ: マイページ（全調査項目フォーム）
+       ========================================== */
+    .mypage-card-meishiki {
+      background: linear-gradient(135deg, var(--purple-bg) 0%, #1e1030 100%);
+      border-radius: 20px; padding: 20px; margin-bottom: 16px;
+      border: 1px solid var(--purple-border);
+    }
+
+    .meishiki-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+      background: rgba(0, 0, 0, 0.25); padding: 12px; border-radius: 12px;
+      font-size: 12px; color: #d8c8ed;
+    }
+
+    .mypage-edit-container {
+      background-color: var(--card-dark); border-radius: 20px; padding: 20px;
+      border: 1px solid var(--card-border);
+    }
+
+    .form-section-title {
+      font-size: 12px; color: var(--mint); margin: 14px 0 8px;
+      padding-bottom: 4px; border-bottom: 1px solid rgba(0, 230, 168, 0.2);
+    }
+
+    .form-field-group { margin-bottom: 12px; }
+    .form-field-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+    .form-field-group input, .form-field-group select {
+      width: 100%; padding: 10px 12px; border-radius: 10px;
+      border: 1px solid #252c3d; background-color: #06080c; color: var(--text-white); font-size: 13px;
+    }
+
     .file-upload-btn {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      background: #1a2233;
-      border: 1px dashed #3a4763;
-      border-radius: 10px;
-      text-align: center;
-      color: #a0aabf;
-      font-size: 12px;
-      cursor: pointer;
+      display: block; width: 100%; padding: 10px; background: #1a2233;
+      border: 1px dashed #3a4763; border-radius: 10px; text-align: center;
+      color: #a0aabf; font-size: 12px; cursor: pointer;
     }
 
     .button-save-profile {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 10px;
-      background-color: #198754;
-      color: var(--text-white);
-      font-size: 14px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 16px;
+      width: 100%; padding: 14px; border: none; border-radius: 10px;
+      background-color: #198754; color: var(--text-white); font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 16px;
     }
 
-    /* その他プレースホルダータブ */
-    .tab-placeholder {
-      text-align: center;
-      padding: 80px 20px;
-      color: var(--text-muted);
-    }
+    .tab-placeholder { text-align: center; padding: 80px 20px; color: var(--text-muted); }
 
     /* モーダル */
     .alert-modal-overlay {
-      display: none;
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.65);
-      z-index: 9999;
-      justify-content: center;
-      align-items: flex-start;
-      padding-top: 50px;
+      display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.65); z-index: 9999; justify-content: center; align-items: flex-start; padding-top: 50px;
     }
 
     .alert-modal-content {
-      background-color: var(--alert-bg);
-      border-radius: 20px;
-      width: 86%;
-      padding: 20px;
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+      background-color: var(--alert-bg); border-radius: 20px; width: 86%; padding: 20px;
       border: 1px solid #2d3446;
     }
 
-    .alert-domain {
-      font-size: 11px;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-      font-family: monospace;
-    }
-
-    .alert-message-text {
-      font-size: 14px;
-      color: var(--text-white);
-      margin-bottom: 20px;
-      font-weight: 500;
-    }
-
+    .alert-domain { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; font-family: monospace; }
+    .alert-message-text { font-size: 14px; color: var(--text-white); margin-bottom: 20px; font-weight: 500; }
     .alert-confirm-btn {
-      background-color: var(--alert-btn);
-      color: #101216;
-      border: none;
-      padding: 8px 22px;
-      border-radius: 20px;
-      font-size: 13px;
-      font-weight: bold;
-      cursor: pointer;
-      float: right;
+      background-color: var(--alert-btn); color: #101216; border: none; padding: 8px 22px;
+      border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; float: right;
     }
 
-    /* ナビバー */
+    /* ナビゲーションバー */
     .app-bottom-nav {
-      height: 72px;
-      background-color: var(--bg-container);
-      border-top: 1px solid rgba(255, 255, 255, 0.05);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      position: relative;
-      padding-bottom: 6px;
+      height: 72px; background-color: var(--bg-container); border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex; justify-content: space-around; align-items: center; position: relative; padding-bottom: 6px;
     }
 
     .nav-button {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 20%;
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 10px;
-      cursor: pointer;
-      gap: 3px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      width: 20%; background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; gap: 3px;
     }
 
-    .nav-button.active {
-      color: var(--mint);
-    }
-
-    .nav-icon-text {
-      font-size: 20px;
-    }
+    .nav-button.active { color: var(--mint); }
+    .nav-icon-text { font-size: 20px; }
 
     .nav-center-button {
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      background: var(--gold-gradient);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-top: -28px;
-      box-shadow: 0 0 18px rgba(226, 183, 64, 0.4);
-      border: 4px solid var(--bg-container);
-      cursor: pointer;
+      width: 58px; height: 58px; border-radius: 50%; background: var(--gold-gradient);
+      display: flex; justify-content: center; align-items: center; margin-top: -28px;
+      box-shadow: 0 0 18px rgba(226, 183, 64, 0.4); border: 4px solid var(--bg-container); cursor: pointer;
     }
 
     .nav-center-button span {
-      font-family: var(--font-serif);
-      font-style: italic;
-      font-weight: bold;
-      color: #000000;
-      font-size: 14px;
+      font-family: var(--font-serif); font-style: italic; font-weight: bold; color: #000; font-size: 14px;
     }
   </style>
 </head>
@@ -509,7 +380,7 @@
 
     <main class="app-main">
 
-      <!-- ① さがす（占い・マッチング） -->
+      <!-- ① さがす（マッチング） -->
       <section id="tab-search" class="tab-content active">
         <div class="odekake-container">
           <div class="odekake-header">📍 今日の運命のおでかけ</div>
@@ -532,24 +403,11 @@
                 あやか <span class="user-age-text">(25歳)</span>
               </div>
 
-              <!-- 占い詳細分析データ表示 -->
               <div class="fortune-detail-box">
-                <div class="fortune-item">
-                  <span>主星・蔵干:</span>
-                  <span>偏財 / 傷官</span>
-                </div>
-                <div class="fortune-item">
-                  <span>九星気学:</span>
-                  <span>四緑木星</span>
-                </div>
-                <div class="fortune-item">
-                  <span>ソウルナンバー:</span>
-                  <span>3（天真爛漫・創作系）</span>
-                </div>
-                <div class="fortune-item">
-                  <span>出生地相性:</span>
-                  <span>東日本エリア（吉方位）</span>
-                </div>
+                <div class="fortune-item"><span>主星・蔵干:</span><span>偏財 / 傷官</span></div>
+                <div class="fortune-item"><span>九星気学:</span><span>四緑木星</span></div>
+                <div class="fortune-item"><span>ソウルナンバー:</span><span>3（天真爛漫・創作系）</span></div>
+                <div class="fortune-item"><span>出生地相性:</span><span>東日本エリア（吉方位）</span></div>
               </div>
 
               <div class="ai-judgment-text">
@@ -576,7 +434,49 @@
         </div>
       </section>
 
-      <!-- ③ メッセージ -->
+      <!-- ③ 中央Linoボタン専用：占い一覧・診断ページ -->
+      <section id="tab-fortune" class="tab-content">
+        <div class="fortune-menu-header">
+          <div class="fortune-menu-title">🔮 Lino 運命・占いセンター</div>
+          <div class="fortune-menu-sub">四柱推命・陰陽五行・AI人相から導く本格診断</div>
+        </div>
+
+        <div class="fortune-grid">
+          <div class="fortune-card-item" onclick="openFortuneDetail('今日の運勢・バイオリズム')">
+            <div class="fortune-icon-box">☯️</div>
+            <div class="fortune-info-box">
+              <h4>本日の運勢・陰陽バイオリズム</h4>
+              <p>今日の日干（甲）と五行エネルギーの巡りから、幸運の行動をアドバイス。</p>
+            </div>
+          </div>
+
+          <div class="fortune-card-item" onclick="openFortuneDetail('命式相性精密鑑定')">
+            <div class="fortune-icon-box">📜</div>
+            <div class="fortune-info-box">
+              <h4>命式・四柱推命の相性鑑定</h4>
+              <p>互いの生年月日・時柱から引き寄せる深層レベルの相性を算出。</p>
+            </div>
+          </div>
+
+          <div class="fortune-card-item" onclick="openFortuneDetail('AI人相・顔相リアルスキャン')">
+            <div class="fortune-icon-box">👁️</div>
+            <div class="fortune-info-box">
+              <h4>AI人相・顔相リアルスキャン</h4>
+              <p>カメラ写真から目・眉・輪郭の配置を分析し、本質や誠実度を解明。</p>
+            </div>
+          </div>
+
+          <div class="fortune-card-item" onclick="openFortuneDetail('ソウルナンバー数秘術')">
+            <div class="fortune-icon-box">🔢</div>
+            <div class="fortune-info-box">
+              <h4>ソウルナンバー＆九星気学</h4>
+              <p>生まれ持つ運命数「7」と九星から、相性の良いパートナー像を提示。</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ④ メッセージ -->
       <section id="tab-messages" class="tab-content">
         <div class="tab-placeholder">
           <h3>メッセージ</h3>
@@ -584,7 +484,7 @@
         </div>
       </section>
 
-      <!-- ④ マイページ（全調査項目・占いパラメータ入力） -->
+      <!-- ⑤ マイページ -->
       <section id="tab-mypage" class="tab-content">
         <div class="mypage-card-meishiki">
           <h2><span id="display-user-name">秀広</span> さんの占い・命式分析</h2>
@@ -612,7 +512,6 @@
             <select id="input-gender">
               <option value="男性" selected>男性</option>
               <option value="女性">女性</option>
-              <option value="その他">その他</option>
             </select>
           </div>
 
@@ -687,7 +586,7 @@
         <span>いいね！</span>
       </button>
 
-      <div class="nav-center-button" onclick="switchNavTab('search', document.querySelectorAll('.nav-button')[0])">
+      <div class="nav-center-button" onclick="switchNavTab('fortune', null)">
         <span>Lino</span>
       </div>
 
@@ -746,6 +645,11 @@
       if (element) {
         element.classList.add('active');
       }
+    }
+
+    function openFortuneDetail(title) {
+      document.getElementById('alert-modal-text').textContent = `「${title}」の診断画面を開きます。`;
+      document.getElementById('custom-alert-modal').style.display = 'flex';
     }
 
     function onFileUploaded(input) {
