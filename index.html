@@ -9,18 +9,19 @@
       --primary: #10b981;
       --primary-dark: #047857;
       --primary-gradient: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
-      --fortune-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
-      --gold-accent: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-      --lino-btn-gradient: linear-gradient(135deg, #d97706 0%, #fbbf24 50%, #10b981 100%);
-      --bg: #f0fdf4;
-      --text: #0f172a;
+      --fortune-gradient: linear-gradient(135deg, #0b1329 0%, #17153b 50%, #2e236c 100%);
+      --gold-gradient: linear-gradient(135deg, #fcd34d 0%, #fbbf24 50%, #d97706 100%);
+      --bg: #f8fafc;
+      --text-main: #0f172a;
+      --text-sub: #64748b;
+      --card-bg: rgba(255, 255, 255, 0.85);
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
     
@@ -38,45 +39,46 @@
       max-width: 430px;
       height: 100vh;
       max-height: 900px;
-      background: var(--bg);
+      background: #f1f5f9;
       display: flex;
       flex-direction: column;
       position: relative;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8);
       overflow: hidden;
     }
 
     @media (min-width: 480px) {
       .app-container {
         height: 88vh;
-        border-radius: 44px;
+        border-radius: 40px;
         border: 8px solid #064e3b;
       }
     }
 
     /* ヘッダー */
     .header {
-      background: rgba(255, 255, 255, 0.9);
-      backdrop-filter: blur(12px);
-      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(16px);
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(16, 185, 129, 0.15);
+      border-bottom: 1px solid rgba(16, 185, 129, 0.1);
       z-index: 10;
     }
     .logo {
-      color: var(--primary-dark);
       font-weight: 900;
-      font-size: 24px;
+      font-size: 22px;
+      letter-spacing: -0.5px;
       display: flex;
       align-items: center;
       gap: 6px;
+      color: #065f46;
     }
-    .logo span {
-      background: var(--primary-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+    .logo-sparkle {
+      width: 18px;
+      height: 18px;
+      fill: url(#goldGradient);
     }
 
     /* メインエリア */
@@ -98,17 +100,18 @@
 
     /* ボタン */
     .action-btn {
-      background: var(--gold-accent);
+      background: var(--gold-gradient);
       color: #0f172a;
       border: none;
-      padding: 12px 18px;
+      padding: 14px 20px;
       border-radius: 30px;
       font-weight: 800;
       font-size: 13px;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
-      transition: all 0.2s;
+      box-shadow: 0 6px 16px rgba(245, 158, 11, 0.25);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
       text-align: center;
+      letter-spacing: 0.3px;
     }
     .action-btn:active { transform: scale(0.97); }
 
@@ -117,137 +120,179 @@
       background: white;
       border-radius: 20px;
       padding: 16px;
-      border: 1px solid #d1fae5;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+      border: 1px solid rgba(16, 185, 129, 0.08);
     }
     .section-title {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 800;
-      color: var(--text);
+      color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
     }
     .tag-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
     .mood-tag {
-      background: #ecfdf5;
+      background: #f0fdf4;
       color: var(--primary-dark);
-      border: 1px solid #a7f3d0;
-      padding: 8px 14px;
+      border: 1px solid #bbf7d0;
+      padding: 8px 16px;
       border-radius: 20px;
       font-size: 12px;
       font-weight: 700;
       white-space: nowrap;
       cursor: pointer;
+      transition: all 0.2s;
     }
-    .mood-tag.active { background: var(--primary-gradient); color: white; border: none; }
+    .mood-tag.active {
+      background: var(--primary-gradient);
+      color: white;
+      border: none;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
 
     .profile-card {
       background: white;
       border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-      border: 1px solid rgba(16, 185, 129, 0.1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+      border: 1px solid rgba(16, 185, 129, 0.08);
       cursor: pointer;
     }
     .profile-img {
-      height: 240px;
-      background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+      height: 260px;
+      background: linear-gradient(135deg, #059669 0%, #10b981 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 56px;
       position: relative;
     }
     .distance-badge {
-      position: absolute; top: 12px; right: 12px;
-      background: rgba(15, 23, 42, 0.75); color: #34d399;
-      font-size: 11px; padding: 5px 10px; border-radius: 14px; font-weight: 700;
+      position: absolute; top: 14px; right: 14px;
+      background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(8px);
+      color: #34d399; font-size: 11px; padding: 6px 12px; border-radius: 20px; font-weight: 700;
     }
     .fortune-tag-badge {
-      position: absolute; bottom: 12px; left: 12px;
-      background: rgba(15, 23, 42, 0.75); color: #fbbf24;
-      font-size: 11px; padding: 5px 10px; border-radius: 14px; font-weight: 700;
+      position: absolute; bottom: 14px; left: 14px;
+      background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(8px);
+      color: #fbbf24; font-size: 11px; padding: 6px 12px; border-radius: 20px; font-weight: 700;
+      display: flex; align-items: center; gap: 4px;
     }
-    .profile-info { padding: 16px; }
-    .profile-name { font-size: 18px; font-weight: 800; color: var(--text); }
-    .profile-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
-    .tag { background: #ecfdf5; color: var(--primary-dark); font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 700; }
+    .profile-info { padding: 18px; }
+    .profile-name { font-size: 19px; font-weight: 800; color: var(--text-main); }
+    .profile-tags { display: flex; gap: 6px; margin-top: 10px; flex-wrap: wrap; }
+    .tag { background: #f0fdf4; color: var(--primary-dark); font-size: 11px; padding: 5px 10px; border-radius: 8px; font-weight: 700; }
 
-    /* ナビゲーションバー (並び：さがす | いいね | ✨占い | メッセージ | マイページ) */
+    /* モダンスタイリッシュな手相解析カード */
+    .palm-card {
+      background: white;
+      border-radius: 20px;
+      padding: 16px 20px;
+      border: 1px solid rgba(16, 185, 129, 0.12);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+      transition: all 0.2s;
+    }
+    .palm-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 16px;
+      background: #f0fdf4;
+      border: 1px solid #a7f3d0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-dark);
+    }
+
+    /* ナビゲーションバー */
     .nav {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(16px);
       display: flex;
       justify-content: space-around;
       align-items: flex-end;
-      padding: 10px 0 12px;
-      border-top: 1px solid rgba(16, 185, 129, 0.15);
+      padding: 8px 0 12px;
+      border-top: 1px solid rgba(16, 185, 129, 0.12);
       z-index: 10;
     }
     .nav-item {
       display: flex; flex-direction: column; align-items: center; gap: 4px;
-      font-size: 10px; color: #94a3b8; cursor: pointer; flex: 1;
+      font-size: 10px; color: #94a3b8; cursor: pointer; flex: 1; font-weight: 700;
+      transition: color 0.2s;
     }
-    .nav-item.active { color: var(--primary-dark); font-weight: 800; }
-    .nav-icon { font-size: 20px; }
+    .nav-item.active { color: var(--primary-dark); }
+    .nav-icon { width: 22px; height: 22px; stroke-width: 2; }
 
-    /* 中央：Lino占いメインボタン */
+    /* 中央：Linoメイン占いボタン（ハイエンド風） */
     .lino-main-btn {
       position: relative; top: -14px; width: 62px; height: 62px; border-radius: 50%;
-      background: var(--lino-btn-gradient);
-      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4), inset 0 2px 4px rgba(255,255,255,0.6);
+      background: var(--gold-gradient);
+      box-shadow: 0 10px 25px rgba(245, 158, 11, 0.4), inset 0 2px 4px rgba(255,255,255,0.8);
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: white; border: 3px solid white; cursor: pointer; transition: all 0.2s;
+      color: #0f172a; border: 3px solid white; cursor: pointer; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     }
     .lino-main-btn:active { transform: scale(0.92); }
-    .lino-main-btn .btn-symbol { font-size: 24px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
-    .lino-main-btn .btn-text { font-size: 9px; font-weight: 900; letter-spacing: 0.5px; margin-top: -3px; }
 
-    /* 全画面オーバーレイ（詳細画面群） */
+    /* 全画面オーバーレイ */
     .full-screen-view {
-      position: absolute; inset: 0; background: var(--bg); z-index: 50;
+      position: absolute; inset: 0; background: #f8fafc; z-index: 50;
       display: none; flex-direction: column; overflow-y: auto;
     }
     .sub-header {
       background: white; padding: 14px 16px; display: flex; align-items: center;
-      justify-content: space-between; border-bottom: 1px solid #d1fae5;
+      justify-content: space-between; border-bottom: 1px solid #e2e8f0;
     }
-    .back-btn { font-size: 20px; cursor: pointer; color: var(--primary-dark); font-weight: 900; }
+    .back-btn { font-size: 18px; cursor: pointer; color: var(--text-main); font-weight: 800; }
 
     /* ホロスコープ盤 */
     .horoscope-wheel {
-      width: 140px; height: 140px; border-radius: 50%; border: 2px dashed #fbbf24;
-      margin: 10px auto; display: flex; align-items: center; justify-content: center;
-      background: rgba(251, 191, 36, 0.05); color: #fbbf24; font-size: 40px;
-      animation: spin 20s linear infinite;
+      width: 150px; height: 150px; border-radius: 50%; border: 2px dashed #fbbf24;
+      margin: 16px auto; display: flex; align-items: center; justify-content: center;
+      background: rgba(251, 191, 36, 0.05); color: #fbbf24;
+      animation: spin 25s linear infinite;
     }
     @keyframes spin { 100% { transform: rotate(360deg); } }
 
     /* チャットUI */
     .chat-bubble {
-      max-width: 75%; padding: 12px 16px; border-radius: 18px; font-size: 13px; line-height: 1.4; margin-bottom: 10px;
+      max-width: 75%; padding: 12px 16px; border-radius: 18px; font-size: 13px; line-height: 1.5; margin-bottom: 10px;
     }
-    .chat-received { background: white; border: 1px solid #d1fae5; align-self: flex-start; color: var(--text); }
+    .chat-received { background: white; border: 1px solid #e2e8f0; align-self: flex-start; color: var(--text-main); }
     .chat-sent { background: var(--primary-gradient); color: white; align-self: flex-end; }
 
     .biorhythm-card {
-      background: var(--fortune-gradient); border-radius: 24px; padding: 20px; color: white;
-    }
-    .gallery-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 10px; }
-    .gallery-item {
-      aspect-ratio: 1; background: #ecfdf5; border: 1px dashed #a7f3d0;
-      border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 24px;
+      background: var(--fortune-gradient); border-radius: 24px; padding: 22px; color: white;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.25);
     }
   </style>
 </head>
 <body>
 
+<!-- SVGグラデーション定義 -->
+<svg style="width:0;height:0;position:absolute;">
+  <defs>
+    <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fcd34d" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+  </defs>
+</svg>
+
 <div class="app-container">
   <!-- ヘッダー -->
   <div class="header">
-    <div class="logo">✨ <span>Lino</span></div>
-    <div style="font-size: 18px; cursor: pointer;">🔔</div>
+    <div class="logo">
+      <svg class="logo-sparkle" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg>
+      Lino
+    </div>
+    <div style="cursor: pointer; color: #0f172a;">
+      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+    </div>
   </div>
 
   <!-- コンテンツエリア -->
@@ -256,7 +301,10 @@
     <!-- タブ1: さがす -->
     <div id="tab-search" class="tab-content active">
       <div class="go-out-box">
-        <div class="section-title">☕ 今日の運命おでかけ</div>
+        <div class="section-title">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          今日の運命おでかけ
+        </div>
         <div class="tag-scroll">
           <div class="mood-tag active" onclick="filterMood(this, '今夜サクッと飲み🍻')">今夜サクッと飲み🍻</div>
           <div class="mood-tag" onclick="filterMood(this, '週末カフェ巡り☕')">週末カフェ巡り☕</div>
@@ -266,54 +314,63 @@
 
       <div class="profile-card" onclick="openDetailProfile()">
         <div class="profile-img">
-          👩🏻‍💼
-          <div class="distance-badge">📍 2.1km先にいます</div>
-          <div class="fortune-tag-badge">🔮 星座相性: 98% (かに座 × いて座)</div>
+          <svg width="80" height="80" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <div class="distance-badge">📍 2.1km</div>
+          <div class="fortune-tag-badge">
+            <svg width="12" height="12" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg>
+            星座相性: 98%
+          </div>
         </div>
         <div class="profile-info">
-          <div class="profile-name">あやか (25歳) • 東京</div>
+          <div class="profile-name">あやか <span style="font-size: 14px; font-weight: 500; color: #64748b;">(25歳) • 東京</span></div>
           <div class="profile-tags">
             <span class="tag">今夜サクッと飲み🍻</span>
             <span class="tag">ドライブ</span>
             <span class="tag">夜カフェ</span>
           </div>
-          <button class="action-btn" style="background: var(--primary-gradient); color: white; width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); alert('運命のいいね！を送りました！');">✨ 運命のいいね！を送る</button>
+          <button class="action-btn" style="background: var(--primary-gradient); color: white; width: 100%; margin-top: 14px;" onclick="event.stopPropagation(); alert('運命のいいね！を送りました！');">✨ 運命のいいね！を送る</button>
         </div>
       </div>
     </div>
 
     <!-- タブ2: いいね！ -->
     <div id="tab-likes" class="tab-content">
-      <p style="text-align: center; color: #64748b; margin-top: 40px;">あなたに届いた「運命のいいね！」一覧です。</p>
+      <p style="text-align: center; color: #64748b; margin-top: 40px; font-size: 13px;">あなたに届いた「運命のいいね！」一覧です。</p>
     </div>
 
     <!-- タブ3: ✨ 占い (メイン) -->
     <div id="tab-fortune" class="tab-content">
       <div class="biorhythm-card">
-        <span style="color: #fbbf24; font-size: 11px; font-weight: 700; letter-spacing: 1px;">HOROSCOPE & AI DIAGNOSIS</span>
-        <h2 style="font-size: 20px; font-weight: 900; margin: 4px 0 8px;">運命のホロスコープ解析</h2>
-        <p style="font-size: 12px; color: #cbd5e1;">生年月日と星のバイオリズムから、今日最も引き寄せられるお相手をリアルタイム解析します。</p>
-        <button class="action-btn" style="width: 100%; margin-top: 14px;" onclick="startHoroscopeResult()">✨ 今日の運命を引き寄せる（全画面鑑定）</button>
+        <span style="color: #fbbf24; font-size: 10px; font-weight: 800; letter-spacing: 1.5px;">HOROSCOPE & AI DIAGNOSIS</span>
+        <h2 style="font-size: 20px; font-weight: 900; margin: 6px 0 8px;">運命のホロスコープ解析</h2>
+        <p style="font-size: 12px; color: #cbd5e1; line-height: 1.5;">生年月日と星のバイオリズムから、今日最も引き寄せられるお相手をリアルタイム解析します。</p>
+        <button class="action-btn" style="width: 100%; margin-top: 16px;" onclick="startHoroscopeResult()">✨ 今日の運命を引き寄せる（全画面鑑定）</button>
       </div>
 
-      <div style="background: white; border-radius: 20px; padding: 16px; border: 1px solid #d1fae5; display: flex; align-items: center; gap: 14px; cursor: pointer;" onclick="alert('手相スキャナーが起動します')">
-        <div style="font-size: 36px; background: #ecfdf5; padding: 10px; border-radius: 16px;">✋</div>
+      <!-- おしゃれなAI手相解析カード -->
+      <div class="palm-card" onclick="alert('手相スキャナーが起動します')">
+        <div class="palm-icon-box">
+          <svg width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v6M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8.5"/>
+            <path d="M18 11a2 2 0 0 1 2 2v2a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.8-5.9-2.2L2.3 15c-.4-.4-.4-1 0-1.4l.7-.7c.4-.4 1-.4 1.4 0L7 15.5V11"/>
+          </svg>
+        </div>
         <div>
-          <h4 style="font-size: 15px; color: var(--text); font-weight: 800;">📷 AIスマホ手相解析</h4>
-          <p style="font-size: 12px; color: #64748b; margin-top: 2px;">感情線・運命線から相性を判定</p>
+          <h4 style="font-size: 14px; color: var(--text-main); font-weight: 800;">📷 AIスマホ手相解析</h4>
+          <p style="font-size: 11px; color: var(--text-sub); margin-top: 2px;">感情線・運命線から相性を精密判定</p>
         </div>
       </div>
     </div>
 
     <!-- タブ4: メッセージ -->
     <div id="tab-messages" class="tab-content">
-      <div style="background: white; border-radius: 16px; padding: 14px; display: flex; align-items: center; gap: 12px; border: 1px solid #d1fae5; cursor: pointer;" onclick="openChatView()">
-        <div style="font-size: 32px; background: #ecfdf5; padding: 8px; border-radius: 50%;">👩🏻</div>
+      <div style="background: white; border-radius: 18px; padding: 14px; display: flex; align-items: center; gap: 12px; border: 1px solid #e2e8f0; cursor: pointer;" onclick="openChatView()">
+        <div style="width: 44px; height: 44px; border-radius: 50%; background: #e2e8f0; display: flex; align-items: center; justify-content: center; font-size: 20px;">👩🏻</div>
         <div style="flex: 1;">
-          <div style="font-weight: 800; font-size: 14px; color: var(--text);">あやか</div>
-          <div style="font-size: 12px; color: #64748b; margin-top: 2px;">今夜サクッと飲みに行けますか？</div>
+          <div style="font-weight: 800; font-size: 14px; color: var(--text-main);">あやか</div>
+          <div style="font-size: 12px; color: var(--text-sub); margin-top: 2px;">今夜サクッと飲みに行けますか？</div>
         </div>
-        <span style="font-size: 11px; background: #f1f5f9; padding: 4px 8px; border-radius: 10px; color: #64748b; font-weight: 700;">🔒 ロック中</span>
+        <span style="font-size: 10px; background: #f1f5f9; padding: 4px 8px; border-radius: 8px; color: #64748b; font-weight: 700;">🔒 ロック中</span>
       </div>
     </div>
 
@@ -322,70 +379,68 @@
       <div class="biorhythm-card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <span style="color: #fbbf24; font-size: 11px; font-weight: 700;">MY BIORHYTHM</span>
-            <h3 style="font-size: 20px; font-weight: 900; margin-top: 2px;">秀広 さんの運命ステータス</h3>
+            <span style="color: #fbbf24; font-size: 10px; font-weight: 800; letter-spacing: 1px;">MY BIORHYTHM</span>
+            <h3 style="font-size: 19px; font-weight: 900; margin-top: 2px;">秀広 さんの運命ステータス</h3>
           </div>
-          <span style="font-size: 32px;">♐</span>
+          <span style="font-size: 28px;">♐</span>
         </div>
       </div>
     </div>
 
   </div>
 
-  <!-- ナビゲーションバー (新並び) -->
+  <!-- ナビゲーションバー (新スタイリッシュSVGアイコン) -->
   <div class="nav">
     <div id="nav-search" class="nav-item active" onclick="switchTab('search', this)">
-      <span class="nav-icon">🔍</span>
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
       <span>さがす</span>
     </div>
     <div class="nav-item" onclick="switchTab('likes', this)">
-      <span class="nav-icon">💖</span>
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       <span>いいね！</span>
     </div>
 
     <!-- 中央メインボタン：🔮 占い -->
     <div class="lino-main-btn" onclick="switchTab('fortune', document.getElementById('nav-fortune-hidden'))">
-      <span class="btn-symbol">🔮</span>
-      <span class="btn-text">占い</span>
+      <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg>
+      <span style="font-size: 9px; font-weight: 900; letter-spacing: 0.5px; margin-top: 1px;">Lino</span>
     </div>
     <div id="nav-fortune-hidden" class="nav-item" style="display:none;"></div>
 
     <div class="nav-item" onclick="switchTab('messages', this)">
-      <span class="nav-icon">💬</span>
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
       <span>メッセージ</span>
     </div>
     <div class="nav-item" onclick="switchTab('mypage', this)">
-      <span class="nav-icon">👤</span>
+      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span>マイページ</span>
     </div>
   </div>
 
-  <!-- ----------------- 詳細画面群（全画面オーバーレイ） ----------------- -->
+  <!-- ----------------- 詳細画面群 ----------------- -->
 
   <!-- 1. お相手詳細プロフィール画面 -->
   <div id="view-profile-detail" class="full-screen-view">
     <div class="sub-header">
       <span class="back-btn" onclick="closeView('view-profile-detail')">✕</span>
-      <span style="font-weight: 800; font-size: 15px;">あやか さんのプロフィール</span>
+      <span style="font-weight: 800; font-size: 14px;">あやか さんのプロフィール</span>
       <span></span>
     </div>
     <div style="padding: 16px; display: flex; flex-direction: column; gap: 16px;">
-      <div style="height: 280px; background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%); border-radius: 24px; display: flex; align-items: center; justify-content: center; font-size: 72px; position: relative;">
-        👩🏻‍💼
+      <div style="height: 280px; background: linear-gradient(135deg, #059669 0%, #10b981 100%); border-radius: 24px; display: flex; align-items: center; justify-content: center; position: relative;">
+        <svg width="100" height="100" fill="none" stroke="rgba(255,255,255,0.9)" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         <div class="distance-badge">📍 2.1km先にいます</div>
       </div>
 
-      <!-- ホロスコープ相性カード -->
       <div class="biorhythm-card">
-        <span style="color: #fbbf24; font-size: 11px; font-weight: 700;">🔮 HOROSCOPE MATCH</span>
+        <span style="color: #fbbf24; font-size: 10px; font-weight: 800; letter-spacing: 1px;">HOROSCOPE MATCH</span>
         <h3 style="font-size: 18px; font-weight: 800; margin-top: 2px;">相性スコア: 98% (奇跡の引き寄せ)</h3>
         <p style="font-size: 12px; color: #cbd5e1; margin-top: 6px; line-height: 1.5;">
           太陽星座「いて座」のあなたと、月星座「うお座」のあやかさんは感性がシンクロ。ドライブや夜カフェなど、静かで深い時間を共にするのに最高の組み合わせです。
         </p>
       </div>
 
-      <!-- 価値観＆おでかけタグ -->
-      <div style="background: white; border-radius: 20px; padding: 16px; border: 1px solid #d1fae5;">
+      <div style="background: white; border-radius: 20px; padding: 16px; border: 1px solid #e2e8f0;">
         <div class="section-title">🏷️ 参加中の価値観・おでかけ</div>
         <div class="profile-tags">
           <span class="tag">今夜サクッと飲み🍻</span>
@@ -395,7 +450,7 @@
         </div>
       </div>
 
-      <button class="action-btn" style="background: var(--primary-gradient); color: white; padding: 16px; font-size: 15px;" onclick="alert('運命のいいね！を送信しました！'); closeView('view-profile-detail');">
+      <button class="action-btn" style="background: var(--primary-gradient); color: white; padding: 16px; font-size: 14px;" onclick="alert('運命のいいね！を送信しました！'); closeView('view-profile-detail');">
         ✨ 運命のいいね！を送る
       </button>
     </div>
@@ -407,17 +462,15 @@
       <span class="back-btn" onclick="closeView('view-chat-detail')">←</span>
       <div style="text-align: center;">
         <div style="font-weight: 800; font-size: 14px;">あやか</div>
-        <div style="font-size: 10px; color: var(--primary-dark);">オンライン</div>
+        <div style="font-size: 10px; color: var(--primary-dark); font-weight: 700;">オンライン</div>
       </div>
-      <!-- 通話相互ロック切り替え -->
       <button id="chat-lock-btn" class="action-btn" style="padding: 6px 12px; font-size: 11px;" onclick="toggleChatLock(this)">
         🔒 通話ロック中
       </button>
     </div>
 
-    <!-- 通話解放バナー（ロック解除時に現れる・時間無制限） -->
-    <div id="call-active-banner" style="display: none; background: var(--gold-accent); padding: 12px; text-align: center; font-weight: 800; font-size: 13px; color: #0f172a; cursor: pointer;" onclick="alert('ボイス通話を開始します…📞（時間無制限・寝落ち通話OK）')">
-      📞 お互いのロックが解除されました！【タップして通話スタート（時間無制限）】
+    <div id="call-active-banner" style="display: none; background: var(--gold-gradient); padding: 12px; text-align: center; font-weight: 800; font-size: 12px; color: #0f172a; cursor: pointer;" onclick="alert('ボイス通話を開始します…📞（時間無制限・寝落ち通話OK）')">
+      📞 お互いのロックが解除されました！【タップして通話スタート（無制限）】
     </div>
 
     <div style="flex: 1; padding: 16px; display: flex; flex-direction: column; justify-content: flex-end;">
@@ -426,9 +479,9 @@
       <div class="chat-bubble chat-received">今夜サクッと飲みに行けたりしますか？🍻</div>
     </div>
 
-    <div style="padding: 12px; background: white; border-top: 1px solid #d1fae5; display: flex; gap: 8px;">
-      <input type="text" placeholder="メッセージを入力..." style="flex: 1; padding: 10px 14px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
-      <button class="action-btn" style="background: var(--primary-gradient); color: white; padding: 10px 16px;">送信</button>
+    <div style="padding: 12px; background: white; border-top: 1px solid #e2e8f0; display: flex; gap: 8px;">
+      <input type="text" placeholder="メッセージを入力..." style="flex: 1; padding: 10px 16px; border-radius: 20px; border: 1px solid #cbd5e1; outline: none; font-size: 13px;">
+      <button class="action-btn" style="background: var(--primary-gradient); color: white; padding: 10px 18px;">送信</button>
     </div>
   </div>
 
@@ -436,26 +489,30 @@
   <div id="view-fortune-result" class="full-screen-view" style="background: var(--fortune-gradient); color: white;">
     <div class="sub-header" style="background: transparent; border: none; color: white;">
       <span class="back-btn" style="color: white;" onclick="closeView('view-fortune-result')">✕</span>
-      <span style="font-weight: 800; font-size: 15px; color: #fbbf24;">✨ 天体ホロスコープ鑑定</span>
+      <span style="font-weight: 800; font-size: 14px; color: #fbbf24;">✨ 天体ホロスコープ鑑定</span>
       <span></span>
     </div>
     
     <div style="padding: 24px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 16px;">
-      <div class="horoscope-wheel">☸</div>
+      <div class="horoscope-wheel">
+        <svg width="60" height="60" fill="none" stroke="#fbbf24" stroke-width="1.5" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg>
+      </div>
       <div>
-        <span style="color: #fbbf24; font-size: 12px; font-weight: 700; letter-spacing: 1px;">DESTINY MATCHING</span>
-        <h2 style="font-size: 22px; font-weight: 900; margin-top: 4px;">本日、最も引き寄せられているお相手</h2>
+        <span style="color: #fbbf24; font-size: 11px; font-weight: 800; letter-spacing: 1.5px;">DESTINY MATCHING</span>
+        <h2 style="font-size: 21px; font-weight: 900; margin-top: 4px;">本日、最も引き寄せられているお相手</h2>
       </div>
 
-      <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); border-radius: 20px; padding: 20px; border: 1px solid rgba(251, 191, 36, 0.3); width: 100%;">
-        <div style="font-size: 48px;">👩🏻‍💼</div>
-        <h3 style="font-size: 18px; font-weight: 800; margin-top: 8px;">あやか (25歳 / かに座)</h3>
-        <p style="font-size: 13px; color: #cbd5e1; margin-top: 8px; line-height: 1.6;">
+      <div style="background: rgba(255,255,255,0.08); backdrop-filter: blur(12px); border-radius: 20px; padding: 22px; border: 1px solid rgba(251, 191, 36, 0.25); width: 100%;">
+        <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.15); margin: 0 auto; display: flex; align-items: center; justify-content: center;">
+          <svg width="36" height="36" fill="none" stroke="white" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <h3 style="font-size: 18px; font-weight: 800; margin-top: 10px;">あやか <span style="font-size: 13px; font-weight: 500; color: #cbd5e1;">(25歳 / かに座)</span></h3>
+        <p style="font-size: 12px; color: #cbd5e1; margin-top: 10px; line-height: 1.6;">
           今日の月と木星の配置が、あなた方の感覚を共鳴させています。無意識に求めていた「気取らない居心地の良さ」を互いに提供できる奇跡のタイミングです。
         </p>
       </div>
 
-      <button class="action-btn" style="width: 100%; padding: 16px; font-size: 15px; margin-top: 10px;" onclick="closeView('view-fortune-result'); openDetailProfile();">
+      <button class="action-btn" style="width: 100%; padding: 16px; font-size: 14px; margin-top: 8px;" onclick="closeView('view-fortune-result'); openDetailProfile();">
         ✨ あやか さんの詳細プロフィールを見る
       </button>
     </div>
@@ -478,21 +535,11 @@
     alert(`【${moodName}】の気分で一緒に行けるお相手を絞り込みました！`);
   }
 
-  /* 詳細画面の開閉制御 */
-  function openDetailProfile() {
-    document.getElementById('view-profile-detail').style.display = 'flex';
-  }
-  function openChatView() {
-    document.getElementById('view-chat-detail').style.display = 'flex';
-  }
-  function startHoroscopeResult() {
-    document.getElementById('view-fortune-result').style.display = 'flex';
-  }
-  function closeView(viewId) {
-    document.getElementById(viewId).style.display = 'none';
-  }
+  function openDetailProfile() { document.getElementById('view-profile-detail').style.display = 'flex'; }
+  function openChatView() { document.getElementById('view-chat-detail').style.display = 'flex'; }
+  function startHoroscopeResult() { document.getElementById('view-fortune-result').style.display = 'flex'; }
+  function closeView(viewId) { document.getElementById(viewId).style.display = 'none'; }
 
-  /* 通話相互ロック切り替え (時間制限なし仕様) */
   function toggleChatLock(btn) {
     const banner = document.getElementById('call-active-banner');
     if (btn.classList.contains('unlocked')) {
