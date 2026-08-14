@@ -96,11 +96,23 @@
                 </div>
             </section>
 
-            <!-- ⑤ マイページ -->
+            <!-- ⑤ マイページ (写真登録・アイコン機能対応) -->
             <section id="tab-mypage" class="tab-content">
                 <div class="mypage-wrapper" id="mypage-container">
                     <div class="view-mode-section">
-                        <div class="mode-toggle-btn" onclick="toggleEditMode(true)">✏️ プロフィールを編集する</div>
+                        <div class="mode-toggle-btn" onclick="toggleEditMode(true)">✏️ プロフィール・写真を編集する</div>
+                        
+                        <!-- 写真プレビューエリア -->
+                        <div class="mypage-photo-preview-section">
+                            <div class="main-avatar-preview-box">
+                                <div id="main-avatar-emoji" class="main-avatar-large">👨‍💼</div>
+                                <span class="main-avatar-badge">メインアイコン</span>
+                            </div>
+                            <div class="sub-photos-mini-grid" id="subPhotosMiniGrid">
+                                <!-- 動的に挿入されるミニプレビュー -->
+                            </div>
+                        </div>
+
                         <div class="mypage-card-meishiki">
                             <h2><span id="display-user-name">秀広</span> さんの占い・命式分析</h2>
                             <div class="meishiki-grid" style="margin-top:10px;">
@@ -113,12 +125,23 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- 編集モード：写真最大10枚管理対応 -->
                     <div class="edit-mode-section">
                         <div class="mypage-edit-container">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                <h3 style="color: var(--text-gold);">⚙️ プロフィール編集モード</h3>
+                                <h3 style="color: var(--text-gold);">⚙️ プロフィール・写真編集 (最大10枚)</h3>
                                 <button style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px;" onclick="toggleEditMode(false)">✕ キャンセル</button>
                             </div>
+                            
+                            <!-- 写真マネージャー (最大10枚) -->
+                            <div class="form-field-group">
+                                <label>プロフィール写真管理 (1枚目がメインアイコン)</label>
+                                <div class="photo-upload-grid" id="photoUploadGrid">
+                                    <!-- 10枚分のスロットをJSで生成 -->
+                                </div>
+                            </div>
+
                             <div class="form-field-group">
                                 <label>お名前</label>
                                 <input type="text" id="input-name" value="秀広">
@@ -134,7 +157,7 @@
             </section>
         </main>
 
-        <!-- モーダル・アラート群 -->
+        <!-- 各種モーダル -->
         <div class="chat-room-modal" id="chatModal">
             <div class="chat-modal-header">
                 <button class="chat-back-btn" onclick="closeChatRoom()">←</button>
@@ -177,11 +200,10 @@
         </app-bottom-nav>
     </div>
 
-    <!-- 各分割スクリプトの読み込み -->
+    <!-- スクリプト読み込み -->
     <script src="matching.js"></script>
     <script src="fortune.js"></script>
     <script src="chat.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
-
