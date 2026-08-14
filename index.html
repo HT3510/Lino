@@ -3,253 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Lino - 命式・AI人相占いマッチング (Ultimate Edition)</title>
+    <title>Lino - 命式・AI人相占いマッチング</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --bg-black: #050608;
+            --bg-container: #0a0c10;
+            --gold-start: #e2b740;
+            --gold-end: #c49619;
+            --gold-gradient: linear-gradient(135deg, var(--gold-start) 0%, var(--gold-end) 100%);
+            --mint: #00e6a8;
+            --text-white: #ffffff;
+            --text-muted: #8c93a4;
+            --text-gold: #ffca28;
+            --font-cursive: 'Caveat', cursive;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: #000; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .app-frame { width: 100%; max-width: 414px; height: 100%; background: var(--bg-container); border-radius: 40px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+        .app-header { height: 64px; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .brand-logo { font-family: var(--font-cursive); font-size: 32px; font-weight: 700; background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .app-main { flex: 1; overflow-y: auto; padding: 20px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        /* マッチングカード */
+        .match-card { background: #0f131c; border-radius: 20px; padding: 20px; border: 1px solid #1a202c; color: #fff; }
+        .avatar-inner { width: 100px; height: 100px; background: #202634; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 50px; margin: 0 auto 20px; border: 2px solid var(--mint); }
+        .btn-like { width: 100%; padding: 15px; border: none; border-radius: 30px; background: var(--gold-gradient); font-weight: bold; cursor: pointer; margin-top: 20px; }
+    </style>
 </head>
 <body>
     <div class="app-frame">
         <header class="app-header">
             <div class="brand-logo">Lino</div>
-            <div class="header-actions">
-                <button class="header-icon-btn" onclick="openCustomAlert('通知はありません')">🔔<div class="notification-badge-dot"></div></button>
-            </div>
         </header>
-
-        <main class="app-main">
-            <!-- ① さがす -->
+        <main class="app-main" id="main-content">
+            <!-- メインコンテンツ領域 -->
             <section id="tab-search" class="tab-content active">
-                <div class="odekake-container">
-                    <div class="odekake-info-area">
-                        <div class="odekake-header">📍 今日の運命のおでかけ</div>
-                        <div class="odekake-title">今夜サクッと飲み 🥂</div>
+                <div id="card-wrapper">
+                    <div class="match-card">
+                        <div class="avatar-inner">✨</div>
+                        <h2 style="text-align:center;">美咲 (27)</h2>
+                        <p style="text-align:center; color:var(--mint); margin-top:10px;">命式相性: 95%</p>
+                        <button class="btn-like" onclick="alert('運命のいいね！を送りました')">運命のいいね！を送る</button>
                     </div>
-                    <button class="filter-open-btn" onclick="openCustomAlert('フィルター機能：命式・年齢の絞り込み設定が可能です')">🔍 絞り込み</button>
-                </div>
-                <div id="card-wrapper"></div>
-                <div class="no-more-cards" id="no-cards-msg">
-                    <p>近くのお相手は全員チェック済みです！<br>また時間をおいてご確認ください。</p>
-                </div>
-            </section>
-
-            <!-- ② いいね！管理 -->
-            <section id="tab-likes" class="tab-content">
-                <div class="likes-container">
-                    <div class="likes-tabs">
-                        <button class="likes-tab-btn active" onclick="switchLikesTab(this, 'received')">自分にくれたいいね (12)</button>
-                        <button class="likes-tab-btn" onclick="switchLikesTab(this, 'sent')">送ったいいね</button>
-                    </div>
-                    <div class="likes-list-wrapper" id="likesListContainer">
-                        <div class="like-card-item">
-                            <div class="like-user-info">
-                                <div class="like-avatar">👩‍💼</div>
-                                <div>
-                                    <div class="like-name">美咲 (27)</div>
-                                    <div class="like-sub">✨ 命式相性 95%</div>
-                                </div>
-                            </div>
-                            <button class="match-back-btn" onclick="openChatRoom('美咲', '👩‍💼')">マッチ返し</button>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ③ 占いセンター -->
-            <section id="tab-fortune" class="tab-content">
-                <div class="fortune-menu-header">
-                    <div class="fortune-menu-title">🔮 Lino 運命・占いセンター</div>
-                    <div class="fortune-menu-sub">四柱推命・タロット・陰陽五行・AI人相から導く本格診断</div>
-                </div>
-                <div class="fortune-grid">
-                    <div class="fortune-card-item" onclick="openFortuneDetail('tarot')">
-                        <div class="fortune-icon-box">🃏</div>
-                        <div class="fortune-info-box">
-                            <h4>運命のLinoタロット占い</h4>
-                            <p>3枚のカードから直感で1枚を選択。今のあなたの恋愛運と出会いをカードが示す。</p>
-                        </div>
-                    </div>
-                    <div class="fortune-card-item" onclick="openFortuneDetail('biorhythm')">
-                        <div class="fortune-icon-box">☯️</div>
-                        <div class="fortune-info-box">
-                            <h4>本日の運勢・陰陽バイオリズム</h4>
-                            <p>今日の日干（甲）と五行エネルギーの巡りから、幸運の行動をアドバイス。</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ④ チャット -->
-            <section id="tab-messages" class="tab-content">
-                <div class="chat-list-wrapper">
-                    <div class="chat-room-item" onclick="openChatRoom('美咲', '👩‍💼')">
-                        <div class="chat-room-avatar">👩‍💼</div>
-                        <div class="chat-room-info">
-                            <div class="chat-room-name-row">
-                                <span class="chat-room-name">美咲</span>
-                                <span class="chat-room-time">12:30</span>
-                            </div>
-                            <div class="chat-room-lastmsg">よろしくお願いします！お酒好きなんですね✨</div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- ⑤ マイページ (指定された全セクション完備版) -->
-            <section id="tab-mypage" class="tab-content">
-                <div class="mypage-wrapper" id="mypage-container">
-                    
-                    <!-- アイコン＆写真エリア（共通） -->
-                    <div class="mypage-photo-preview-section">
-                        <div class="main-avatar-preview-box">
-                            <div id="main-avatar-emoji" class="main-avatar-large">👨‍💼</div>
-                            <span class="main-avatar-badge">メインアイコン</span>
-                        </div>
-                        <div class="sub-photos-mini-grid" id="subPhotosMiniGrid"></div>
-                    </div>
-
-                    <!-- モード切り替えボタン（アイコンの下付近） -->
-                    <div class="mode-toggle-btn" id="modeToggleBtn" onclick="toggleEditMode(true)">✏️ 編集モードへ</div>
-
-                    <!-- ==================== 【ビューモード】 ==================== -->
-                    <div class="view-mode-section">
-                        
-                        <!-- 1. 占い結果 -->
-                        <div class="mypage-section-card">
-                            <h3 class="mypage-section-title">🔮 占い結果・命式分析</h3>
-                            <div class="meishiki-grid" style="margin-top:8px;">
-                                <div>日干: <strong id="v-nikkan">甲（大木）</strong></div>
-                                <div>ソウル: <strong id="v-soul">7</strong></div>
-                                <div>月柱: <strong id="v-getchuu">丙午</strong></div>
-                                <div>九星: <strong id="v-kyusei">一白水星</strong></div>
-                                <div>人相: <strong id="v-jinso">意志強相</strong></div>
-                            </div>
-                        </div>
-
-                        <!-- 2. 基礎情報 -->
-                        <div class="mypage-section-card">
-                            <h3 class="mypage-section-title">📋 基礎情報</h3>
-                            <div class="meishiki-grid" style="margin-top:8px;">
-                                <div>生まれ: <strong id="v-birth">1980年代</strong></div>
-                                <div>身長・体重: <strong id="v-body-size">175cm / 65kg</strong></div>
-                                <div>体格: <strong id="v-build">標準・引き締め</strong></div>
-                                <div>年収: <strong id="v-income">1,000万円〜1,500万円</strong></div>
-                                <div>居住地: <strong id="v-residence">東京都</strong></div>
-                            </div>
-                        </div>
-
-                        <!-- 3. 自己紹介文 -->
-                        <div class="mypage-section-card">
-                            <h3 class="mypage-section-title">✍️ 自己紹介文</h3>
-                            <p id="v-intro" class="mypage-text-body">初めまして！隠れ家的なお店や創作料理、ドライブやガレージライフを楽しんでいます。誠実な出逢いがあれば嬉しいです。よろしくお願いします。</p>
-                        </div>
-
-                        <!-- 4. 趣味のカード -->
-                        <div class="mypage-section-card">
-                            <h3 class="mypage-section-title">🎨 趣味のカード</h3>
-                            <div class="hobby-cards-grid">
-                                <span class="hobby-tag">🚗 ドライブ</span>
-                                <span class="hobby-tag">🍷 隠れ家ディナー</span>
-                                <span class="hobby-tag">☕ カフェ巡り</span>
-                                <span class="hobby-tag">📈 投資・チャート</span>
-                                <span class="hobby-tag">🎮 ゲーミング</span>
-                            </div>
-                        </div>
-
-                        <!-- 5. その他のプロフィール内容 -->
-                        <div class="mypage-section-card">
-                            <h3 class="mypage-section-title">📌 その他のプロフィール内容</h3>
-                            <div class="meishiki-grid" style="margin-top:8px;">
-                                <div>タバコ: <strong id="v-tabako">吸わない</strong></div>
-                                <div>お酒: <strong id="v-alcohol">たしなむ程度</strong></div>
-                                <div>休日: <strong id="v-holiday">土日・祝日</strong></div>
-                                <div>結婚歴: <strong id="v-marriage">未婚</strong></div>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- ==================== 【編集モード】 ==================== -->
-                    <div class="edit-mode-section">
-                        <div class="mypage-edit-container">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                                <h3 style="color: var(--text-gold);">⚙️ プロフィール編集</h3>
-                                <button style="background:none; border:none; color:var(--text-muted); cursor:pointer; font-size:12px;" onclick="toggleEditMode(false)">✕ キャンセル</button>
-                            </div>
-                            
-                            <div class="form-field-group">
-                                <label>プロフィール写真管理 (最大10枚 / 1枚目がアイコン)</label>
-                                <div class="photo-upload-grid" id="photoUploadGrid"></div>
-                            </div>
-
-                            <div class="form-field-group"><label>生まれ</label><input type="text" id="input-birth" value="1980年代"></div>
-                            <div class="form-field-group"><label>身長・体重</label><input type="text" id="input-body-size" value="175cm / 65kg"></div>
-                            <div class="form-field-group"><label>体格</label><input type="text" id="input-build" value="標準・引き締め"></div>
-                            <div class="form-field-group"><label>年収</label><input type="text" id="input-income" value="1,000万円〜1,500万円"></div>
-                            <div class="form-field-group"><label>居住地</label><input type="text" id="input-residence" value="東京都"></div>
-                            
-                            <div class="form-field-group">
-                                <label>自己紹介文</label>
-                                <textarea id="input-intro" style="width:100%; background:#050608; border:1px solid #222b3e; border-radius:10px; padding:10px; color:#fff; font-size:13px; height:80px;">初めまして！隠れ家的なお店や創作料理、ドライブやガレージライフを楽しんでいます。誠実な出逢いがあれば嬉しいです。よろしくお願いします。</textarea>
-                            </div>
-
-                            <div class="form-field-group"><label>その他の項目 (タバコ・お酒等)</label><input type="text" id="input-other" value="タバコ:吸わない / お酒:たしなむ程度"></div>
-
-                            <button class="button-save-profile" onclick="saveProfileData()">💾 保存する</button>
-                        </div>
-                    </div>
-
                 </div>
             </section>
         </main>
-
-        <!-- モーダル・アラート群 -->
-        <div class="chat-room-modal" id="chatModal">
-            <div class="chat-modal-header">
-                <button class="chat-back-btn" onclick="closeChatRoom()">←</button>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span id="chatModalAvatar" style="font-size: 24px;">👩‍💼</span>
-                    <span id="chatModalName" style="font-size: 15px; font-weight: bold;">美咲</span>
-                </div>
-            </div>
-            <div class="chat-modal-body" id="chatModalBody">
-                <div class="chat-bubble incoming">マッチング成立ありがとうございます！よろしくお願いします✨</div>
-            </div>
-            <div class="chat-input-footer">
-                <input type="text" class="chat-input-box" id="chatInputText" placeholder="メッセージを入力...">
-                <button class="chat-send-btn" onclick="sendChatMessage()">💬</button>
-            </div>
-        </div>
-
-        <div class="fortune-result-modal" id="fortuneModal">
-            <div class="fortune-result-header">
-                <div class="fortune-result-title" id="modalTitle">占い結果</div>
-                <button class="close-modal-btn" onclick="closeFortuneDetail()">×</button>
-            </div>
-            <div id="modalBody"></div>
-        </div>
-
-        <div class="alert-modal-overlay" id="customAlertOverlay">
-            <div class="alert-modal-content">
-                <div class="alert-domain">lino-matching.app</div>
-                <div class="alert-message-text" id="customAlertMessage">アラートメッセージ</div>
-                <button class="alert-confirm-btn" onclick="closeCustomAlert()">OK</button>
-            </div>
-        </div>
-
-        <app-bottom-nav class="app-bottom-nav">
-            <button class="nav-button active" onclick="switchTab('search', this)"><span class="nav-icon-text">🔍</span><span>さがす</span></button>
-            <button class="nav-button" onclick="switchTab('likes', this)"><span class="nav-icon-text">✨</span><span>いいね！</span></button>
-            <div class="nav-center-button" onclick="switchTab('fortune', this)"><span>Lino</span></div>
-            <button class="nav-button" onclick="switchTab('messages', this)"><span class="nav-icon-text">💬</span><span>メッセージ</span></button>
-            <button class="nav-button" onclick="switchTab('mypage', this)"><span class="nav-icon-text">👤</span><span>マイページ</span></button>
-        </app-bottom-nav>
     </div>
-
-    <script src="matching.js"></script>
-    <script src="fortune.js"></script>
-    <script src="chat.js"></script>
-    <script src="app.js"></script>
+    <script>
+        // 基本操作ロジック
+        function openCustomAlert(msg) { alert(msg); }
+        // ここに将来的にカードスワイプや占い詳細のJSロジックを追加・更新していく
+    </script>
 </body>
 </html>
