@@ -1,1159 +1,1205 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Lino - 命式・AI人相占いマッチング</title>
-  <!-- 筆記体用フォントの読み込み -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
-
-  <style>
-    /* ==========================================
-       1. カラー・基本CSS定義
-       ========================================== */
-    :root {
-      --bg-black: #050608;
-      --bg-container: #0a0c10;
-      --card-dark: #0f131c;
-      --card-border: #1a202c;
-      --purple-bg: #2e1a47;
-      --purple-border: #4a2d73;
-      --mint: #00e6a8;
-      --gold-start: #e2b740;
-      --gold-end: #c49619;
-      --gold-gradient: linear-gradient(135deg, var(--gold-start) 0%, var(--gold-end) 100%);
-      --text-white: #ffffff;
-      --text-muted: #8c93a4;
-      --text-gold: #ffca28;
-      --alert-bg: #1e222d;
-      --alert-btn: #8ab4f8;
-      --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      --font-cursive: 'Caveat', cursive, 'Georgia', serif;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: var(--font-base);
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    html, body {
-      width: 100%;
-      height: 100%;
-      background-color: #000000;
-      color: var(--text-white);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-    }
-
-    .app-frame {
-      width: 100%;
-      max-width: 414px;
-      height: 100%;
-      max-height: 844px;
-      background-color: var(--bg-container);
-      border-radius: 40px;
-      position: relative;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
-      border: 1px solid #1a1f2c;
-    }
-
-    /* Header */
-    .app-header {
-      width: 100%;
-      height: 64px;
-      padding: 0 20px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background-color: var(--bg-container);
-      z-index: 100;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    }
-
-    .brand-logo {
-      font-family: var(--font-cursive);
-      font-size: 38px;
-      font-weight: 700;
-      background: var(--gold-gradient);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 0.5px;
-      line-height: 1;
-    }
-
-    .bell-icon {
-      font-size: 20px;
-      color: var(--text-gold);
-      cursor: pointer;
-    }
-
-    /* Main Area */
-    .app-main {
-      flex: 1;
-      padding: 16px;
-      overflow-y: auto;
-      position: relative;
-    }
-
-    .app-main::-webkit-scrollbar {
-      display: none;
-    }
-
-    .tab-content {
-      display: none;
-      width: 100%;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    /* ==========================================
-       2. タブ1: さがす（マッチング・100人連続カード）
-       ========================================== */
-    .odekake-container {
-      background-color: #0e111a;
-      border-radius: 20px;
-      padding: 16px;
-      margin-bottom: 16px;
-      border: 1px solid var(--card-border);
-    }
-
-    .odekake-header {
-      font-size: 13px;
-      color: var(--text-white);
-      font-weight: bold;
-      margin-bottom: 12px;
-    }
-
-    .odekake-tags-wrapper {
-      display: flex;
-      gap: 10px;
-    }
-
-    .odekake-tag {
-      background-color: #102620;
-      border: 1px solid #164235;
-      color: var(--mint);
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .odekake-tag.disabled {
-      background-color: #141722;
-      border-color: #1e2434;
-      color: var(--text-muted);
-    }
-
-    .match-card {
-      background: linear-gradient(180deg, #09221a 0%, #0c1017 50%, #101420 100%);
-      border-radius: 28px;
-      border: 1px solid #153b2f;
-      overflow: hidden;
-      position: relative;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
-      transition: transform 0.35s ease, opacity 0.35s ease;
-    }
-
-    .match-badge-container { padding: 14px 16px 0; }
-    .match-badge {
-      display: inline-flex;
-      background: rgba(0, 0, 0, 0.45);
-      color: #ffc107;
-      font-size: 12px;
-      font-weight: bold;
-      padding: 6px 12px;
-      border-radius: 12px;
-    }
-
-    .card-avatar-section { padding: 16px 0 8px; display: flex; justify-content: center; }
-    .avatar-inner {
-      width: 90px; height: 90px;
-      background-color: #202634; border-radius: 50%;
-      display: flex; justify-content: center; align-items: center;
-      font-size: 50px;
-    }
-
-    .card-info-section { padding: 12px 20px 20px; text-align: left; }
-    .user-name-text { font-size: 22px; font-weight: bold; color: var(--text-white); margin-bottom: 6px; }
-    .user-age-text { font-size: 15px; color: var(--text-muted); }
-
-    .fortune-detail-box {
-      background: rgba(255, 255, 255, 0.04);
-      border-radius: 14px;
-      padding: 12px;
-      margin: 12px 0;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .fortune-item {
-      font-size: 12px; color: #d1d5db; margin-bottom: 6px;
-      display: flex; justify-content: space-between;
-    }
-
-    .ai-judgment-text {
-      font-size: 12px; color: var(--mint); margin-bottom: 16px; font-weight: 500;
-    }
-
-    .button-like-submit {
-      width: 100%; padding: 15px; border: none; border-radius: 30px;
-      background: var(--gold-gradient); color: #000; font-size: 15px; font-weight: bold; cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .button-like-submit.disabled {
-      background: #2a2e39 !important;
-      color: #666e80 !important;
-      cursor: not-allowed;
-    }
-
-    .no-more-cards { display: none; text-align: center; padding: 80px 20px; color: var(--text-muted); }
-
-    /* ==========================================
-       3. 中央Linoボタン専用：占い・診断一覧ページ
-       ========================================== */
-    .fortune-menu-header {
-      background: linear-gradient(135deg, #1e1030 0%, #0d1322 100%);
-      border: 1px solid var(--purple-border);
-      border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .fortune-menu-title {
-      font-size: 20px;
-      font-weight: bold;
-      color: var(--text-gold);
-      margin-bottom: 6px;
-    }
-
-    .fortune-menu-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .fortune-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-    }
-
-    .fortune-card-item {
-      background-color: var(--card-dark);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      cursor: pointer;
-      transition: transform 0.2s, border-color 0.2s;
-    }
-
-    .fortune-card-item:active {
-      transform: scale(0.98);
-      border-color: var(--gold-start);
-    }
-
-    .fortune-icon-box {
-      width: 48px;
-      height: 48px;
-      border-radius: 12px;
-      background: rgba(226, 183, 64, 0.1);
-      border: 1px solid rgba(226, 183, 64, 0.3);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 24px;
-      flex-shrink: 0;
-    }
-
-    .fortune-info-box h4 {
-      font-size: 15px;
-      color: var(--text-white);
-      margin-bottom: 4px;
-    }
-
-    .fortune-info-box p {
-      font-size: 11px;
-      color: var(--text-muted);
-      line-height: 1.4;
-    }
-
-    /* 占い詳細画面モーダル（フレーム内収まり修正版） */
-    .fortune-result-modal {
-      position: absolute;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background-color: rgba(5, 6, 8, 0.98);
-      z-index: 500;
-      display: none;
-      flex-direction: column;
-      overflow-y: auto;
-      padding: 20px;
-    }
-
-    .fortune-result-header {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding-bottom: 12px;
-    }
-
-    .fortune-result-title {
-      font-size: 18px; font-weight: bold; color: var(--text-gold);
-    }
-
-    .close-modal-btn {
-      background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;
-    }
-
-    /* タロット選択インタラクションUI */
-    .tarot-interactive-area {
-      text-align: center;
-      margin: 16px 0;
-    }
-
-    .tarot-cards-container {
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      margin: 20px 0;
-      perspective: 1000px;
-    }
-
-    .tarot-card-wrapper {
-      width: 80px;
-      height: 130px;
-      cursor: pointer;
-      perspective: 1000px;
-    }
-
-    .tarot-card-inner {
-      width: 100%; height: 100%;
-      position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.8s ease;
-    }
-
-    .tarot-card-inner.flipped {
-      transform: rotateY(180deg);
-    }
-
-    .tarot-card-front, .tarot-card-back {
-      position: absolute;
-      width: 100%; height: 100%;
-      backface-visibility: hidden;
-      border-radius: 12px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-
-    .tarot-card-back {
-      background: linear-gradient(135deg, #2b1055 0%, #7597de 100%);
-      border: 2px solid var(--gold-start);
-      font-size: 24px;
-    }
-
-    .tarot-card-front {
-      background: #192233;
-      border: 2px solid var(--mint);
-      transform: rotateY(180deg);
-      flex-direction: column;
-      padding: 8px;
-      text-align: center;
-    }
-
-    .tarot-card-front .tarot-icon { font-size: 28px; margin-bottom: 4px; }
-    .tarot-card-front .tarot-name { font-size: 10px; font-weight: bold; color: var(--text-gold); }
-
-    .fortune-result-card {
-      background: #0f131c; border: 1px solid var(--purple-border);
-      border-radius: 20px; padding: 18px; margin-bottom: 20px;
-      display: none; /* タロットめくり後に表示 */
-    }
-
-    .fortune-score-badge {
-      font-size: 24px; font-weight: bold; color: var(--mint); text-align: center; margin: 6px 0 12px;
-    }
-
-    .fortune-desc-text {
-      font-size: 12.5px; color: #d1d5db; line-height: 1.6; margin-bottom: 12px;
-    }
-
-    /* 相性の良いおすすめ相手セクション */
-    .recommend-section-title {
-      font-size: 14px; font-weight: bold; color: var(--text-gold); margin-bottom: 12px;
-      display: flex; align-items: center; gap: 6px;
-    }
-
-    .recommend-list {
-      display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;
-    }
-
-    .recommend-item {
-      background: #141926; border: 1px solid #222b3e; border-radius: 16px; padding: 12px;
-      display: flex; justify-content: space-between; align-items: center;
-    }
-
-    .recommend-user-info { display: flex; align-items: center; gap: 10px; }
-    .recommend-avatar { font-size: 28px; }
-    .recommend-name { font-size: 13px; font-weight: bold; }
-    .recommend-match { font-size: 10.5px; color: var(--mint); margin-top: 2px; }
-
-    .btn-small-like {
-      background: var(--gold-gradient); color: #000; border: none;
-      padding: 6px 12px; border-radius: 14px; font-size: 11px; font-weight: bold; cursor: pointer;
-    }
-
-    .btn-small-like.disabled {
-      background: #2a2e39 !important;
-      color: #666e80 !important;
-      cursor: not-allowed;
-    }
-
-    /* ==========================================
-       4. タブ: マイページ（詳細プロフ＆コメント拡張）
-       ========================================== */
-    .mypage-card-meishiki {
-      background: linear-gradient(135deg, var(--purple-bg) 0%, #1e1030 100%);
-      border-radius: 20px; padding: 18px; margin-bottom: 16px;
-      border: 1px solid var(--purple-border);
-    }
-
-    .meishiki-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
-      background: rgba(0, 0, 0, 0.25); padding: 12px; border-radius: 12px;
-      font-size: 12px; color: #d8c8ed;
-    }
-
-    .mypage-edit-container {
-      background-color: var(--card-dark); border-radius: 20px; padding: 18px;
-      border: 1px solid var(--card-border);
-    }
-
-    .form-section-title {
-      font-size: 12px; color: var(--mint); margin: 16px 0 8px;
-      padding-bottom: 4px; border-bottom: 1px solid rgba(0, 230, 168, 0.2);
-    }
-
-    .form-field-group { margin-bottom: 12px; }
-    .form-field-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
-    .form-field-group input, .form-field-group select, .form-field-group textarea {
-      width: 100%; padding: 10px 12px; border-radius: 10px;
-      border: 1px solid #252c3d; background-color: #06080c; color: var(--text-white); font-size: 13px;
-    }
-
-    .form-field-group textarea {
-      height: 80px; resize: none; line-height: 1.5;
-    }
-
-    .file-upload-btn {
-      display: block; width: 100%; padding: 10px; background: #1a2233;
-      border: 1px dashed #3a4763; border-radius: 10px; text-align: center;
-      color: #a0aabf; font-size: 12px; cursor: pointer;
-    }
-
-    .button-save-profile {
-      width: 100%; padding: 14px; border: none; border-radius: 10px;
-      background-color: #198754; color: var(--text-white); font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 16px;
-    }
-
-    .tab-placeholder { text-align: center; padding: 80px 20px; color: var(--text-muted); }
-
-    /* モーダル */
-    .alert-modal-overlay {
-      display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.65); z-index: 9999; justify-content: center; align-items: flex-start; padding-top: 50px;
-    }
-
-    .alert-modal-content {
-      background-color: var(--alert-bg); border-radius: 20px; width: 86%; padding: 20px;
-      border: 1px solid #2d3446;
-    }
-
-    .alert-domain { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; font-family: monospace; }
-    .alert-message-text { font-size: 14px; color: var(--text-white); margin-bottom: 20px; font-weight: 500; }
-    .alert-confirm-btn {
-      background-color: var(--alert-btn); color: #101216; border: none; padding: 8px 22px;
-      border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; float: right;
-    }
-
-    /* ナビゲーションバー */
-    .app-bottom-nav {
-      height: 72px; background-color: var(--bg-container); border-top: 1px solid rgba(255, 255, 255, 0.05);
-      display: flex; justify-content: space-around; align-items: center; position: relative; padding-bottom: 6px;
-    }
-
-    .nav-button {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      width: 20%; background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; gap: 3px;
-    }
-
-    .nav-button.active { color: var(--mint); }
-    .nav-icon-text { font-size: 20px; }
-
-    .nav-center-button {
-      width: 58px; height: 58px; border-radius: 50%; background: var(--gold-gradient);
-      display: flex; justify-content: center; align-items: center; margin-top: -28px;
-      box-shadow: 0 0 18px rgba(226, 183, 64, 0.4); border: 4px solid var(--bg-container); cursor: pointer;
-    }
-
-    .nav-center-button span {
-      font-family: var(--font-cursive); font-weight: 700; color: #000; font-size: 22px; line-height: 1;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Lino - 命式・AI人相占いマッチング</title>
+<!-- 筆記体用フォントの読み込み -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================
+1. カラー・基本CSS定義
+========================================== */
+:root {
+  --bg-black: #050608;
+  --bg-container: #0a0c10;
+  --card-dark: #0f131c;
+  --card-border: #1a202c;
+  --purple-bg: #2e1a47;
+  --purple-border: #4a2d73;
+  --mint: #00e6a8;
+  --gold-start: #e2b740;
+  --gold-end: #c49619;
+  --gold-gradient: linear-gradient(135deg, var(--gold-start) 0%, var(--gold-end) 100%);
+  --text-white: #ffffff;
+  --text-muted: #8c93a4;
+  --text-gold: #ffca28;
+  --alert-bg: #1e222d;
+  --alert-btn: #8ab4f8;
+  --font-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-cursive: 'Caveat', cursive, 'Georgia', serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: #000000;
+  color: var(--text-white);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.app-frame {
+  width: 100%;
+  max-width: 414px;
+  height: 100%;
+  max-height: 844px;
+  background-color: var(--bg-container);
+  border-radius: 40px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
+  border: 1px solid #1a1f2c;
+}
+
+/* Header */
+.app-header {
+  width: 100%;
+  height: 64px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--bg-container);
+  z-index: 100;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.brand-logo {
+  font-family: var(--font-cursive);
+  font-size: 38px;
+  font-weight: 700;
+  background: var(--gold-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.bell-icon {
+  font-size: 20px;
+  color: var(--text-gold);
+  cursor: pointer;
+}
+
+/* Main Area */
+.app-main {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  position: relative;
+}
+
+.app-main::-webkit-scrollbar {
+  display: none;
+}
+
+.tab-content {
+  display: none;
+  width: 100%;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+/* ==========================================
+2. タブ1: さがす（マッチング・100人連続カード）
+========================================== */
+.odekake-container {
+  background-color: #0e111a;
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
+  border: 1px solid var(--card-border);
+}
+
+.odekake-header {
+  font-size: 13px;
+  color: var(--text-white);
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.odekake-tags-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.odekake-tag {
+  background-color: #102620;
+  border: 1px solid #164235;
+  color: var(--mint);
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.odekake-tag.disabled {
+  background-color: #141722;
+  border-color: #1e2434;
+  color: var(--text-muted);
+}
+
+.match-card {
+  background: linear-gradient(180deg, #09221a 0%, #0c1017 50%, #101420 100%);
+  border-radius: 28px;
+  border: 1px solid #153b2f;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  transition: transform 0.35s ease, opacity 0.35s ease;
+}
+
+.match-badge-container { padding: 14px 16px 0; }
+.match-badge {
+  display: inline-flex;
+  background: rgba(0, 0, 0, 0.45);
+  color: #ffc107;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 12px;
+}
+
+.card-avatar-section { padding: 16px 0 8px; display: flex; justify-content: center; }
+.avatar-inner {
+  width: 90px; height: 90px;
+  background-color: #202634; border-radius: 50%;
+  display: flex; justify-content: center; align-items: center;
+  font-size: 50px;
+}
+
+.card-info-section { padding: 12px 20px 20px; text-align: left; }
+.user-name-text { font-size: 22px; font-weight: bold; color: var(--text-white); margin-bottom: 6px; }
+.user-age-text { font-size: 15px; color: var(--text-muted); }
+
+.fortune-detail-box {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  padding: 12px;
+  margin: 12px 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.fortune-item {
+  font-size: 12px; color: #d1d5db; margin-bottom: 6px;
+  display: flex; justify-content: space-between;
+}
+
+.ai-judgment-text {
+  font-size: 12px; color: var(--mint); margin-bottom: 16px; font-weight: 500;
+}
+
+.button-like-submit {
+  width: 100%; padding: 15px; border: none; border-radius: 30px;
+  background: var(--gold-gradient); color: #000; font-size: 15px; font-weight: bold; cursor: pointer;
+  transition: background 0.3s;
+}
+
+.button-like-submit.disabled {
+  background: #2a2e39 !important;
+  color: #666e80 !important;
+  cursor: not-allowed;
+}
+
+.no-more-cards { display: none; text-align: center; padding: 80px 20px; color: var(--text-muted); }
+
+/* ==========================================
+3. 中央Linoボタン専用：占い・診断一覧ページ
+========================================== */
+.fortune-menu-header {
+  background: linear-gradient(135deg, #1e1030 0%, #0d1322 100%);
+  border: 1px solid var(--purple-border);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.fortune-menu-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: var(--text-gold);
+  margin-bottom: 6px;
+}
+
+.fortune-menu-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.fortune-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+.fortune-card-item {
+  background-color: var(--card-dark);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.fortune-card-item:active {
+  transform: scale(0.98);
+  border-color: var(--gold-start);
+}
+
+.fortune-icon-box {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(226, 183, 64, 0.1);
+  border: 1px solid rgba(226, 183, 64, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.fortune-info-box h4 {
+  font-size: 15px;
+  color: var(--text-white);
+  margin-bottom: 4px;
+}
+
+.fortune-info-box p {
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* 占い詳細画面モーダル */
+.fortune-result-modal {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(5, 6, 8, 0.98);
+  z-index: 500;
+  display: none;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.fortune-result-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+
+.fortune-result-title {
+  font-size: 18px; font-weight: bold; color: var(--text-gold);
+}
+
+.close-modal-btn {
+  background: none; border: none; color: #fff; font-size: 24px; cursor: pointer;
+}
+
+/* タロット選択UI */
+.tarot-interactive-area { text-align: center; margin: 16px 0; }
+.tarot-cards-container { display: flex; justify-content: center; gap: 12px; margin: 20px 0; perspective: 1000px; }
+.tarot-card-wrapper { width: 80px; height: 130px; cursor: pointer; perspective: 1000px; }
+.tarot-card-inner { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.8s ease; }
+.tarot-card-inner.flipped { transform: rotateY(180deg); }
+.tarot-card-front, .tarot-card-back {
+  position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px;
+  display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+}
+.tarot-card-back { background: linear-gradient(135deg, #2b1055 0%, #7597de 100%); border: 2px solid var(--gold-start); font-size: 24px; }
+.tarot-card-front { background: #192233; border: 2px solid var(--mint); transform: rotateY(180deg); flex-direction: column; padding: 8px; text-align: center; }
+.tarot-card-front .tarot-icon { font-size: 28px; margin-bottom: 4px; }
+.tarot-card-front .tarot-name { font-size: 10px; font-weight: bold; color: var(--text-gold); }
+
+.fortune-result-card {
+  background: #0f131c; border: 1px solid var(--purple-border);
+  border-radius: 20px; padding: 18px; margin-bottom: 20px;
+  display: none;
+}
+
+.fortune-score-badge { font-size: 24px; font-weight: bold; color: var(--mint); text-align: center; margin: 6px 0 12px; }
+.fortune-desc-text { font-size: 12.5px; color: #d1d5db; line-height: 1.6; margin-bottom: 12px; }
+
+.recommend-section-title { font-size: 14px; font-weight: bold; color: var(--text-gold); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.recommend-list { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.recommend-item { background: #141926; border: 1px solid #222b3e; border-radius: 16px; padding: 12px; display: flex; justify-content: space-between; align-items: center; }
+.recommend-user-info { display: flex; align-items: center; gap: 10px; }
+.recommend-avatar { font-size: 28px; }
+.recommend-name { font-size: 13px; font-weight: bold; }
+.recommend-match { font-size: 10.5px; color: var(--mint); margin-top: 2px; }
+.btn-small-like { background: var(--gold-gradient); color: #000; border: none; padding: 6px 12px; border-radius: 14px; font-size: 11px; font-weight: bold; cursor: pointer; }
+.btn-small-like.disabled { background: #2a2e39 !important; color: #666e80 !important; cursor: not-allowed; }
+
+/* ==========================================
+4. タブ: マイページ（詳細プロフ＆趣味カード追加版）
+========================================== */
+.mypage-card-meishiki {
+  background: linear-gradient(135deg, var(--purple-bg) 0%, #1e1030 100%);
+  border-radius: 20px; padding: 18px; margin-bottom: 16px;
+  border: 1px solid var(--purple-border);
+}
+
+.meishiki-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  background: rgba(0, 0, 0, 0.25); padding: 12px; border-radius: 12px;
+  font-size: 12px; color: #d8c8ed;
+}
+
+.mypage-details-preview {
+  background: #0f131c; border-radius: 16px; padding: 14px; margin-top: 12px; border: 1px solid #1f2738;
+}
+.preview-title { font-size: 12px; color: var(--text-gold); font-weight: bold; margin-bottom: 8px; }
+.preview-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11.5px; color: #a0aabf; }
+
+.selected-tags-display {
+  display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;
+}
+.hobby-tag-chip {
+  background: rgba(0, 230, 168, 0.12); border: 1px solid var(--mint); color: var(--mint);
+  font-size: 11px; padding: 4px 10px; border-radius: 12px; display: inline-flex; align-items: center; gap: 4px;
+}
+
+.mypage-edit-container {
+  background-color: var(--card-dark); border-radius: 20px; padding: 18px;
+  border: 1px solid var(--card-border);
+}
+
+.form-section-title {
+  font-size: 12px; color: var(--mint); margin: 18px 0 10px;
+  padding-bottom: 4px; border-bottom: 1px solid rgba(0, 230, 168, 0.2); font-weight: bold;
+}
+
+.form-field-group { margin-bottom: 12px; }
+.form-field-group label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+.form-field-group input, .form-field-group select, .form-field-group textarea {
+  width: 100%; padding: 10px 12px; border-radius: 10px;
+  border: 1px solid #252c3d; background-color: #06080c; color: var(--text-white); font-size: 13px;
+}
+
+.form-field-group textarea { height: 80px; resize: none; line-height: 1.5; }
+
+.hobby-category-title {
+  font-size: 11px; color: var(--text-gold); font-weight: bold; margin: 10px 0 6px;
+}
+
+.hobby-selector-grid {
+  display: flex; flex-wrap: wrap; gap: 6px; max-height: 250px; overflow-y: auto;
+  padding: 8px; background: #06080c; border: 1px solid #252c3d; border-radius: 10px;
+}
+
+.hobby-choice-btn {
+  background: #141926; border: 1px solid #222b3e; color: #a0aabf;
+  font-size: 11px; padding: 5px 10px; border-radius: 14px; cursor: pointer; user-select: none;
+}
+
+.hobby-choice-btn.selected {
+  background: var(--purple-bg); border-color: var(--gold-start); color: #fff; font-weight: bold;
+}
+
+.button-save-profile {
+  width: 100%; padding: 14px; border: none; border-radius: 10px;
+  background-color: #198754; color: var(--text-white); font-size: 14px; font-weight: bold; cursor: pointer; margin-top: 20px;
+}
+
+.tab-placeholder { text-align: center; padding: 80px 20px; color: var(--text-muted); }
+
+/* モーダル */
+.alert-modal-overlay {
+  display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.65); z-index: 9999; justify-content: center; align-items: flex-start; padding-top: 50px;
+}
+
+.alert-modal-content {
+  background-color: var(--alert-bg); border-radius: 20px; width: 86%; padding: 20px;
+  border: 1px solid #2d3446;
+}
+
+.alert-domain { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; font-family: monospace; }
+.alert-message-text { font-size: 14px; color: var(--text-white); margin-bottom: 20px; font-weight: 500; }
+
+.alert-confirm-btn {
+  background-color: var(--alert-btn); color: #101216; border: none; padding: 8px 22px;
+  border-radius: 20px; font-size: 13px; font-weight: bold; cursor: pointer; float: right;
+}
+
+/* ナビゲーションバー */
+.app-bottom-nav {
+  height: 72px; background-color: var(--bg-container); border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex; justify-content: space-around; align-items: center; position: relative; padding-bottom: 6px;
+}
+
+.nav-button {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  width: 20%; background: none; border: none; color: var(--text-muted); font-size: 10px; cursor: pointer; gap: 3px;
+}
+
+.nav-button.active { color: var(--mint); }
+.nav-icon-text { font-size: 20px; }
+
+.nav-center-button {
+  width: 58px; height: 58px; border-radius: 50%; background: var(--gold-gradient);
+  display: flex; justify-content: center; align-items: center; margin-top: -28px;
+  box-shadow: 0 0 18px rgba(226, 183, 64, 0.4); border: 4px solid var(--bg-container); cursor: pointer;
+}
+
+.nav-center-button span {
+  font-family: var(--font-cursive); font-weight: 700; color: #000; font-size: 22px; line-height: 1;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="app-frame">
+<div class="app-frame">
+  <header class="app-header">
+    <div class="brand-logo">Lino</div>
+    <div class="bell-icon">🔔</div>
+  </header>
 
-    <header class="app-header">
-      <div class="brand-logo">Lino</div>
-      <div class="bell-icon">🔔</div>
-    </header>
-
-    <main class="app-main">
-
-      <!-- ① さがす（マッチング・100人連続カード） -->
-      <section id="tab-search" class="tab-content active">
-        <div class="odekake-container">
-          <div class="odekake-header">📍 今日の運命のおでかけ</div>
-          <div class="odekake-tags-wrapper">
-            <div class="odekake-tag">今夜サクッと飲み 🍻</div>
-            <div class="odekake-tag disabled">週末カフェ巡り ☕</div>
-          </div>
+  <main class="app-main">
+    <!-- ① さがす（マッチング・100人連続カード） -->
+    <section id="tab-search" class="tab-content active">
+      <div class="odekake-container">
+        <div class="odekake-header">📍 今日の運命のおでかけ</div>
+        <div class="odekake-tags-wrapper">
+          <div class="odekake-tag">今夜サクッと飲み 🍻</div>
+          <div class="odekake-tag disabled">週末カフェ巡り ☕</div>
         </div>
-
-        <div id="card-wrapper">
-          <!-- JSで動的にカードが100人分入れ替わります -->
-        </div>
-
-        <div class="no-more-cards" id="no-cards-msg">
-          <p>近くのお相手は全員チェック済みです！<br>また時間をおいてご確認ください。</p>
-        </div>
-      </section>
-
-      <!-- ② いいね！ -->
-      <section id="tab-likes" class="tab-content">
-        <div class="tab-placeholder">
-          <h3>いいね！一覧</h3>
-          <p>送ったいいね・届いたいいねを管理できます。</p>
-        </div>
-      </section>
-
-      <!-- ③ 中央Linoボタン専用：占い一覧・診断ページ -->
-      <section id="tab-fortune" class="tab-content">
-        <div class="fortune-menu-header">
-          <div class="fortune-menu-title">🔮 Lino 運命・占いセンター</div>
-          <div class="fortune-menu-sub">四柱推命・タロット・陰陽五行・AI人相から導く本格診断</div>
-        </div>
-
-        <div class="fortune-grid">
-          <!-- タロット追加 -->
-          <div class="fortune-card-item" onclick="openFortuneDetail('tarot')">
-            <div class="fortune-icon-box">🎴</div>
-            <div class="fortune-info-box">
-              <h4>運命のLinoタロット占い</h4>
-              <p>3枚のカードから直感で1枚を選択。今のあなたの恋愛運と出会いをカードが示す。</p>
-            </div>
-          </div>
-
-          <div class="fortune-card-item" onclick="openFortuneDetail('biorhythm')">
-            <div class="fortune-icon-box">☯️</div>
-            <div class="fortune-info-box">
-              <h4>本日の運勢・陰陽バイオリズム</h4>
-              <p>今日の日干（甲）と五行エネルギーの巡りから、幸運の行動をアドバイス。</p>
-            </div>
-          </div>
-
-          <div class="fortune-card-item" onclick="openFortuneDetail('compatibility')">
-            <div class="fortune-icon-box">📜</div>
-            <div class="fortune-info-box">
-              <h4>命式・四柱推命の相性鑑定</h4>
-              <p>互いの生年月日・時柱から引き寄せる深層レベルの相性を算出。</p>
-            </div>
-          </div>
-
-          <div class="fortune-card-item" onclick="openFortuneDetail('face')">
-            <div class="fortune-icon-box">👁️</div>
-            <div class="fortune-info-box">
-              <h4>AI人相・顔相リアルスキャン</h4>
-              <p>カメラ写真から目・眉・輪郭の配置を分析し、本質や誠実度を解明。</p>
-            </div>
-          </div>
-
-          <div class="fortune-card-item" onclick="openFortuneDetail('numerology')">
-            <div class="fortune-icon-box">🔢</div>
-            <div class="fortune-info-box">
-              <h4>ソウルナンバー＆九星気学</h4>
-              <p>生まれ持つ運命数「7」と九星から、相性の良いパートナー像を提示。</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- ④ メッセージ -->
-      <section id="tab-messages" class="tab-content">
-        <div class="tab-placeholder">
-          <h3>メッセージ</h3>
-          <p>マッチングしたお相手とのチャットルームです。</p>
-        </div>
-      </section>
-
-      <!-- ⑤ マイページ -->
-      <section id="tab-mypage" class="tab-content">
-        <div class="mypage-card-meishiki">
-          <h2><span id="display-user-name">秀広</span> さんの占い・命式分析</h2>
-          <div class="meishiki-grid">
-            <div>日干: <strong id="display-user-nikkan">甲（大木）</strong></div>
-            <div>ソウル: <strong id="display-user-soul">7</strong></div>
-            <div>月柱: <strong id="display-user-getchu">丙午</strong></div>
-            <div>九星: <strong id="display-user-kyusei">一白水星</strong></div>
-            <div>出生地: <strong id="display-user-birthplace">宮城県</strong></div>
-            <div>人相: <strong id="display-user-face">意志強相</strong></div>
-          </div>
-        </div>
-
-        <div class="mypage-edit-container">
-          <h3>⚙️ 命式 ＆ 詳細プロフィール編集</h3>
-          
-          <div class="form-section-title">基本プロフィール</div>
-          <div class="form-field-group">
-            <label>お名前</label>
-            <input type="text" id="input-name" value="秀広">
-          </div>
-
-          <div class="form-field-group">
-            <label>性別</label>
-            <select id="input-gender">
-              <option value="男性" selected>男性</option>
-              <option value="女性">女性</option>
-            </select>
-          </div>
-
-          <div class="form-field-group">
-            <label>自己紹介コメント（アピール文）</label>
-            <textarea id="input-bio" placeholder="自分の趣味や休日の過ごし方、好きなタイプなどを入力してください。">はじめまして！ご覧いただきありがとうございます。普段は仕事に打ち込みつつ、休日はドライブやグルメ巡りを楽しんでいます。お互いに居心地の良い関係を築ける方と出会えたら嬉しいです。</textarea>
-          </div>
-
-          <div class="form-section-title">詳細プロフィール設定</div>
-          <div class="form-field-group">
-            <label>職業・職種</label>
-            <input type="text" id="input-job" value="M&Aコンサルタント / 経営アドバイザー">
-          </div>
-
-          <div class="form-field-group">
-            <label>年収</label>
-            <select id="input-income">
-              <option value="400万円〜600万円">400万円〜600万円</option>
-              <option value="600万円〜800万円">600万円〜800万円</option>
-              <option value="800万円〜1000万円">800万円〜1000万円</option>
-              <option value="1000万円〜1500万円" selected>1000万円〜1500万円</option>
-              <option value="1500万円以上">1500万円以上</option>
-            </select>
-          </div>
-
-          <div class="form-field-group">
-            <label>身長 (cm)</label>
-            <input type="number" id="input-height" value="178">
-          </div>
-
-          <div class="form-field-group">
-            <label>体型</label>
-            <select id="input-body">
-              <option value="スリム">スリム</option>
-              <option value="やや細め">やや細め</option>
-              <option value="普通" selected>普通</option>
-              <option value="筋肉質">筋肉質</option>
-              <option value="がっちり">がっちり</option>
-            </select>
-          </div>
-
-          <div class="form-field-group">
-            <label>休日</label>
-            <select id="input-holiday">
-              <option value="土日休み" selected>土日休み</option>
-              <option value="平日休み">平日休み</option>
-              <option value="不定期">不定期</option>
-            </select>
-          </div>
-
-          <div class="form-field-group">
-            <label>タバコ</label>
-            <select id="input-smoke">
-              <option value="吸わない" selected>吸わない</option>
-              <option value="時々吸う">時々吸う</option>
-              <option value="吸う">吸う</option>
-            </select>
-          </div>
-
-          <div class="form-field-group">
-            <label>お酒</label>
-            <select id="input-drink">
-              <option value="飲まない">飲まない</option>
-              <option value="飲む（たしなむ程度）" selected>飲む（たしなむ程度）</option>
-              <option value="飲む（お酒好き）">飲む（お酒好き）</option>
-            </select>
-          </div>
-
-          <div class="form-section-title">東洋占い・四柱推命データ</div>
-          <div class="form-field-group">
-            <label>生年月日</label>
-            <input type="date" id="input-birthdate" value="1995-12-14">
-          </div>
-
-          <div class="form-field-group">
-            <label>出生時刻（※精度向上に必須）</label>
-            <input type="time" id="input-birthtime" value="08:30">
-          </div>
-
-          <div class="form-field-group">
-            <label>出生地（都道府県）</label>
-            <input type="text" id="input-birthplace" value="宮城県">
-          </div>
-
-          <div class="form-field-group">
-            <label>日干（五行属性）</label>
-            <input type="text" id="input-nikkan" value="甲（大木）">
-          </div>
-
-          <div class="form-field-group">
-            <label>月柱・蔵干</label>
-            <input type="text" id="input-getchu" value="丙午">
-          </div>
-
-          <div class="form-section-title">西洋・数秘術・九星気学</div>
-          <div class="form-field-group">
-            <label>ソウルナンバー</label>
-            <input type="number" id="input-soul" value="7">
-          </div>
-
-          <div class="form-field-group">
-            <label>九星気学</label>
-            <input type="text" id="input-kyusei" value="一白水星">
-          </div>
-
-          <div class="form-section-title">AI人相判定（写真データ解析）</div>
-          <div class="form-field-group">
-            <label>顔写真アップロード判定</label>
-            <label class="file-upload-btn">
-              📷 顔写真を解析・再ロード
-              <input type="file" id="input-face-file" accept="image/*" style="display:none;" onchange="onFileUploaded(this)">
-            </label>
-          </div>
-
-          <div class="form-field-group">
-            <label>AI人相診断タグ</label>
-            <input type="text" id="input-face-tag" value="意志強相（眉頭濃・眼光明）">
-          </div>
-
-          <button class="button-save-profile" onclick="onSaveFullProfile()">
-            全プロフィール＆占いデータを保存更新
-          </button>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- モーダル: 本格占い詳細 ＆ タロット体験 ＆ 相性おすすめ相手画面（フレーム内完全収まり版） -->
-    <div class="fortune-result-modal" id="fortune-detail-modal">
-      <div class="fortune-result-header">
-        <div class="fortune-result-title" id="fortune-modal-title">診断結果</div>
-        <button class="close-modal-btn" onclick="closeFortuneModal()">✕</button>
       </div>
 
-      <!-- タロット専用インタラクティブゾーン -->
-      <div class="tarot-interactive-area" id="tarot-interactive-zone" style="display:none;">
-        <p style="font-size: 12px; color: var(--text-gold);">✨ 直感でカードを1枚選んでタップしてください</p>
-        <div class="tarot-cards-container">
-          <div class="tarot-card-wrapper" onclick="pickTarotCard(this, 0)">
-            <div class="tarot-card-inner">
-              <div class="tarot-card-back">🔮</div>
-              <div class="tarot-card-front">
-                <div class="tarot-icon">☀️</div>
-                <div class="tarot-name">太陽 (The Sun)</div>
-              </div>
-            </div>
+      <div id="card-wrapper">
+        <!-- JSで動的にカードが100人分入れ替わります -->
+      </div>
+
+      <div class="no-more-cards" id="no-cards-msg">
+        <p>近くのお相手は全員チェック済みです！<br>また時間をおいてご確認ください。</p>
+      </div>
+    </section>
+
+    <!-- ② いいね！ -->
+    <section id="tab-likes" class="tab-content">
+      <div class="tab-placeholder">
+        <h3>いいね！一覧</h3>
+        <p>送ったいいね・届いたいいねを管理できます。</p>
+      </div>
+    </section>
+
+    <!-- ③ 中央Linoボタン専用：占い一覧・診断ページ -->
+    <section id="tab-fortune" class="tab-content">
+      <div class="fortune-menu-header">
+        <div class="fortune-menu-title">🔮 Lino 運命・占いセンター</div>
+        <div class="fortune-menu-sub">四柱推命・タロット・陰陽五行・AI人相から導く本格診断</div>
+      </div>
+
+      <div class="fortune-grid">
+        <div class="fortune-card-item" onclick="openFortuneDetail('tarot')">
+          <div class="fortune-icon-box">🎴</div>
+          <div class="fortune-info-box">
+            <h4>運命のLinoタロット占い</h4>
+            <p>3枚のカードから直感で1枚を選択。今のあなたの恋愛運と出会いをカードが示す。</p>
           </div>
-          <div class="tarot-card-wrapper" onclick="pickTarotCard(this, 1)">
-            <div class="tarot-card-inner">
-              <div class="tarot-card-back">🔮</div>
-              <div class="tarot-card-front">
-                <div class="tarot-icon">💖</div>
-                <div class="tarot-name">恋人 (The Lovers)</div>
-              </div>
-            </div>
+        </div>
+
+        <div class="fortune-card-item" onclick="openFortuneDetail('biorhythm')">
+          <div class="fortune-icon-box">☯️</div>
+          <div class="fortune-info-box">
+            <h4>本日の運勢・陰陽バイオリズム</h4>
+            <p>今日の日干（甲）と五行エネルギーの巡りから、幸運の行動をアドバイス。</p>
           </div>
-          <div class="tarot-card-wrapper" onclick="pickTarotCard(this, 2)">
-            <div class="tarot-card-inner">
-              <div class="tarot-card-back">🔮</div>
-              <div class="tarot-card-front">
-                <div class="tarot-icon">🌟</div>
-                <div class="tarot-name">星 (The Star)</div>
-              </div>
+        </div>
+
+        <div class="fortune-card-item" onclick="openFortuneDetail('compatibility')">
+          <div class="fortune-icon-box">📜</div>
+          <div class="fortune-info-box">
+            <h4>命式・四柱推命の相性鑑定</h4>
+            <p>互いの生年月日・時柱から引き寄せる深層レベルの相性を算出。</p>
+          </div>
+        </div>
+
+        <div class="fortune-card-item" onclick="openFortuneDetail('face')">
+          <div class="fortune-icon-box">👁️</div>
+          <div class="fortune-info-box">
+            <h4>AI人相・顔相リアルスキャン</h4>
+            <p>カメラ写真から目・眉・輪郭の配置を分析し、本質や誠実度を解明。</p>
+          </div>
+        </div>
+
+        <div class="fortune-card-item" onclick="openFortuneDetail('numerology')">
+          <div class="fortune-icon-box">🔢</div>
+          <div class="fortune-info-box">
+            <h4>ソウルナンバー＆九星気学</h4>
+            <p>生まれ持つ運命数「7」と九星から、相性の良いパートナー像を提示。</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ④ メッセージ -->
+    <section id="tab-messages" class="tab-content">
+      <div class="tab-placeholder">
+        <h3>メッセージ</h3>
+        <p>マッチングしたお相手とのチャットルームです。</p>
+      </div>
+    </section>
+
+    <!-- ⑤ マイページ（詳細プロフ＆趣味カード拡張） -->
+    <section id="tab-mypage" class="tab-content">
+      <div class="mypage-card-meishiki">
+        <h2><span id="display-user-name">秀広</span> さんの占い・命式分析</h2>
+        <div class="meishiki-grid" style="margin-top:10px;">
+          <div>日干: <strong id="display-user-nikkan">甲（大木）</strong></div>
+          <div>ソウル: <strong id="display-user-soul">7</strong></div>
+          <div>月柱: <strong id="display-user-getchu">丙午</strong></div>
+          <div>九星: <strong id="display-user-kyusei">一白水星</strong></div>
+          <div>居住地: <strong id="display-user-residence">東京都</strong></div>
+          <div>人相: <strong id="display-user-face">意志強相</strong></div>
+        </div>
+
+        <div class="mypage-details-preview">
+          <div class="preview-title">📋 プロフィール・属性概要</div>
+          <div class="preview-grid">
+            <div>年齢/性別: <span id="prev-age-gender">30歳 / 男性</span></div>
+            <div>出身地: <span id="prev-birthplace">宮城県</span></div>
+            <div>職業: <span id="prev-job">M&Aコンサルタント</span></div>
+            <div>年収: <span id="prev-income">1000万〜1500万</span></div>
+            <div>身長/体型: <span id="prev-body">178cm / 普通</span></div>
+            <div>休日: <span id="prev-holiday">土日休み</span></div>
+            <div>ペット: <span id="prev-pet">猫好き・飼っている</span></div>
+            <div>結婚意識: <span id="prev-marriage">良い人がいれば</span></div>
+          </div>
+          <div style="margin-top:10px;">
+            <div class="preview-title">🏷️ 選択中の趣味・価値観カード</div>
+            <div class="selected-tags-display" id="display-selected-hobbies">
+              <!-- JSで動的生成 -->
             </div>
           </div>
         </div>
       </div>
 
-      <div class="fortune-result-card" id="fortune-result-card-box">
-        <div class="fortune-score-badge" id="fortune-modal-score">相性度 95%</div>
-        <div class="fortune-desc-text" id="fortune-modal-desc">
-          鑑定ロジックに基づき、命式とエネルギーの巡りを完全解析しました。
+      <div class="mypage-edit-container">
+        <h3>⚙️ プロフィール ＆ 趣味カード設定</h3>
+
+        <div class="form-section-title">① 基本プロフィール</div>
+        <div class="form-field-group">
+          <label>お名前（本名）</label>
+          <input type="text" id="input-name" value="秀広">
+        </div>
+        <div class="form-field-group">
+          <label>ニックネーム（アプリ内表示）</label>
+          <input type="text" id="input-nickname" value="ひで">
+        </div>
+        <div class="form-field-group">
+          <label>性別</label>
+          <select id="input-gender">
+            <option value="男性" selected>男性</option>
+            <option value="女性">女性</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+        <div class="form-field-group">
+          <label>生年月日</label>
+          <input type="date" id="input-birthdate" value="1995-12-14">
+        </div>
+        <div class="form-field-group">
+          <label>居住地</label>
+          <input type="text" id="input-residence" value="東京都">
+        </div>
+        <div class="form-field-group">
+          <label>出身地</label>
+          <input type="text" id="input-birthplace" value="宮城県">
+        </div>
+        <div class="form-field-group">
+          <label>自己紹介文（Bio）</label>
+          <textarea id="input-bio" placeholder="趣味や休日の過ごし方、好きなタイプなどを入力してください。">はじめまして！ご覧いただきありがとうございます。普段は仕事に打ち込みつつ、休日はドライブやグルメ巡りを楽しんでいます。お互いに居心地の良い関係を築ける方と出会えたら嬉しいです。</textarea>
+        </div>
+
+        <div class="form-section-title">② 属性・スペック・詳細条件</div>
+        <div class="form-field-group">
+          <label>職業・職種</label>
+          <select id="input-job">
+            <option value="IT・Web系">IT・Web系</option>
+            <option value="営業・マーケティング">営業・マーケティング</option>
+            <option value="経営者・役員">経営者・役員</option>
+            <option value="専門職（弁護士・会計士等）">専門職（弁護士・会計士等）</option>
+            <option value="金融・不動産">金融・不動産</option>
+            <option value="製造・メーカー">製造・メーカー</option>
+            <option value="M&Aコンサルタント / 経営アドバイザー" selected>M&Aコンサルタント / 経営アドバイザー</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+        <div class="form-field-group">
+          <label>年収</label>
+          <select id="input-income">
+            <option value="300万円未満">300万円未満</option>
+            <option value="300万〜500万円">300万〜500万円</option>
+            <option value="500万〜700万円">500万〜700万円</option>
+            <option value="700万〜1000万円">700万〜1000万円</option>
+            <option value="1000万円〜1500万円" selected>1000万円〜1500万円</option>
+            <option value="1500万円〜2000万円">1500万円〜2000万円</option>
+            <option value="2000万円以上">2000万円以上</option>
+            <option value="非公開">非公開</option>
+          </select>
+        </div>
+        <div class="form-field-group">
+          <label>学歴</label>
+          <select id="input-education">
+            <option value="高卒">高卒</option>
+            <option value="専門・短大卒">専門・短大卒</option>
+            <option value="大卒" selected>大卒</option>
+            <option value="大学院卒">大学院卒</option>
+            <option value="その他">その他</option>
+          </select>
+        </div>
+        <div class="form-field-group">
+          <label>身長 (cm)</label>
+          <input type="number" id="input-height" value="178">
+        </div>
+        <div class="form-field-group">
+          <label>体型</label>
+          <select id="input-body">
+            <option value="スレンダー">スレンダー</option>
+            <option value="細身">細身</option>
+            <option value="普通" selected>普通</option>
+
+            <option value="ややぽっちゃり">ややぽっちゃり</option>
+            <option value="ガッチリ・筋肉質">ガッチリ・筋肉質</option>
+          </select>
+        </div>
+        <div class="form-field-group">
+          <label>休日</label>
+          <select id="input-holiday">
+            <option value="土日休み" selected>土日休み</option>
+            <option value="平日休み">平日休み</option>
+            <option value="不定期・シフト制">不定期・シフト制</option>
+            <option value="祝日休み">祝日休み</option>
+          </select>
+        </div>
+
+        <div class="form-section-title">③ ライフスタイル・価値観</div>
+        <div class="form-field-group">
+          <label>お酒</label>
+          <select id="input-drink">
+            <option value="まったく飲まない">まったく飲まない</option>
+            <option value="たまに飲む" selected>たまに飲む</option>
+            <option value="飲む・好き">飲む・好き</option>
+            <option value="お酒の席が好き（自分は飲まない）">お酒の席が好き（自分は飲まない）</option>
+          </select>
+        </div>
+        <div class="form-field-group">
+          <label>タバコ</label>
+          <select id="input-smoke">
+            <option value="吸わない" selected>吸わない</option>
+            <option value="非喫煙者の前では吸わない">非喫煙者の前では吸わない</option>
+            <option value="加熱式タバコ">加熱式タバコ</option>
+            <option value="吸う">吸う</option>
+          </select>
+        </div>
+        <div class="form-field-group">
+          <label>同居人</label>
+          <select id="input-roommate">
+            <option value="一人暮らし" selected>一人暮らし</option>
+            <option value="実家暮らし">実家暮らし</option>
+            <option value="友達と同居">友達と同居</option>
+            <option value="ペットと同居">ペットと同居</option>
+          </select>
+        </div>
+        <div class="form-field-group">
+          <label>ペット</label>
+          <select id="input-pet">
+            <option value="猫好き・飼っている" selected>猫好き・飼っている</option>
+            <option value="犬好き・飼っている">犬好き・飼っている</option>
+            <option value="エキゾチックアニマル">エキゾチックアニマル</option>
+            <option value="鳥・小動物">鳥・小動物</option>
+            <option value="飼っていない（好き）">飼っていない（好き）</option>
+          </select>
+        </div>
+        <div class="form-field-group">
+          <label>結婚に対する意思</label>
+          <select id="input-marriage">
+            <option value="すぐにでもしたい">すぐにでもしたい</option>
+            <option value="2〜3年以内にしたい">2〜3年以内にしたい</option>
+            <option value="良い人がいれば" selected>良い人がいれば</option>
+            <option value="当面は考えていない">当面は考えていない</option>
+          </select>
+        </div>
+
+        <div class="form-section-title">④ 細分化「趣味・価値観カード」（複数選択可）</div>
+        <div class="hobby-category-title">🎬 エンタメ・映画・音楽・サブカル・ゲーム</div>
+        <div class="hobby-selector-grid" id="hobby-grid-1">
+          <!-- JSで全カード生成 -->
+        </div>
+
+        <div class="hobby-category-title">🍻 グルメ・スポーツ・アウトドア・車・旅行</div>
+        <div class="hobby-selector-grid" id="hobby-grid-2">
+          <!-- JSで全カード生成 -->
+        </div>
+
+        <div class="form-section-title">⑤ 東洋占い・命式設定</div>
+        <div class="form-field-group">
+          <label>出生時刻</label>
+          <input type="time" id="input-birthtime" value="08:30">
+        </div>
+        <div class="form-field-group">
+          <label>日干</label>
+          <input type="text" id="input-nikkan" value="甲（大木）">
+        </div>
+        <div class="form-field-group">
+          <label>月柱・蔵干</label>
+          <input type="text" id="input-getchu" value="丙午">
+        </div>
+        <div class="form-field-group">
+          <label>ソウルナンバー</label>
+          <input type="number" id="input-soul" value="7">
+        </div>
+        <div class="form-field-group">
+          <label>九星気学</label>
+          <input type="text" id="input-kyusei" value="一白水星">
+        </div>
+
+        <button class="button-save-profile" onclick="saveProfileData()">全プロフィール＆趣味カードを保存更新</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- 占いモーダル画面 -->
+  <div class="fortune-result-modal" id="fortune-modal">
+    <div class="fortune-result-header">
+      <div class="fortune-result-title" id="modal-title">占い結果</div>
+      <button class="close-modal-btn" onclick="closeFortuneModal()">×</button>
+    </div>
+
+    <!-- タロット専用インタラクティブ選択エリア -->
+    <div id="tarot-interactive-block" class="tarot-interactive-area" style="display:none;">
+      <p style="font-size:13px; color:var(--text-gold);">運命のカードを1枚選んでタップしてください</p>
+      <div class="tarot-cards-container">
+        <div class="tarot-card-wrapper" onclick="selectTarotCard(0)">
+          <div class="tarot-card-inner" id="tarot-card-0">
+            <div class="tarot-card-back">🔮</div>
+            <div class="tarot-card-front"><div class="tarot-icon">💖</div><div class="tarot-name">恋人</div></div>
+          </div>
+        </div>
+        <div class="tarot-card-wrapper" onclick="selectTarotCard(1)">
+          <div class="tarot-card-inner" id="tarot-card-1">
+            <div class="tarot-card-back">🔮</div>
+            <div class="tarot-card-front"><div class="tarot-icon">🌟</div><div class="tarot-name">星</div></div>
+          </div>
+        </div>
+        <div class="tarot-card-wrapper" onclick="selectTarotCard(2)">
+          <div class="tarot-card-inner" id="tarot-card-2">
+            <div class="tarot-card-back">🔮</div>
+            <div class="tarot-card-front"><div class="tarot-icon">☀️</div><div class="tarot-name">太陽</div></div>
+          </div>
         </div>
       </div>
+    </div>
 
-      <div class="recommend-section-title" id="recommend-title-zone" style="display:none;">
-        ✨ あなたと占い相性がいいおすすめ相手
+    <!-- 診断結果カード -->
+    <div class="fortune-result-card" id="modal-result-card">
+      <div class="fortune-score-badge" id="modal-score">相性適合率 94%</div>
+      <div class="fortune-desc-text" id="modal-desc">
+        診断結果のテキストがここに入ります。
       </div>
-      
+    </div>
+
+    <!-- おすすめ会員リスト -->
+    <div id="recommend-block" style="display:none;">
+      <div class="recommend-section-title">✨ この診断と特に相性が良いおすすめのお相手</div>
       <div class="recommend-list" id="recommend-list-container">
-        <!-- JSで動的におすすめ相手を表示 -->
+        <!-- JSで動的生成 -->
       </div>
     </div>
-
-    <!-- モーダル: 汎用通知 -->
-    <div class="alert-modal-overlay" id="custom-alert-modal">
-      <div class="alert-modal-content">
-        <div class="alert-domain">ht3510.github.io の内容</div>
-        <div class="alert-message-text" id="alert-modal-text"></div>
-        <button class="alert-confirm-btn" onclick="onCloseAlertModal()">OK</button>
-      </div>
-    </div>
-
-    <!-- 下部ナビ -->
-    <nav class="app-bottom-nav">
-      <button class="nav-button active" onclick="switchNavTab('search', this)">
-        <span class="nav-icon-text">🔍</span>
-        <span>さがす</span>
-      </button>
-
-      <button class="nav-button" onclick="switchNavTab('likes', this)">
-        <span class="nav-icon-text">🤍</span>
-        <span>いいね！</span>
-      </button>
-
-      <div class="nav-center-button" onclick="switchNavTab('fortune', null)">
-        <span>Lino</span>
-      </div>
-
-      <button class="nav-button" onclick="switchNavTab('messages', this)">
-        <span class="nav-icon-text">💬</span>
-        <span>メッセージ</span>
-      </button>
-
-      <button class="nav-button" onclick="switchNavTab('mypage', this)">
-        <span class="nav-icon-text">👤</span>
-        <span>マイページ</span>
-      </button>
-    </nav>
-
   </div>
 
-  <script>
-    /* ==========================================
-       1. 100人分ダミーデータ生成ロジック
-       ========================================== */
-    const names = ["あやか", "ゆい", "まい", "りな", "さくら", "ひな", "あおい", "みゆ", "ほのか", "ななみ", "えり", "ちひろ", "かな", "みさき", "ゆうか"];
-    const avatars = ["👩🏻", "👩🏼", "👩🏽", "👧🏻", "👩🏻‍🦰", "👩🏻‍🦱", "👱🏻‍♀️"];
-    const nikkanList = ["偏財 / 傷官", "正官 / 印綬", "食神 / 比肩", "正財 / 劫財", "偏印 / 七殺"];
-    const kyuseiList = ["四緑木星", "九紫火星", "一白水星", "八白土星", "三碧木星"];
-    const faceTags = ["眉間幅広（オープン・誠実相）", "目尻上がり（直感・情熱相）", "小鼻しっかり（金運・堅実相）", "唇厚め（愛情深相）"];
+  <!-- カスタムダイアログ -->
+  <div class="alert-modal-overlay" id="custom-alert">
+    <div class="alert-modal-content">
+      <div class="alert-domain">lino-fortune.app の内容</div>
+      <div class="alert-message-text" id="alert-text">メッセージ</div>
+      <button class="alert-confirm-btn" onclick="closeAlert()">OK</button>
+    </div>
+  </div>
 
-    let userDatabase = [];
+  <!-- ナビゲーションバー -->
+  <nav class="app-bottom-nav">
+    <button class="nav-button active" onclick="switchTab('search', this)">
+      <span class="nav-icon-text">🔍</span>
+      <span>さがす</span>
+    </button>
+    <button class="nav-button" onclick="switchTab('likes', this)">
+      <span class="nav-icon-text">💖</span>
+      <span>いいね！</span>
+    </button>
+    <button class="nav-center-button" onclick="switchTab('fortune', this)">
+      <span>Lino</span>
+    </button>
+    <button class="nav-button" onclick="switchTab('messages', this)">
+      <span class="nav-icon-text">💬</span>
+      <span>メッセージ</span>
+    </button>
+    <button class="nav-button" onclick="switchTab('mypage', this)">
+      <span class="nav-icon-text">👤</span>
+      <span>マイページ</span>
+    </button>
+  </nav>
+</div>
 
-    // 1人目はあやか（固定）
-    userDatabase.push({
-      id: 0,
-      name: "あやか",
-      age: 25,
-      avatar: "👩🏻",
-      nikkan: "偏財 / 傷官",
-      kyusei: "四緑木星",
-      soul: "3（天真爛漫・創作系）",
-      birthplace: "東日本エリア（吉方位）",
-      matchScore: "98%",
-      elementMatch: "[金 × 水]",
-      face: "👁️ AI人相判定: 眉間幅広（オープン・誠実相）"
-    });
+<script>
+/* ==========================================
+ 趣味・価値観カードのマスターデータ（全80種以上）
+========================================== */
+const HOBBY_LIST_1 = [
+  "🎬 洋画（アクション・SF）", "🍿 邦画・ヒューマンドラマ", "😱 ホラー・サスペンス映画",
+  "📺 海外ドラマ（Netflix/Prime）", "🇰🇷 韓流・韓国ドラマ", "📽️ 単館・ミニシアター", "🎭 劇場鑑賞・ミュージカル",
+  "🎸 邦ロック・バンド", "🎧 洋楽・EDM・クラブ", "🎤 ライブ・野外フェス好き", "🎼 J-POP・アイドル",
+  "📻 昭和歌謡・80s-90s", "🎻 クラシック・ジャズ", "🎙️ カラオケ好き・得意",
+  "📖 ジャンプ系マンガ", "⚔️ ダークファンタジーアニメ", "🤖 ロボット・SFアニメ", "📚 webtoon・縦読みマンガ",
+  "🎙️ 声優・イベント", "🕹️ レトロゲーム・アーケード", "💻 PCゲーマー（Steam/Mod派）", "🎮 FPS/TPS（Apex/Valorant）",
+  "⚔️ RPG（スカイリム/FF/DQ）", "📱 スマホアプリ・ガチャゲー", "🧩 ボードゲーム・マダミス", "🏎️ レース・シミュレーター"
+];
 
-    // 2人目〜100人目を自動生成
-    for (let i = 1; i < 100; i++) {
-      const name = names[i % names.length] + (Math.floor(i / names.length) > 0 ? Math.floor(i / names.length) : "");
-      const age = 21 + (i % 12);
-      const avatar = avatars[i % avatars.length];
-      const nikkan = nikkanList[i % nikkanList.length];
-      const kyusei = kyuseiList[i % kyuseiList.length];
-      const soul = (i % 9) + 1;
-      const score = 85 + (i % 15);
-      
-      userDatabase.push({
-        id: i,
-        name: name,
-        age: age,
-        avatar: avatar,
-        nikkan: nikkan,
-        kyusei: kyusei,
-        soul: `${soul}（運命数` + soul + `）`,
-        birthplace: "吉方位エリア",
-        matchScore: `${score}%`,
-        elementMatch: `[五行適合度 ${score}%]`,
-        face: `👁️ AI人相判定: ${faceTags[i % faceTags.length]}`
-      });
-    }
+const HOBBY_LIST_2 = [
+  "☕️ おしゃれカフェ巡り", "🍻 大衆酒場・せんべろ", "🍷 ワイン・バーテンダー系バー", "🥃 ウイスキー・ハイボール",
+  "🍜 ラーメン食べ歩き", "🍣 鮨・隠れ家和食", "🥩 焼肉・熟成肉", "🌶️ 激辛料理・スパイスカレー", "🍳 自炊・料理好き",
+  "🏋️‍♂️ 筋トレ・ガチジム", "🏃‍♂️ ランニング・マラソン", "🧘‍♀️ ヨガ・ピラティス", "⚽️ サッカー・フットサル",
+  "⚾️ プロ野球観戦", "🥊 格闘技・RIZIN観戦", "⛳️ ゴルフ", "🧗‍♀️ クライミング・ボルド",
+  "🚗 ドライブ・愛車こだわり", "🏎️ モータースポーツ", "🎣 釣り（ルアー/船釣り）", "⛺️ Solo/Groupキャンプ",
+  "🏍️ ツーリング・バイク", "🏔️ 登山・トレッキング", "🏄‍♂️ サーフィン", "⛷️ スキー・スノーボード",
+  "✈️ 海外旅行・バックパッカー", "♨️ 温泉・秘湯めぐり", "🏯 神社仏閣・御朱印集め", "📷 一眼レフ・フィルムカメラ",
+  "🏙️ 建築巡り・レトロ街歩き", "🏰 テーマパーク", "🧖‍♂️ サウナ・整う（サ活）", "🐈 猫と暮らす・猫カフェ", "🐕 犬と暮らす"
+];
 
-    let currentCardIndex = 0;
+let selectedHobbies = ["🚗 ドライブ・愛車こだわり", "🍣 鮨・隠れ家和食", "💻 PCゲーマー（Steam/Mod派）", "⚔️ RPG（スカイリム/FF/DQ）", "🐈 猫と暮らす・猫カフェ", "🧖‍♂️ サウナ・整う（サ活）"];
 
-    function renderCurrentCard() {
-      const wrapper = document.getElementById('card-wrapper');
-      if (currentCardIndex >= userDatabase.length) {
-        wrapper.innerHTML = "";
-        document.getElementById('no-cards-msg').style.display = 'block';
-        return;
-      }
+/* ==========================================
+ 100人連続カード生成用ダミーデータ
+========================================== */
+const names = ["エリカ", "リア", "アオイ", "ミサキ", "エレナ", "サラ", "カレン", "ノゾミ", "リン", "ユウキ"];
+const avatars = ["👩🏻", "👩🏼", "👩🏽", "👧🏻", "👩🏻‍🦰", "👩🏻‍🦱", "👱‍♀️"];
+const mainStars = ["偏財・絶", "正官・病", "食神・長生", "印綬・建禄", "偏印・衰", "七殺・沐浴"];
+const kyuseiList = ["一白水星", "二黒土星", "三碧木星", "四緑木星", "九紫火星"];
+const aiTags = ["【AI判定】誠実度 98%・包容力抜群", "【AI判定】愛嬌度 95%・あげまん相", "【AI判定】知性派・自立度 92%"];
 
-      const u = userDatabase[currentCardIndex];
-      wrapper.innerHTML = `
-        <div class="match-card" id="active-match-card">
-          <div class="match-badge-container">
-            <div class="match-badge">✨ 命式相性 ${u.elementMatch} ${u.matchScore}</div>
-          </div>
-          <div class="card-avatar-section">
-            <div class="avatar-inner">${u.avatar}</div>
-          </div>
-          <div class="card-info-section">
-            <div class="user-name-text">
-              ${u.name} <span class="user-age-text">(${u.age}歳)</span>
-            </div>
+let dummyUsers = [];
+for(let i=1; i<=100; i++) {
+  const name = names[i % names.length] + (i > 10 ? i : '');
+  const age = 22 + (i % 12);
+  const avatar = avatars[i % avatars.length];
+  const star = mainStars[i % mainStars.length];
+  const kyusei = kyuseiList[i % kyuseiList.length];
+  const soul = (i % 9) + 1;
+  const match = 82 + (i % 18);
+  const aiTag = aiTags[i % aiTags.length];
 
-            <div class="fortune-detail-box">
-              <div class="fortune-item"><span>主星・蔵干:</span><span>${u.nikkan}</span></div>
-              <div class="fortune-item"><span>九星気学:</span><span>${u.kyusei}</span></div>
-              <div class="fortune-item"><span>ソウルナンバー:</span><span>${u.soul}</span></div>
-              <div class="fortune-item"><span>出生地相性:</span><span>${u.birthplace}</span></div>
-            </div>
+  dummyUsers.push({ id: i, name, age, avatar, star, kyusei, soul, match, aiTag });
+}
 
-            <div class="ai-judgment-text">
-              ${u.face}
-            </div>
+let currentIndex = 0;
 
-            <button class="button-like-submit" id="main-like-btn" onclick="onClickMainLike('${u.name}')">
-              ✨ 運命のいいね！を送る
-            </button>
-          </div>
+/* 初期化処理 */
+window.onload = function() {
+  renderHobbySelectors();
+  renderCard(currentIndex);
+  updateHobbyDisplay();
+};
+
+/* 趣味選択ボタンの動的生成 */
+function renderHobbySelectors() {
+  const g1 = document.getElementById('hobby-grid-1');
+  const g2 = document.getElementById('hobby-grid-2');
+  g1.innerHTML = ''; g2.innerHTML = '';
+
+  HOBBY_LIST_1.forEach(item => {
+    const btn = document.createElement('div');
+    btn.className = `hobby-choice-btn ${selectedHobbies.includes(item) ? 'selected' : ''}`;
+    btn.innerText = item;
+    btn.onclick = () => toggleHobby(item, btn);
+    g1.appendChild(btn);
+  });
+
+  HOBBY_LIST_2.forEach(item => {
+    const btn = document.createElement('div');
+    btn.className = `hobby-choice-btn ${selectedHobbies.includes(item) ? 'selected' : ''}`;
+    btn.innerText = item;
+    btn.onclick = () => toggleHobby(item, btn);
+    g2.appendChild(btn);
+  });
+}
+
+function toggleHobby(item, el) {
+  if (selectedHobbies.includes(item)) {
+    selectedHobbies = selectedHobbies.filter(h => h !== item);
+    el.classList.remove('selected');
+  } else {
+    selectedHobbies.push(item);
+    el.classList.add('selected');
+  }
+}
+
+function updateHobbyDisplay() {
+  const container = document.getElementById('display-selected-hobbies');
+  container.innerHTML = '';
+  selectedHobbies.forEach(h => {
+    const chip = document.createElement('span');
+    chip.className = 'hobby-tag-chip';
+    chip.innerText = h;
+    container.appendChild(chip);
+  });
+}
+
+/* カード描画 */
+function renderCard(index) {
+  const wrapper = document.getElementById('card-wrapper');
+  if(index >= dummyUsers.length) {
+    wrapper.style.display = 'none';
+    document.getElementById('no-cards-msg').style.display = 'block';
+    return;
+  }
+
+  const u = dummyUsers[index];
+  wrapper.innerHTML = `
+    <div class="match-card" id="current-card">
+      <div class="match-badge-container">
+        <div class="match-badge">✨ 命式適合率 ${u.match}%</div>
+      </div>
+      <div class="card-avatar-section">
+        <div class="avatar-inner">${u.avatar}</div>
+      </div>
+      <div class="card-info-section">
+        <div class="user-name-text">${u.name} <span class="user-age-text">${u.age}歳</span></div>
+        <div class="fortune-detail-box">
+          <div class="fortune-item"><span>主星 / 蔵干:</span> <strong>${u.star}</strong></div>
+          <div class="fortune-item"><span>九星気学 / ソウル:</span> <strong>${u.kyusei} (No.${u.soul})</strong></div>
         </div>
-      `;
+        <div class="ai-judgment-text">${u.aiTag}</div>
+        <button class="button-like-submit" id="like-btn" onclick="sendLike(${u.id}, '${u.name}')">✨ 運命のいいね！を送る</button>
+      </div>
+    </div>
+  `;
+}
+
+/* いいね送信処理 */
+function sendLike(id, name) {
+  showAlert(`${name} さんに「運命のいいね！」を送りました！`);
+  const card = document.getElementById('current-card');
+  card.style.transform = 'translateX(120%) rotate(20deg)';
+  card.style.opacity = '0';
+  
+  setTimeout(() => {
+    currentIndex++;
+    renderCard(currentIndex);
+  }, 350);
+}
+
+/* タブ切り替え */
+function switchTab(tabName, btnEl) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-button').forEach(el => el.classList.remove('active'));
+  
+  document.getElementById(`tab-${tabName}`).classList.add('active');
+  if(btnEl && btnEl.classList.contains('nav-button')) {
+    btnEl.classList.add('active');
+  }
+}
+
+/* 占いモーダル開閉 */
+function openFortuneDetail(type) {
+  const modal = document.getElementById('fortune-modal');
+  const title = document.getElementById('modal-title');
+  const score = document.getElementById('modal-score');
+  const desc = document.getElementById('modal-desc');
+  const tarotBlock = document.getElementById('tarot-interactive-block');
+  const resultCard = document.getElementById('modal-result-card');
+  const recommendBlock = document.getElementById('recommend-block');
+
+  modal.style.display = 'flex';
+  recommendBlock.style.display = 'block';
+
+  // タロット以外は直接表示
+  if(type !== 'tarot') {
+    tarotBlock.style.display = 'none';
+    resultCard.style.display = 'block';
+  }
+
+  if(type === 'tarot') {
+    title.innerText = '運命のLinoタロット';
+    tarotBlock.style.display = 'block';
+    resultCard.style.display = 'none';
+    // カードリセット
+    for(let i=0; i<3; i++) {
+      document.getElementById(`tarot-card-${i}`).classList.remove('flipped');
     }
+  } else if(type === 'biorhythm') {
+    title.innerText = '本日の陰陽バイオリズム';
+    score.innerText = '今日の運勢指数: 92点 (大吉)';
+    desc.innerText = '本日、あなたの日干「甲（大木）」は午月の強い火のエネルギーを受け、才能と魅力が最大限に発揮されるタイミングです。19:00〜21:00のアプローチが最も効果的です。';
+    renderRecommendations([dummyUsers[2], dummyUsers[5], dummyUsers[8]]);
+  } else if(type === 'compatibility') {
+    title.innerText = '命式・四柱推命の相性鑑定';
+    score.innerText = '最高相性グループ: 96%';
+    desc.innerText = 'あなたの命式（甲）と相互補完の関係にある「己・癸」を持つお相手との相性が突出しています。お互いの長所を引き出し合える理想のパートナーシップです。';
+    renderRecommendations([dummyUsers[0], dummyUsers[3], dummyUsers[7]]);
+  } else if(type === 'face') {
+    title.innerText = 'AI人相・顔相リアルスキャン';
+    score.innerText = '分析結果: 皇帝・誠実相';
+    desc.innerText = '眉間の広さと力強い目元から、極めて高い決断力と誠実さが見受けられます。包容力のある女性との相性が抜群です。';
+    renderRecommendations([dummyUsers[1], dummyUsers[4], dummyUsers[9]]);
+  } else if(type === 'numerology') {
+    title.innerText = 'ソウルナンバー＆九星気学';
+    score.innerText = 'ソウルナンバー 7 の運命';
+    desc.innerText = '探究心が強く信念を持つあなたには、ソウルナンバー「1」「7」「9」のお相手がベストマッチ。深い会話ができる関係を構築できます。';
+    renderRecommendations([dummyUsers[6], dummyUsers[8], dummyUsers[10]]);
+  }
+}
 
-    renderCurrentCard();
+function selectTarotCard(index) {
+  const cardInner = document.getElementById(`tarot-card-${index}`);
+  cardInner.classList.add('flipped');
 
-    /* ==========================================
-       2. いいね！＆100人連続カード遷移ロジック
-       ========================================== */
-    function onClickMainLike(targetName) {
-      const btn = document.getElementById('main-like-btn');
-      btn.classList.add('disabled');
-      btn.textContent = "✔ いいね！送信済み";
-      btn.onclick = null;
+  setTimeout(() => {
+    const resultCard = document.getElementById('modal-result-card');
+    const score = document.getElementById('modal-score');
+    const desc = document.getElementById('modal-desc');
 
-      document.getElementById('alert-modal-text').textContent = `${targetName}さんに運命のいいね！を送りました！`;
-      document.getElementById('custom-alert-modal').style.display = 'flex';
+    resultCard.style.display = 'block';
+    if(index === 0) {
+      score.innerText = 'カード: 恋人 (The Lovers) - 適合度 98%';
+      desc.innerText = '互いに深く惹かれ合う最高の出会いが近づいています。直感を信じて一歩踏み出してみましょう。';
+    } else if(index === 1) {
+      score.innerText = 'カード: 星 (The Star) - 適合度 90%';
+      desc.innerText = '希望に満ちた素敵なアプローチが実を結びます。あなたの魅力が素直に伝わる運気です。';
+    } else {
+      score.innerText = 'カード: 太陽 (The Sun) - 適合度 95%';
+      desc.innerText = '明るく楽しく開放的な関係が築けます。飾らない笑顔が最高の幸運を引き寄せます。';
     }
+    renderRecommendations([dummyUsers[0], dummyUsers[1], dummyUsers[2]]);
+  }, 600);
+}
 
-    function onCloseAlertModal() {
-      document.getElementById('custom-alert-modal').style.display = 'none';
+function renderRecommendations(list) {
+  const container = document.getElementById('recommend-list-container');
+  container.innerHTML = '';
 
-      const cardElement = document.getElementById('active-match-card');
-      if (cardElement) {
-        cardElement.style.opacity = '0';
-        cardElement.style.transform = 'translateY(-30px)';
+  list.forEach(u => {
+    const item = document.createElement('div');
+    item.className = 'recommend-item';
+    item.innerHTML = `
+      <div class="recommend-user-info">
+        <div class="recommend-avatar">${u.avatar}</div>
+        <div>
+          <div class="recommend-name">${u.name} (${u.age}歳)</div>
+          <div class="recommend-match">適合率 ${u.match}% / ${u.kyusei}</div>
+        </div>
+      </div>
+      <button class="btn-small-like" id="rec-btn-${u.id}" onclick="sendSmallLike(${u.id}, '${u.name}', this)">いいね！</button>
+    `;
+    container.appendChild(item);
+  });
+}
 
-        setTimeout(() => {
-          currentCardIndex++;
-          renderCurrentCard();
-        }, 300);
-      }
-    }
+function sendSmallLike(id, name, btn) {
+  showAlert(`${name} さんに「いいね！」を送りました！`);
+  btn.innerText = '送信済み';
+  btn.classList.add('disabled');
+  btn.onclick = null;
+}
 
-    /* ==========================================
-       3. タブ切り替えロジック
-       ========================================== */
-    function switchNavTab(tabKey, element) {
-      const tabPages = document.querySelectorAll('.tab-content');
-      tabPages.forEach(page => page.classList.remove('active'));
+function closeFortuneModal() {
+  document.getElementById('fortune-modal').style.display = 'none';
+}
 
-      const navButtons = document.querySelectorAll('.nav-button');
-      navButtons.forEach(btn => btn.classList.remove('active'));
+/* カスタムアラート表示 */
+function showAlert(msg) {
+  document.getElementById('alert-text').innerText = msg;
+  document.getElementById('custom-alert').style.display = 'flex';
+}
 
-      document.getElementById(`tab-${tabKey}`).classList.add('active');
+function closeAlert() {
+  document.getElementById('custom-alert').style.display = 'none';
+}
 
-      if (element) {
-        element.classList.add('active');
-      }
-    }
+/* 生年月日から年齢を自動計算 */
+function calculateAge(birthdateStr) {
+  if (!birthdateStr) return 30;
+  const birthDate = new Date(birthdateStr);
+  const today = new Date();
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+  return age;
+}
 
-    /* ==========================================
-       4. 本格ロジック占い ＆ タロットアニメーション
-       ========================================== */
-    const fortuneDataDetails = {
-      tarot: {
-        title: "🎴 運命のLinoタロット占い",
-        score: "タロットシンクロ率：97%",
-        desc: "【選択されたカード：恋人 (The Lovers)】情熱と直感が冴え渡る最高のカードを引き当てました！素晴らしい選択眼です。近々、価値観がぴったり合致する運命のパートナーとの強烈な引き寄せが起こります。"
-      },
-      biorhythm: {
-        title: "☯️ 本日の運勢・陰陽バイオリズム",
-        score: "バイオリズム指数：92 pt",
-        desc: "今日の日干「甲（大木）」は、大地のエネルギーを得て絶好の成長期に入っています。直感力が高まっており、本日出会う人とは素直な対話で深い共感が生まれます。特に午後のアプローチが幸運を引き寄せます。"
-      },
-      compatibility: {
-        title: "📜 命式・四柱推命の相性鑑定",
-        score: "命式波長適合率：96%",
-        desc: "あなたの日柱干支と相手の蔵干五行（木・火・土・金・水）の巡りが理想的な相生関係を形成しています。お互いの短所を補い合い、長期間にわたって安定した信頼関係を築ける最高の命式バランスです。"
-      },
-      face: {
-        title: "👁️ AI人相・顔相リアルスキャン",
-        score: "誠実・包容力スコア：94点",
-        desc: "AI画像解析により「眉間が広く、目尻が緩やかな誠実相」を提示するお相手を中心に抽出しました。嘘がなくオープンな性格で、会話の波長が合いやすい相性です。"
-      },
-      numerology: {
-        title: "🔢 ソウルナンバー＆九星気学",
-        score: "運命数ソウルシンクロ：99%",
-        desc: "あなたのソウルナンバー「7（探求・独自の世界観）」と相性の良い「3（天真爛漫）」および「5（変化と情熱）」を持つ相手を検出。自然体でいられるベストパートナーです。"
-      }
-    };
+/* マイページ保存更新処理 */
+function saveProfileData() {
+  const name = document.getElementById('input-name').value;
+  const nickname = document.getElementById('input-nickname').value;
+  const gender = document.getElementById('input-gender').value;
+  const birthdate = document.getElementById('input-birthdate').value;
+  const residence = document.getElementById('input-residence').value;
+  const birthplace = document.getElementById('input-birthplace').value;
+  
+  const job = document.getElementById('input-job').value;
+  const income = document.getElementById('input-income').value;
+  const height = document.getElementById('input-height').value;
+  const body = document.getElementById('input-body').value;
+  const holiday = document.getElementById('input-holiday').value;
+  const pet = document.getElementById('input-pet').value;
+  const marriage = document.getElementById('input-marriage').value;
 
-    let activeFortuneKey = "";
+  const nikkan = document.getElementById('input-nikkan').value;
+  const soul = document.getElementById('input-soul').value;
+  const getchu = document.getElementById('input-getchu').value;
+  const kyusei = document.getElementById('input-kyusei').value;
 
-    function openFortuneDetail(key) {
-      activeFortuneKey = key;
-      const data = fortuneDataDetails[key];
-      
-      document.getElementById('fortune-modal-title').textContent = data.title;
-      
-      // リセット
-      document.getElementById('recommend-list-container').innerHTML = "";
-      document.getElementById('recommend-title-zone').style.display = 'none';
+  // 上部カード表示更新
+  document.getElementById('display-user-name').innerText = nickname || name;
+  document.getElementById('display-user-nikkan').innerText = nikkan;
+  document.getElementById('display-user-soul').innerText = soul;
+  document.getElementById('display-user-getchu').innerText = getchu;
+  document.getElementById('display-user-kyusei').innerText = kyusei;
+  document.getElementById('display-user-residence').innerText = residence;
 
-      if (key === 'tarot') {
-        // タロットモード：カード選択画面を表示
-        document.getElementById('tarot-interactive-zone').style.display = 'block';
-        document.getElementById('fortune-result-card-box').style.display = 'none';
-        
-        // カードの裏返し状態をリセット
-        const cards = document.querySelectorAll('.tarot-card-inner');
-        cards.forEach(c => c.classList.remove('flipped'));
-      } else {
-        // 通常占い：直接結果表示
-        document.getElementById('tarot-interactive-zone').style.display = 'none';
-        document.getElementById('fortune-result-card-box').style.display = 'block';
-        document.getElementById('fortune-modal-score').textContent = data.score;
-        document.getElementById('fortune-modal-desc').textContent = data.desc;
-        renderRecommendUsers();
-      }
+  // 概要プレビューの更新
+  const age = calculateAge(birthdate);
+  document.getElementById('prev-age-gender').innerText = `${age}歳 / ${gender}`;
+  document.getElementById('prev-birthplace').innerText = birthplace;
+  document.getElementById('prev-job').innerText = job;
+  document.getElementById('prev-income').innerText = income;
+  document.getElementById('prev-body').innerText = `${height}cm / ${body}`;
+  document.getElementById('prev-holiday').innerText = holiday;
+  document.getElementById('prev-pet').innerText = pet;
+  document.getElementById('prev-marriage').innerText = marriage;
 
-      document.getElementById('fortune-detail-modal').style.display = 'flex';
-    }
+  // 趣味タグ表示の更新
+  updateHobbyDisplay();
 
-    function pickTarotCard(wrapperElement, index) {
-      const inner = wrapperElement.querySelector('.tarot-card-inner');
-      if (inner.classList.contains('flipped')) return;
-
-      inner.classList.add('flipped');
-
-      // カードめくりアニメーション後に結果カード＆おすすめ相手を表示
-      setTimeout(() => {
-        const data = fortuneDataDetails['tarot'];
-        document.getElementById('fortune-result-card-box').style.display = 'block';
-        document.getElementById('fortune-modal-score').textContent = data.score;
-        document.getElementById('fortune-modal-desc').textContent = data.desc;
-        renderRecommendUsers();
-      }, 700);
-    }
-
-    function renderRecommendUsers() {
-      const container = document.getElementById('recommend-list-container');
-      container.innerHTML = "";
-      document.getElementById('recommend-title-zone').style.display = 'flex';
-
-      for (let i = 1; i <= 3; i++) {
-        const randIndex = (Math.floor(Math.random() * 90) + i) % userDatabase.length;
-        const targetUser = userDatabase[randIndex];
-
-        const itemHtml = `
-          <div class="recommend-item">
-            <div class="recommend-user-info">
-              <div class="recommend-avatar">${targetUser.avatar}</div>
-              <div>
-                <div class="recommend-name">${targetUser.name} (${targetUser.age}歳)</div>
-                <div class="recommend-match">相性 ${targetUser.matchScore} • ${targetUser.kyusei}</div>
-              </div>
-            </div>
-            <button class="btn-small-like" onclick="onClickRecommendLike(this, '${targetUser.name}')">
-              いいね！
-            </button>
-          </div>
-        `;
-        container.innerHTML += itemHtml;
-      }
-    }
-
-    function closeFortuneModal() {
-      document.getElementById('fortune-detail-modal').style.display = 'none';
-    }
-
-    function onClickRecommendLike(btnElement, name) {
-      btnElement.classList.add('disabled');
-      btnElement.textContent = "送信済み";
-      btnElement.onclick = null;
-    }
-
-    /* ==========================================
-       5. マイページ全項目保存・画像解析機能
-       ========================================== */
-    function onFileUploaded(input) {
-      if (input.files && input.files[0]) {
-        document.getElementById('input-face-tag').value = "解析完了: 眉間幅広・誠実相（信頼度95%）";
-        alert("顔写真のAI人相解析が完了しました！");
-      }
-    }
-
-    function onSaveFullProfile() {
-      const nameVal = document.getElementById('input-name').value;
-      const nikkanVal = document.getElementById('input-nikkan').value;
-      const soulVal = document.getElementById('input-soul').value;
-      const getchuVal = document.getElementById('input-getchu').value;
-      const kyuseiVal = document.getElementById('input-kyusei').value;
-      const birthPlaceVal = document.getElementById('input-birthplace').value;
-      const faceVal = document.getElementById('input-face-tag').value;
-
-      document.getElementById('display-user-name').textContent = nameVal;
-      document.getElementById('display-user-nikkan').textContent = nikkanVal;
-      document.getElementById('display-user-soul').textContent = soulVal;
-      document.getElementById('display-user-getchu').textContent = getchuVal;
-      document.getElementById('display-user-kyusei').textContent = kyuseiVal;
-      document.getElementById('display-user-birthplace').textContent = birthPlaceVal;
-      document.getElementById('display-user-face').textContent = faceVal.split('（')[0];
-
-      document.getElementById('alert-modal-text').textContent = "詳細プロフィールおよび命式データを保存しました！";
-      document.getElementById('custom-alert-modal').style.display = 'flex';
-    }
-  </script>
+  showAlert('プロフィールおよび趣味・価値観カードのデータを更新しました！');
+}
+</script>
 
 </body>
 </html>
