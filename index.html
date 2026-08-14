@@ -146,6 +146,18 @@
     }
     .action-btn-glossy:active { transform: scale(0.96); }
 
+    .action-btn-disabled {
+      background: rgba(255, 255, 255, 0.1);
+      color: #64748b;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 12px 18px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: not-allowed;
+      text-align: center;
+    }
+
     .tag-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
     .mood-tag {
       background: rgba(255, 255, 255, 0.05); color: var(--text-sub);
@@ -189,6 +201,7 @@
     .profile-card {
       background: var(--card-bg); border-radius: 24px; overflow: hidden;
       border: 1px solid var(--card-border); cursor: pointer;
+      transition: all 0.3s ease;
     }
     .profile-img {
       height: 180px; background: linear-gradient(135deg, #059669 0%, #1e1b4b 100%);
@@ -283,17 +296,20 @@
         </div>
       </div>
 
-      <div class="profile-card" onclick="openDetailProfile(1)">
-        <div class="profile-img">
-          <span style="font-size: 60px;">👩🏻</span>
-          <div style="position: absolute; top:10px; left:10px; background: rgba(11,13,27,0.85); color:#fbbf24; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:800;">
-            ✨ 命式相性 [金 × 水] 98%
+      <!-- メインのカード表示エリア -->
+      <div id="search-card-wrapper">
+        <div class="profile-card" id="main-profile-card" onclick="openDetailProfile(currentSearchIndex)">
+          <div class="profile-img">
+            <span style="font-size: 60px;" id="main-user-icon">👩🏻</span>
+            <div style="position: absolute; top:10px; left:10px; background: rgba(11,13,27,0.85); color:#fbbf24; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:800;" id="main-user-tag">
+              ✨ 命式相性 [金 × 水] 98%
+            </div>
           </div>
-        </div>
-        <div style="padding: 16px;">
-          <div style="font-size: 18px; font-weight: 900; color: white;">あやか <span style="font-size: 13px; font-weight: 500; color: var(--text-sub);">(25歳)</span></div>
-          <p style="font-size: 11px; color: #34d399; font-weight: 700; margin-top: 2px;">👁️ AI人相判定: 眉間幅広（オープン・誠実相）</p>
-          <button class="action-btn-glossy" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); alert('あやかさんに運命のいいね！を送りました！');">✨ 運命のいいね！を送る</button>
+          <div style="padding: 16px;">
+            <div style="font-size: 18px; font-weight: 900; color: white;" id="main-user-name">あやか <span style="font-size: 13px; font-weight: 500; color: var(--text-sub);">(25歳)</span></div>
+            <p style="font-size: 11px; color: #34d399; font-weight: 700; margin-top: 2px;" id="main-user-bio-preview">👁️ AI人相判定: 眉間幅広（オープン・誠実相）</p>
+            <button id="main-like-btn" class="action-btn-glossy" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); handleMainLike();">✨ 運命のいいね！を送る</button>
+          </div>
         </div>
       </div>
     </div>
@@ -441,7 +457,6 @@
         <h4 id="scan-res-title" style="color: #34d399; font-size: 14px; font-weight: 800;"></h4>
         <p id="scan-res-desc" style="font-size: 12px; color: #cbd5e1; margin-top: 6px; line-height: 1.5;"></p>
         
-        <!-- 🔥 ここに確実にボタンを出します！ -->
         <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="showMatchedUsersModal('AI適合女性一覧（10名）')">
           ✨ 適合するお相手（10名）を見る ➔
         </button>
@@ -517,7 +532,7 @@
         <p style="font-size: 12px; color: #34d399; font-weight: bold; margin-top: 4px;" id="detail-match-score">相性: 98%</p>
         <p style="font-size: 12px; color: #cbd5e1; margin-top: 12px; line-height: 1.5;" id="detail-bio"></p>
       </div>
-      <button class="action-btn-glossy" style="width: 100%; padding: 14px;" onclick="alert('運命のいいね！を送信しました！'); closeView('view-profile-detail');">✨ 運命のいいね！を送る</button>
+      <button id="detail-like-btn" class="action-btn-glossy" style="width: 100%; padding: 14px;" onclick="handleDetailLike();">✨ 運命のいいね！を送る</button>
     </div>
   </div>
 
@@ -536,19 +551,73 @@
 </div>
 
 <script>
-  /* 👩 10名のサンプル女性データ */
+  /* 👩 10名のサンプル女性データ（liked状態を追加） */
   const sampleUsers = [
-    { id: 1, name: "あやか", age: 25, icon: "👩🏻", tag: "相性 98%", bio: "カフェ巡りとアート鑑賞が好きです！お互いの個性を大事にできる人と出会いたいです✨" },
-    { id: 2, name: "凛 (りん)", age: 27, icon: "👩🏻‍💼", tag: "金×水属性", bio: "休日によくドライブに出かけます🚗 四柱推命の相性が良いと出て気になりました！" },
-    { id: 3, name: "まみ", age: 24, icon: "👱🏻‍♀️", tag: "ソウル 7", bio: "美味しい居酒屋を開拓するのが趣味です🍻 フットワーク軽めです！" },
-    { id: 4, name: "葵 (あおい)", age: 26, icon: "👩🏻‍🎨", tag: "トライン吉", bio: "のんびり美術館に行ったり自然に触れるのが好き🌿 穏やかな関係が理想です。" },
-    { id: 5, name: "エレナ", age: 28, icon: "💃🏻", tag: "太陽アスペクト", bio: "海外旅行とワインが好き🍷 直感を大事にしてアプローチしてみました！" },
-    { id: 6, name: "ひなこ", age: 23, icon: "👩🏻‍🎓", tag: "相性 94%", bio: "最近料理にはまってます🍳 一緒に美味しくご飯を食べられる人がいいな。" },
-    { id: 7, name: "美咲", age: 29, icon: "👩🏻‍💻", tag: "水×木補完", bio: "IT系でデザインの仕事をしてます。価値観や内面の相性を重視してます✨" },
-    { id: 8, name: "ゆりあ", age: 25, icon: "🧘🏻‍♀️", tag: "ソウル 11", bio: "ヨガとサウナで整うのが好きです！運命的な引き寄せを感じて登録しました。" },
-    { id: 9, name: "かのん", age: 24, icon: "👩🏻‍🎤", tag: "感情線整合", bio: "音楽フェスやライブによく行きます♪ 一緒に盛り上がれるお相手募集中！" },
-    { id: 10, name: "さゆり", age: 30, icon: "👩🏻‍🔬", tag: "相性 96%", bio: "落ち着いた居酒屋でサクッと飲むのが好きです。大人の心強いパートナー希望。" }
+    { id: 0, name: "あやか", age: 25, icon: "👩🏻", tag: "相性 98%", preview: "👁️ AI人相判定: 眉間幅広（オープン・誠実相）", bio: "カフェ巡りとアート鑑賞が好きです！お互いの個性を大事にできる人と出会いたいです✨", liked: false },
+    { id: 1, name: "凛 (りん)", age: 27, icon: "👩🏻‍💼", tag: "金×水属性 96%", preview: "🚗 休日ドライブ＆カフェ巡り好き", bio: "休日によくドライブに出かけます🚗 四柱推命の相性が良いと出て気になりました！", liked: false },
+    { id: 2, name: "まみ", age: 24, icon: "👱🏻‍♀️", tag: "ソウル 7 / 95%", preview: "🍻 居酒屋開拓＆フットワーク軽め", bio: "美味しい居酒屋を開拓するのが趣味です🍻 フットワーク軽めです！", liked: false },
+    { id: 3, name: "葵 (あおい)", age: 26, icon: "👩🏻‍🎨", tag: "トライン吉 92%", preview: "🌿 美術館巡り＆自然派ライフ", bio: "のんびり美術館に行ったり自然に触れるのが好き🌿 穏やかな関係が理想です。", liked: false },
+    { id: 4, name: "エレナ", age: 28, icon: "💃🏻", tag: "太陽アスペクト 94%", preview: "🍷 海外旅行＆ワイン愛好家", bio: "海外旅行とワインが好き🍷 直感を大事にしてアプローチしてみました！", liked: false },
+    { id: 5, name: "ひなこ", age: 23, icon: "👩🏻‍🎓", tag: "相性 94%", preview: "🍳 手料理＆グルメ開拓中", bio: "最近料理にはまってます🍳 一緒に美味しくご飯を食べられる人がいいな。", liked: false },
+    { id: 6, name: "美咲", age: 29, icon: "👩🏻‍💻", tag: "水×木補完 91%", preview: "💻 ITデザイナー＆内面重視", bio: "IT系でデザインの仕事をしてます。価値観や内面の相性を重視してます✨", liked: false },
+    { id: 7, name: "ゆりあ", age: 25, icon: "🧘🏻‍♀️", tag: "ソウル 11 / 97%", preview: "🧘‍♀️ サウナ＆ヨガで整う日々", bio: "ヨガとサウナで整うのが好きです！運命的な引き寄せを感じて登録しました。", liked: false },
+    { id: 8, name: "かのん", age: 24, icon: "👩🏻‍🎤", tag: "感情線整合 93%", preview: "🎶 音楽フェス＆ライブ好き", bio: "音楽フェスやライブによく行きます♪ 一緒に盛り上がれるお相手募集中！", liked: false },
+    { id: 9, name: "さゆり", age: 30, icon: "👩🏻‍🔬", tag: "相性 96%", preview: "🍶 大人の隠れ家飲み好き", bio: "落ち着いた居酒屋でサクッと飲むのが好きです。大人の心強いパートナー希望。", liked: false }
   ];
+
+  let currentSearchIndex = 0;
+  let activeDetailUserId = null;
+
+  function updateMainCard() {
+    const wrapper = document.getElementById('search-card-wrapper');
+    if (currentSearchIndex >= sampleUsers.length) {
+      wrapper.innerHTML = `
+        <div class="glass-card" style="padding: 40px 20px; text-align: center;">
+          <span style="font-size: 50px;">✨</span>
+          <h3 style="font-size: 16px; margin-top: 10px; color: #34d399;">全員のチェックが完了しました！</h3>
+          <p style="font-size: 12px; color: var(--text-sub); margin-top: 6px;">また新しい運命のお相手が登録されるのをお待ちください。</p>
+          <button class="action-btn-glossy" style="margin-top: 20px;" onclick="resetSearchIndex()">🔁 最初からもう一度見る</button>
+        </div>
+      `;
+      return;
+    }
+
+    const user = sampleUsers[currentSearchIndex];
+    const btnClass = user.liked ? 'action-btn-disabled' : 'action-btn-glossy';
+    const btnText = user.liked ? '✔ イイネ済' : '✨ 運命のいいね！を送る';
+    const btnOnClick = user.liked ? '' : 'event.stopPropagation(); handleMainLike();';
+
+    wrapper.innerHTML = `
+      <div class="profile-card" onclick="openDetailProfile(${user.id})">
+        <div class="profile-img">
+          <span style="font-size: 60px;">${user.icon}</span>
+          <div style="position: absolute; top:10px; left:10px; background: rgba(11,13,27,0.85); color:#fbbf24; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:800;">
+            ✨ ${user.tag}
+          </div>
+        </div>
+        <div style="padding: 16px;">
+          <div style="font-size: 18px; font-weight: 900; color: white;">${user.name} <span style="font-size: 13px; font-weight: 500; color: var(--text-sub);">(${user.age}歳)</span></div>
+          <p style="font-size: 11px; color: #34d399; font-weight: 700; margin-top: 2px;">${user.preview}</p>
+          <button class="${btnClass}" style="width: 100%; margin-top: 12px;" onclick="${btnOnClick}">${btnText}</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function handleMainLike() {
+    const user = sampleUsers[currentSearchIndex];
+    user.liked = true;
+    alert(`${user.name}さんに運命のいいね！を送りました！`);
+    
+    // 次の人へ進む！
+    currentSearchIndex++;
+    updateMainCard();
+  }
+
+  function resetSearchIndex() {
+    currentSearchIndex = 0;
+    updateMainCard();
+  }
 
   function switchTab(tabName, el) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
@@ -577,12 +646,42 @@
 
   function openDetailProfile(userId) {
     const user = sampleUsers.find(u => u.id === userId) || sampleUsers[0];
+    activeDetailUserId = user.id;
+
     document.getElementById('detail-header-name').innerText = user.name;
     document.getElementById('detail-avatar').innerText = user.icon;
     document.getElementById('detail-name').innerText = `${user.name} (${user.age})`;
     document.getElementById('detail-match-score').innerText = `✨ ${user.tag}`;
     document.getElementById('detail-bio').innerText = user.bio;
+
+    const btn = document.getElementById('detail-like-btn');
+    if (user.liked) {
+      btn.className = 'action-btn-disabled';
+      btn.innerText = '✔ イイネ済';
+      btn.onclick = null;
+    } else {
+      btn.className = 'action-btn-glossy';
+      btn.innerText = '✨ 運命のいいね！を送る';
+      btn.onclick = handleDetailLike;
+    }
+
     openView('view-profile-detail');
+  }
+
+  function handleDetailLike() {
+    if (activeDetailUserId === null) return;
+    const user = sampleUsers.find(u => u.id === activeDetailUserId);
+    if (user) {
+      user.liked = true;
+      alert(`${user.name}さんに運命のいいね！を送りました！`);
+      
+      // もし現在さがす画面で表示されていた人物なら、次の人へ送る
+      if (currentSearchIndex === user.id) {
+        currentSearchIndex++;
+      }
+      updateMainCard();
+      closeView('view-profile-detail');
+    }
   }
 
   function openChatView(name) { 
@@ -615,7 +714,6 @@
     }
   }
 
-  /* 🔥 修正箇所：ボタンを壊さずにテキストだけ安全に更新する処理 */
   function openScanModal(type) {
     document.getElementById('scan-emoji').innerText = type === 'hand' ? '✋' : '👁️';
     document.getElementById('scan-header-title').innerText = type === 'hand' ? '📷 AIスマホ手相解析' : '👤 AI顔像・人相解剖学';
@@ -643,19 +741,22 @@
     document.getElementById('numerology-result-box').style.display = 'block';
   }
 
-  /* 🔥 10名の女性をタイル表示する関数 */
   function showMatchedUsersModal(title) {
     document.getElementById('grid-modal-title').innerText = title;
     const container = document.getElementById('tile-container');
     container.innerHTML = '';
 
     sampleUsers.forEach(user => {
+      const btnClass = user.liked ? 'action-btn-disabled' : 'action-btn-glossy';
+      const btnText = user.liked ? '✔ イイネ済' : '✨ いいね！';
+      const btnOnClick = user.liked ? '' : `event.stopPropagation(); handleTileLike(${user.id});`;
+
       const tileHtml = `
         <div class="user-tile" onclick="openDetailProfile(${user.id})">
           <div class="user-tile-badge">${user.tag}</div>
           <div class="user-tile-avatar">${user.icon}</div>
           <div style="font-weight: 800; font-size: 13px; color: white;">${user.name} <span style="font-size: 10px; color: var(--text-sub); font-weight:400;">(${user.age})</span></div>
-          <button class="action-btn-glossy" style="width: 100%; margin-top: 6px; padding: 4px; font-size: 9px;" onclick="event.stopPropagation(); alert('${user.name}さんにいいね！を送りました！');">✨ いいね！</button>
+          <button class="${btnClass}" style="width: 100%; margin-top: 6px; padding: 4px; font-size: 9px;" onclick="${btnOnClick}">${btnText}</button>
         </div>
       `;
       container.innerHTML += tileHtml;
@@ -663,6 +764,19 @@
 
     openView('view-matched-grid');
   }
+
+  function handleTileLike(userId) {
+    const user = sampleUsers.find(u => u.id === userId);
+    if (user) {
+      user.liked = true;
+      alert(`${user.name}さんにいいね！を送りました！`);
+      showMatchedUsersModal(document.getElementById('grid-modal-title').innerText); // 一覧再描画
+      updateMainCard(); // さがす画面も更新
+    }
+  }
+
+  // 初期化実行
+  updateMainCard();
 </script>
 
 </body>
