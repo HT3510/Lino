@@ -2,963 +2,759 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lino - 運命を奏でるマッチングプラットフォーム</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lino - 運命のマッチング</title>
   <style>
+    /* ==========================================================================
+       1. 基本変数・カラーパレット定義
+       ========================================================================== */
     :root {
-      --bg-dark: #070913;
-      --card-bg: rgba(21, 23, 43, 0.85);
-      --card-border: rgba(255, 255, 255, 0.12);
-      
-      --primary-neon: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
-      --gold-glossy: linear-gradient(135deg, #fff3b0 0%, #ffd700 35%, #d97706 80%, #fff176 100%);
-      --purple-lux: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4c1d95 100%);
-
-      --text-main: #f8fafc;
-      --text-sub: #94a3b8;
+      --color-bg-main: #050608;
+      --color-bg-container: #0a0c10;
+      --color-card-dark: #0f131c;
+      --color-card-border: #1a202c;
+      --color-purple-bg: #2e1a47;
+      --color-purple-border: #4a2d73;
+      --color-mint: #00e6a8;
+      --color-gold-start: #e2b740;
+      --color-gold-end: #c49619;
+      --color-text-primary: #ffffff;
+      --color-text-secondary: #8c93a4;
+      --color-text-gold: #ffca28;
+      --color-alert-bg: #1e222d;
+      --color-alert-btn: #8ab4f8;
+      --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      --font-family-serif: 'Georgia', serif;
     }
 
+    /* ==========================================================================
+       2. リセット CSS & 全体レイアウト設定
+       ========================================================================== */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: var(--font-family-base);
       -webkit-tap-highlight-color: transparent;
     }
-    
-    body {
-      background-color: #030408;
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      background-color: #000000;
+      color: var(--color-text-primary);
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      margin: 0;
+      overflow: hidden;
     }
 
-    .app-container {
+    /* アプリビューポート（iPhone型フレーム） */
+    .app-frame {
       width: 100%;
-      max-width: 430px;
-      height: 100vh;
-      max-height: 900px;
-      background: #0b0d1b;
+      max-width: 414px;
+      height: 100%;
+      max-height: 844px;
+      background-color: var(--color-bg-container);
+      border-radius: 40px;
+      position: relative;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
-      position: relative;
-      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.9), 0 0 40px rgba(16, 185, 129, 0.15);
-      overflow: hidden;
-      color: var(--text-main);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95);
+      border: 1px solid #1a1f2c;
     }
 
-    .app-container::before {
-      content: '';
-      position: absolute;
-      top: -100px; left: -50px;
-      width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    @media (min-width: 480px) {
-      .app-container {
-        height: 88vh;
-        border-radius: 40px;
-        border: 1px solid rgba(255, 255, 255, 0.15);
-      }
-    }
-
-    .header {
-      background: rgba(11, 13, 27, 0.75);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      padding: 12px 20px;
+    /* ==========================================================================
+       3. ヘッダーエリア
+       ========================================================================== */
+    .app-header {
+      width: 100%;
+      height: 64px;
+      padding: 0 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      z-index: 10;
-      flex-shrink: 0;
-    }
-    
-    .logo {
-      font-family: 'Great Vibes', cursive !important;
-      font-size: 40px !important;
-      font-weight: 500;
-      background: var(--gold-glossy);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      line-height: 1;
-      filter: drop-shadow(0 2px 8px rgba(245, 158, 11, 0.3));
+      background-color: var(--color-bg-container);
+      z-index: 100;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
     }
 
-    .content-area {
+    .brand-logo {
+      font-family: var(--font-family-serif);
+      font-size: 32px;
+      font-style: italic;
+      font-weight: bold;
+      background: linear-gradient(135deg, #ffe082 0%, #c49619 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .header-notification {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .bell-icon {
+      font-size: 20px;
+      color: var(--color-text-gold);
+    }
+
+    /* ==========================================================================
+       4. メインコンテンツ（スクロール可能エリア）
+       ========================================================================== */
+    .app-main {
       flex: 1;
-      overflow-y: auto;
       padding: 16px;
-      z-index: 1;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .app-main::-webkit-scrollbar {
+      display: none;
     }
 
     .tab-content {
       display: none;
-      flex-direction: column;
-      gap: 16px;
-      animation: fadeIn 0.3s ease-out;
-    }
-    .tab-content.active { display: flex; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .glass-card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 24px;
-      border: 1px solid var(--card-border);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      overflow: hidden;
-      position: relative;
-    }
-
-    .action-btn-glossy {
-      background: var(--gold-glossy);
-      color: #0b0d1b;
-      border: none;
-      padding: 12px 18px;
-      border-radius: 30px;
-      font-weight: 900;
-      font-size: 13px;
-      cursor: pointer;
-      box-shadow: 0 8px 25px rgba(217, 119, 6, 0.35);
-      transition: all 0.2s;
-      text-align: center;
-    }
-    .action-btn-glossy:active { transform: scale(0.96); }
-
-    .action-btn-outline {
-      background: rgba(255, 255, 255, 0.05);
-      color: #f8fafc;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 10px 16px;
-      border-radius: 30px;
-      font-weight: 800;
-      font-size: 12px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-    }
-    .action-btn-outline:active { background: rgba(255, 255, 255, 0.15); }
-
-    .tag-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
-    .mood-tag {
-      background: rgba(255, 255, 255, 0.05); color: var(--text-sub);
-      border: 1px solid rgba(255, 255, 255, 0.1); padding: 8px 16px;
-      border-radius: 20px; font-size: 12px; font-weight: 700; white-space: nowrap; cursor: pointer;
-    }
-    .mood-tag.active {
-      background: var(--primary-neon); color: #000; font-weight: 800; border: none;
-    }
-
-    .user-tile-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 12px;
-    }
-    .user-tile {
-      background: var(--card-bg);
-      border-radius: 20px;
-      border: 1px solid var(--card-border);
-      padding: 10px;
-      text-align: center;
-      cursor: pointer;
-      position: relative;
-      transition: transform 0.2s;
-      overflow: hidden;
-    }
-    .user-tile:active { transform: scale(0.96); }
-    .user-tile-img {
       width: 100%;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 14px;
-      margin-bottom: 6px;
-    }
-    .user-tile-badge {
-      position: absolute;
-      top: 14px; left: 14px;
-      background: rgba(11, 13, 27, 0.85);
-      color: #34d399;
-      border: 1px solid rgba(52, 211, 153, 0.4);
-      padding: 2px 8px;
-      border-radius: 10px;
-      font-size: 9px;
-      font-weight: 800;
+      height: 100%;
     }
 
-    .profile-card {
-      background: var(--card-bg); border-radius: 28px; overflow: hidden;
-      border: 1px solid var(--card-border); cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-    }
-    .profile-img-container {
-      height: 280px; width: 100%; position: relative; overflow: hidden;
-    }
-    .profile-img-src {
-      width: 100%; height: 100%; object-fit: cover;
+    .tab-content.active {
+      display: block;
     }
 
-    .biorhythm-card {
-      background: linear-gradient(135deg, rgba(30, 27, 75, 0.9) 0%, rgba(76, 29, 149, 0.8) 100%);
-      border-radius: 24px; padding: 22px; color: white;
-      border: 1px solid rgba(168, 85, 247, 0.3);
+    /* ==========================================================================
+       5. タブ1: 「さがす」画面スタイル
+       ========================================================================== */
+    .odekake-container {
+      background-color: #0e111a;
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 20px;
+      border: 1px solid var(--color-card-border);
     }
 
-    .fortune-card {
-      background: var(--card-bg); border-radius: 20px; padding: 16px;
-      border: 1px solid var(--card-border); display: flex; align-items: center; gap: 14px; cursor: pointer;
-    }
-    .fortune-icon-box {
-      width: 50px; height: 50px; border-radius: 16px;
-      background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(52, 211, 153, 0.3);
-      display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
+    .odekake-header {
+      font-size: 13px;
+      color: var(--color-text-primary);
+      font-weight: bold;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
-    /* フォーム */
-    .form-group { margin-bottom: 16px; text-align: left; }
-    .form-label { font-size: 11px; font-weight: 800; color: var(--text-sub); margin-bottom: 6px; display: block; }
-    .form-input, .form-textarea, .form-select {
-      width: 100%; padding: 12px 14px; border-radius: 14px;
-      background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15);
-      color: white; font-size: 13px; outline: none;
+    .odekake-tags-wrapper {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
     }
-    .form-textarea { resize: vertical; min-height: 90px; }
 
-    .nav {
-      background: rgba(11, 13, 27, 0.85); backdrop-filter: blur(20px);
-      display: flex; justify-content: space-around; align-items: flex-end;
-      padding: 10px 0 14px; border-top: 1px solid rgba(255, 255, 255, 0.08); z-index: 10;
+    .odekake-tag {
+      background-color: #102620;
+      border: 1px solid #164235;
+      color: var(--color-mint);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      white-space: nowrap;
+      cursor: pointer;
     }
-    .nav-item {
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      font-size: 10px; color: #64748b; cursor: pointer; flex: 1; font-weight: 700;
-    }
-    .nav-item.active { color: #34d399; }
-    .nav-icon { width: 22px; height: 22px; stroke-width: 2.2; }
 
-    .lino-main-btn {
-      position: relative; top: -16px; width: 64px; height: 64px; border-radius: 50%;
-      background: var(--gold-glossy); box-shadow: 0 10px 30px rgba(245, 158, 11, 0.5);
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      color: #0b0d1b; border: 3px solid #0b0d1b; cursor: pointer;
+    .odekake-tag.disabled {
+      background-color: #141722;
+      border-color: #1e2434;
+      color: var(--color-text-secondary);
     }
-    .lino-btn-text { font-family: 'Great Vibes', cursive; font-size: 18px; font-weight: bold; line-height: 1; }
 
-    .full-screen-view {
-      position: absolute; inset: 0; background: #0b0d1b; z-index: 50;
-      display: none; flex-direction: column; overflow-y: auto;
-      opacity: 0; transform: translateY(20px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .full-screen-view.show { display: flex; opacity: 1; transform: translateY(0); }
-    
-    .sub-header {
-      background: rgba(11, 13, 27, 0.8); backdrop-filter: blur(16px);
-      padding: 16px; display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid rgba(255,255,255,0.08); position: sticky; top: 0; z-index: 20;
-    }
-    .back-btn { font-size: 18px; cursor: pointer; color: white; font-weight: 800; }
-
-    .tarot-scene { perspective: 1000px; width: 150px; height: 220px; margin: 16px auto; cursor: pointer; }
-    .tarot-card-object { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transition: transform 0.8s; }
-    .tarot-card-object.is-flipped { transform: rotateY(180deg); }
-    .tarot-face { position: absolute; inset: 0; backface-visibility: hidden; border-radius: 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; border: 2px solid #ffd700; }
-    .tarot-face-back { background: linear-gradient(135deg, #17153b 0%, #2e236c 100%); color: #ffd700; }
-    .tarot-face-front { background: #0f172a; color: #fcd34d; transform: rotateY(180deg); padding: 12px; text-align: center; }
-
-    .scan-window {
-      position: relative; width: 180px; height: 180px; margin: 16px auto; border-radius: 24px;
-      background: #05070e; border: 2px solid #10b981; display: flex; align-items: center; justify-content: center; font-size: 50px;
-    }
-    .scan-laser-line {
-      position: absolute; width: 100%; height: 4px; background: #34d399; box-shadow: 0 0 15px #34d399; top: 0;
-      animation: scanLaser 1.8s infinite ease-in-out;
-    }
-    @keyframes scanLaser { 0% { top: 0%; } 50% { top: 95%; } 100% { top: 0%; } }
-
-    /* マイページ用 */
-    .profile-header-bg {
-      height: 120px;
-      background: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #4c1d95 100%);
+    /* ユーザー対戦・マッチカード */
+    .match-card-wrapper {
+      width: 100%;
       position: relative;
     }
-    .profile-avatar-wrap {
-      width: 84px; height: 84px; border-radius: 50%;
-      background: #0b0d1b; border: 3px solid #34d399;
-      position: absolute; bottom: -35px; left: 20px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+
+    .match-card {
+      background: linear-gradient(180deg, #09221a 0%, #0c1017 50%, #101420 100%);
+      border-radius: 28px;
+      border: 1px solid #153b2f;
       overflow: hidden;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
     }
-    .profile-avatar-img { width: 100%; height: 100%; object-fit: cover; }
-    .info-row {
-      display: flex; justify-content: space-between; padding: 10px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 12px;
+
+    .match-badge-container {
+      padding: 14px 16px 0;
     }
-    .info-row:last-child { border-bottom: none; }
+
+    .match-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.45);
+      color: #ffc107;
+      font-size: 12px;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    .card-avatar-section {
+      padding: 24px 0 12px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .avatar-inner {
+      width: 100px;
+      height: 100px;
+      background-color: #202634;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 56px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .card-info-section {
+      padding: 12px 20px 24px;
+      text-align: left;
+    }
+
+    .user-name-text {
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--color-text-primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
+    }
+
+    .user-age-text {
+      font-size: 16px;
+      color: var(--color-text-secondary);
+      font-weight: normal;
+    }
+
+    .ai-judgment-text {
+      font-size: 12px;
+      color: var(--color-mint);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 500;
+    }
+
+    .button-like-submit {
+      width: 100%;
+      padding: 16px;
+      border: none;
+      border-radius: 30px;
+      background: linear-gradient(135deg, var(--color-gold-start) 0%, var(--color-gold-end) 100%);
+      color: #000000;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 6px 20px rgba(226, 183, 64, 0.3);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .button-like-submit:active {
+      transform: scale(0.97);
+      box-shadow: 0 2px 10px rgba(226, 183, 64, 0.2);
+    }
+
+    .no-more-cards {
+      display: none;
+      text-align: center;
+      padding: 100px 20px;
+      color: var(--color-text-secondary);
+    }
+
+    .no-more-cards p {
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       6. タブ4: 「マイページ」画面スタイル（編集フォーム含む）
+       ========================================================================== */
+    .mypage-card-meishiki {
+      background: linear-gradient(135deg, var(--color-purple-bg) 0%, #1e1030 100%);
+      border-radius: 24px;
+      padding: 24px;
+      margin-bottom: 20px;
+      border: 1px solid var(--color-purple-border);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .mypage-card-meishiki h2 {
+      font-size: 20px;
+      color: var(--color-text-primary);
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    .mypage-card-meishiki p {
+      font-size: 14px;
+      color: #d8c8ed;
+      line-height: 1.5;
+    }
+
+    .mypage-edit-container {
+      background-color: var(--color-card-dark);
+      border-radius: 24px;
+      padding: 24px;
+      border: 1px solid var(--color-card-border);
+    }
+
+    .mypage-edit-container h3 {
+      font-size: 16px;
+      color: var(--color-text-gold);
+      margin-bottom: 20px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-field-group {
+      margin-bottom: 18px;
+    }
+
+    .form-field-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    .form-field-group input {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #252c3d;
+      background-color: #06080c;
+      color: var(--color-text-primary);
+      font-size: 15px;
+      transition: border-color 0.2s ease;
+    }
+
+    .form-field-group input:focus {
+      outline: none;
+      border-color: var(--color-gold-start);
+    }
+
+    .button-save-profile {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      background-color: #198754;
+      color: var(--color-text-primary);
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background-color 0.2s ease;
+    }
+
+    .button-save-profile:active {
+      background-color: #146c43;
+    }
+
+    /* その他のプレースホルダータブ */
+    .tab-placeholder {
+      text-align: center;
+      padding: 100px 20px;
+      color: var(--color-text-secondary);
+    }
+
+    .tab-placeholder h3 {
+      font-size: 18px;
+      color: var(--color-text-primary);
+      margin-bottom: 10px;
+    }
+
+    /* ==========================================================================
+       7. アラートポップアップ（Modal）スタイル
+       ========================================================================== */
+    .alert-modal-overlay {
+      display: none;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 9999;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 50px;
+      backdrop-filter: blur(2px);
+    }
+
+    .alert-modal-content {
+      background-color: var(--color-alert-bg);
+      border-radius: 20px;
+      width: 86%;
+      padding: 20px 24px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.8);
+      border: 1px solid #2d3446;
+      animation: alertPop 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes alertPop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .alert-domain {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      margin-bottom: 12px;
+      font-family: monospace;
+    }
+
+    .alert-message-text {
+      font-size: 15px;
+      color: var(--color-text-primary);
+      margin-bottom: 24px;
+      font-weight: 500;
+      line-height: 1.4;
+    }
+
+    .alert-action-row {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .alert-confirm-btn {
+      background-color: var(--color-alert-btn);
+      color: #101216;
+      border: none;
+      padding: 9px 26px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    /* ==========================================================================
+       8. フッターナビゲーションバー
+       ========================================================================== */
+    .app-bottom-nav {
+      height: 76px;
+      background-color: var(--color-bg-container);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      position: relative;
+      padding-bottom: 10px;
+      z-index: 100;
+    }
+
+    .nav-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 20%;
+      height: 100%;
+      background: none;
+      border: none;
+      color: var(--color-text-secondary);
+      font-size: 10px;
+      cursor: pointer;
+      gap: 4px;
+    }
+
+    .nav-button.active {
+      color: var(--color-mint);
+    }
+
+    .nav-icon-text {
+      font-size: 22px;
+    }
+
+    .nav-center-button {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-gold-start) 0%, var(--color-gold-end) 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: -32px;
+      box-shadow: 0 0 20px rgba(226, 183, 64, 0.4);
+      border: 4px solid var(--color-bg-container);
+      cursor: pointer;
+    }
+
+    .nav-center-button span {
+      font-family: var(--font-family-serif);
+      font-style: italic;
+      font-weight: bold;
+      color: #000000;
+      font-size: 15px;
+    }
   </style>
 </head>
 <body>
 
-<div class="app-container">
-  <div class="header">
-    <div class="logo">Lino</div>
-    <div style="cursor: pointer; color: #f8fafc; font-size: 18px;">🔔</div>
-  </div>
+  <!-- スマホ風枠組み -->
+  <div class="app-frame">
 
-  <div class="content-area">
-
-    <!-- タブ1: さがす -->
-    <div id="tab-search" class="tab-content active">
-      <div class="glass-card" style="padding: 16px;">
-        <div style="font-size: 13px; font-weight: 800; color: #34d399; margin-bottom: 10px;">📍 今日の運命おでかけ</div>
-        <div class="tag-scroll">
-          <div class="mood-tag active" onclick="filterMood(this, '今夜サクッと飲み🍻')">今夜サクッと飲み🍻</div>
-          <div class="mood-tag" onclick="filterMood(this, '週末カフェ巡り☕')">週末カフェ巡り☕</div>
-        </div>
+    <!-- 共通ヘッダー -->
+    <header class="app-header">
+      <div class="brand-logo">Lino</div>
+      <div class="header-notification">
+        <span class="bell-icon">🔔</span>
       </div>
+    </header>
 
-      <div id="search-card-wrapper"></div>
-    </div>
+    <!-- スクロールメイン領域 -->
+    <main class="app-main">
 
-    <!-- タブ2: いいね！ -->
-    <div id="tab-likes" class="tab-content">
-      <p style="text-align: center; color: var(--text-sub); margin-top: 50px; font-size: 13px;">あなたに届いた「運命のいいね！」一覧です。</p>
-    </div>
-
-    <!-- タブ3: ✨ 占い -->
-    <div id="tab-fortune" class="tab-content">
-      <div class="biorhythm-card">
-        <span style="color: #fbbf24; font-size: 10px; font-weight: 800;">ASTROLOGY DIAGNOSIS</span>
-        <h2 style="font-size: 20px; font-weight: 900; margin: 4px 0;">精密ホロスコープ解析</h2>
-        <p style="font-size: 11px; color: #cbd5e1;">アスペクト計算から、今日のベストパートナーを抽出します。</p>
-        <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="startHoroscopeResult()">✨ 算術解析を実行</button>
-      </div>
-
-      <div class="fortune-card" onclick="openScanModal('hand')">
-        <div class="fortune-icon-box">✋</div>
-        <div>
-          <h4 style="font-size: 14px; color: white;">📷 AIスマホ手相解析</h4>
-          <p style="font-size: 11px; color: var(--text-sub);">感情線・頭脳線をビジュアルスキャン</p>
-        </div>
-      </div>
-
-      <div class="fortune-card" onclick="openScanModal('face')">
-        <div class="fortune-icon-box">👁️</div>
-        <div>
-          <h4 style="font-size: 14px; color: white;">👤 AI顔像・人相解剖学</h4>
-          <p style="font-size: 11px; color: var(--text-sub);">顔パーツ比率から本質と注意点を解析</p>
-        </div>
-      </div>
-
-      <div class="fortune-card" onclick="openTarotModal()">
-        <div class="fortune-icon-box">🃏</div>
-        <div>
-          <h4 style="font-size: 14px; color: white;">🃏 3D引き寄せタロット</h4>
-          <p style="font-size: 11px; color: var(--text-sub);">タップで180度くるっとカードフリップ</p>
-        </div>
-      </div>
-
-      <div class="fortune-card" onclick="openNumerologyModal()">
-        <div class="fortune-icon-box">☯️</div>
-        <div>
-          <h4 style="font-size: 14px; color: white;">🔢 四柱推命 & ソウル数理</h4>
-          <p style="font-size: 11px; color: var(--text-sub);">生年月日から「日干」と「ソウルNo」算出</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- タブ4: メッセージ -->
-    <div id="tab-messages" class="tab-content">
-      <div class="glass-card" style="padding: 14px; display: flex; align-items: center; gap: 12px; cursor: pointer;" onclick="openChatView('あやか')">
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid #34d399;">
-        <div>
-          <div style="font-weight: 800; font-size: 14px; color: white;">あやか</div>
-          <div style="font-size: 11px; color: var(--text-sub);">今夜サクッと飲みに行けますか？🍻</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- タブ5: 👤 マイページ -->
-    <div id="tab-mypage" class="tab-content">
-      <div class="glass-card">
-        <div class="profile-header-bg">
-          <div class="profile-avatar-wrap">
-            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" class="profile-avatar-img" id="my-avatar-display">
-          </div>
-        </div>
-        <div style="padding: 42px 16px 16px;">
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div>
-              <h2 style="font-size: 20px; font-weight: 900;" id="my-name-display">秀広 <span style="font-size: 14px; font-weight:500; color:var(--text-sub);" id="my-age-display">(30歳)</span></h2>
-              <p style="font-size: 11px; color: #34d399; font-weight: 700; margin-top:2px;" id="my-sub-display">📍 東京都 / IT・機械製造</p>
-            </div>
-            <button class="action-btn-outline" onclick="openEditProfileModal()">✏️ 編集</button>
-          </div>
-
-          <p style="font-size: 12px; color: #cbd5e1; margin-top: 12px; line-height: 1.6;" id="my-bio-display">
-            目利き力と泥臭い折衝力が強みです。休日はドライブやグルメ開拓をして過ごしています！気軽に話しかけてください。
-          </p>
-        </div>
-      </div>
-
-      <!-- 占い・命式ステータス -->
-      <div class="biorhythm-card">
-        <span style="color: #fbbf24; font-size: 10px; font-weight: 800;">YOUR MYSTICAL PROFILE</span>
-        <h3 style="font-size: 16px; font-weight: 900; margin-top: 4px;">陰陽五行 & 鑑定パラメータ</h3>
+      <!-- ==========================================
+           タブ1: さがす（メインカード表示）
+           ========================================== -->
+      <section id="tab-search" class="tab-content active">
         
-        <div class="info-row" style="margin-top: 10px;">
-          <span style="color: #cbd5e1;">日干（本質）</span>
-          <span style="font-weight: 800; color: #34d399;" id="my-nikkan-display">甲（大木）</span>
+        <!-- おでかけ条件チップ -->
+        <div class="odekake-container">
+          <div class="odekake-header">
+            <span>📍 今日の運命のおでかけ</span>
+          </div>
+          <div class="odekake-tags-wrapper">
+            <div class="odekake-tag">今夜サクッと飲み 🍻</div>
+            <div class="odekake-tag disabled">週末カフェ巡り ☕</div>
+          </div>
         </div>
-        <div class="info-row">
-          <span style="color: #cbd5e1;">ソウルナンバー</span>
-          <span style="font-weight: 800; color: #fbbf24;" id="my-soul-display">7 (職人・探求者)</span>
+
+        <!-- カードコンテナ -->
+        <div class="match-card-wrapper" id="card-wrapper">
+          <div class="match-card" id="user-card-ayaka">
+            <div class="match-badge-container">
+              <div class="match-badge">
+                ✨ 命式相性 [金 × 水] 98%
+              </div>
+            </div>
+            <div class="card-avatar-section">
+              <div class="avatar-inner">👩🏻</div>
+            </div>
+            <div class="card-info-section">
+              <div class="user-name-text">
+                あやか <span class="user-age-text">(25歳)</span>
+              </div>
+              <div class="ai-judgment-text">
+                👁️ AI人相判定: 眉間幅広（オープン・誠実相）
+              </div>
+              <button class="button-like-submit" onclick="onClickLike('あやか')">
+                ✨ 運命のいいね！を送る
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="info-row">
-          <span style="color: #cbd5e1;">AI人相解析</span>
-          <span style="font-weight: 800; color: #a7f3d0;" id="my-face-display">深謀遠慮相・誠実眼</span>
+
+        <!-- なくなった時の案内 -->
+        <div class="no-more-cards" id="no-cards-msg">
+          <p>近くのお相手は全員チェック済みです！<br>また時間をおいてご確認ください。</p>
         </div>
-      </div>
 
-      <!-- 基本詳細 -->
-      <div class="glass-card" style="padding: 16px;">
-        <h4 style="font-size: 13px; font-weight: 800; color: #34d399; margin-bottom: 8px;">📋 詳細スペック</h4>
-        <div class="info-row"><span style="color: var(--text-sub);">居住地</span><span id="my-location-display">東京都</span></div>
-        <div class="info-row"><span style="color: var(--text-sub);">職種</span><span id="my-job-display">製造・M&Aアドバイザリー</span></div>
-        <div class="info-row"><span style="color: var(--text-sub);">年収</span><span id="my-income-display">1,000万円以上</span></div>
-        <div class="info-row"><span style="color: var(--text-sub);">休日</span><span>土日祝休み</span></div>
-        <div class="info-row"><span style="color: var(--text-sub);">お酒</span><span>時々飲む 🍻</span></div>
-      </div>
-    </div>
+      </section>
 
-  </div>
-
-  <!-- ナビゲーションバー -->
-  <div class="nav">
-    <div id="nav-search" class="nav-item active" onclick="switchTab('search', this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-      <span>さがす</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('likes', this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-      <span>いいね！</span>
-    </div>
-
-    <div class="lino-main-btn" onclick="switchTab('fortune', document.getElementById('nav-fortune-hidden'))">
-      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg>
-      <span class="lino-btn-text">Lino</span>
-    </div>
-    <div id="nav-fortune-hidden" class="nav-item" style="display:none;"></div>
-
-    <div class="nav-item" onclick="switchTab('messages', this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-      <span>メッセージ</span>
-    </div>
-    <div class="nav-item" onclick="switchTab('mypage', this)">
-      <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span>マイページ</span>
-    </div>
-  </div>
-
-  <!-- ✏️ プロフィール編集モーダル -->
-  <div id="view-edit-profile-modal" class="full-screen-view">
-    <div class="sub-header">
-      <span class="back-btn" onclick="closeView('view-edit-profile-modal')">✕</span>
-      <span style="font-weight: 800; font-size: 14px; color: #34d399;">✏️ プロフィール編集</span>
-      <span style="font-size: 12px; color: #fbbf24; font-weight: 800; cursor: pointer;" onclick="saveProfileChanges()">保存</span>
-    </div>
-    <div style="padding: 20px 16px;">
-      
-      <div class="form-group">
-        <label class="form-label">お名前 (表示名)</label>
-        <input type="text" id="edit-name" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">年齢</label>
-        <input type="number" id="edit-age" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">居住地</label>
-        <input type="text" id="edit-location" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">職業</label>
-        <input type="text" id="edit-job" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">年収</label>
-        <select id="edit-income" class="form-select">
-          <option value="500万円〜700万円">500万円〜700万円</option>
-          <option value="700万円〜1,000万円">700万円〜1,000万円</option>
-          <option value="1,000万円以上">1,000万円以上</option>
-          <option value="1,500万円以上">1,500万円以上</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">自己紹介文</label>
-        <textarea id="edit-bio" class="form-textarea"></textarea>
-      </div>
-
-      <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
-
-      <h4 style="font-size: 13px; font-weight: 800; color: #fbbf24; margin-bottom: 12px;">☯️ 命式・鑑定ステータス設定</h4>
-
-      <div class="form-group">
-        <label class="form-label">日干（四柱推命の本質）</label>
-        <input type="text" id="edit-nikkan" class="form-input">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">ソウルナンバー</label>
-        <input type="text" id="edit-soul" class="form-input">
-      </div>
-
-      <button class="action-btn-glossy" style="width: 100%; margin-top: 20px; padding: 14px;" onclick="saveProfileChanges()">✨ 変更内容を保存する</button>
-    </div>
-  </div>
-
-  <!-- 【モーダル1】3Dタロット -->
-  <div id="view-tarot-modal" class="full-screen-view">
-    <div class="sub-header">
-      <span class="back-btn" onclick="closeView('view-tarot-modal')">✕</span>
-      <span style="font-weight: 800; font-size: 14px; color: #fbbf24;">🃏 3D引き寄せタロット</span>
-      <span></span>
-    </div>
-    <div style="padding: 20px 16px; text-align: center;">
-      <p style="font-size: 12px; color: var(--text-sub);">タップしてカードをひっくり返してください。</p>
-      
-      <div class="tarot-scene" onclick="executeTarotFlip()">
-        <div class="tarot-card-object" id="tarot-card-obj">
-          <div class="tarot-face tarot-face-back"><span style="font-size: 36px;">🔮</span></div>
-          <div class="tarot-face tarot-face-front" id="tarot-front-content"></div>
+      <!-- ==========================================
+           タブ2: いいね！
+           ========================================== -->
+      <section id="tab-likes" class="tab-content">
+        <div class="tab-placeholder">
+          <h3>いいね！一覧</h3>
+          <p>送ったいいね・届いたいいねをここで確認できます。</p>
         </div>
-      </div>
+      </section>
 
-      <div id="tarot-result-card" style="display: none; background: var(--card-bg); border-radius: 20px; padding: 16px; border: 1px solid rgba(251, 191, 36, 0.4); text-align: left;">
-        <div id="tarot-res-title" style="color: #fbbf24; font-weight: 800; font-size: 14px;"></div>
-        <p id="tarot-res-desc" style="font-size: 12px; color: #cbd5e1; margin-top: 6px; line-height: 1.5;"></p>
-        <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="showMatchedUsersModal('タロット引き寄せ（おすすめ10名）')">
-          ✨ 相性の良い女性（10名）を一覧で見る ➔
-        </button>
-      </div>
-    </div>
-  </div>
+      <!-- ==========================================
+           タブ3: メッセージ
+           ========================================== -->
+      <section id="tab-messages" class="tab-content">
+        <div class="tab-placeholder">
+          <h3>メッセージ</h3>
+          <p>マッチングしたお相手とのチャット一覧です。</p>
+        </div>
+      </section>
 
-  <!-- 【モーダル2】AIスキャン -->
-  <div id="view-scan-modal" class="full-screen-view">
-    <div class="sub-header">
-      <span class="back-btn" onclick="closeView('view-scan-modal')">✕</span>
-      <span id="scan-header-title" style="font-weight: 800; font-size: 14px; color: #34d399;">📷 AI解析</span>
-      <span></span>
-    </div>
-    <div style="padding: 20px 16px; text-align: center;">
-      <div class="scan-window">
-        <div class="scan-laser-line"></div>
-        <span id="scan-emoji">✋</span>
-      </div>
-      <p id="scan-status" style="font-size: 13px; color: #34d399; font-weight: 800;">特徴点をリアルタイムスキャン中...</p>
-      
-      <div id="scan-result-box" style="display: none; background: var(--card-bg); border-radius: 20px; padding: 16px; text-align: left; margin-top: 16px; border: 1px solid rgba(52, 211, 153, 0.4);">
-        <h4 id="scan-res-title" style="color: #34d399; font-size: 14px; font-weight: 800;"></h4>
-        <p id="scan-res-desc" style="font-size: 12px; color: #cbd5e1; margin-top: 6px; line-height: 1.5;"></p>
-        <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="showMatchedUsersModal('AI適合女性一覧（10名）')">
-          ✨ 適合するお相手（10名）を見る ➔
-        </button>
-      </div>
-    </div>
-  </div>
+      <!-- ==========================================
+           タブ4: マイページ（編集機能付き）
+           ========================================== -->
+      <section id="tab-mypage" class="tab-content">
+        
+        <!-- 上部：命式プロフィールカード（リアルタイム変更領域） -->
+        <div class="mypage-card-meishiki">
+          <h2><span id="display-user-name">秀広</span> さんの陰陽五行・命式</h2>
+          <p>日干: <span id="display-user-nikkan">甲（大木）</span> | ソウルナンバー: <span id="display-user-soul">7</span></p>
+        </div>
 
-  <!-- 【モーダル3】四柱推命 -->
-  <div id="view-numerology-modal" class="full-screen-view">
-    <div class="sub-header">
-      <span class="back-btn" onclick="closeView('view-numerology-modal')">✕</span>
-      <span style="font-weight: 800; font-size: 14px; color: #fbbf24;">☯️ 命式解析</span>
-      <span></span>
-    </div>
-    <div style="padding: 20px 16px;">
-      <div class="glass-card" style="padding: 16px;">
-        <h3 style="font-size: 14px; color: #fbbf24;">生年月日</h3>
-        <input type="date" id="user-birthdate" value="1995-05-15" style="width:100%; padding:10px; margin-top:8px; border-radius:10px; background:rgba(255,255,255,0.1); color:white; border:1px solid rgba(255,255,255,0.2);">
-        <button class="action-btn-glossy" style="width: 100%; margin-top: 12px;" onclick="calculateNumerology()">✨ 命式を解析する</button>
+        <!-- 下部：編集フォームエリア -->
+        <div class="mypage-edit-container">
+          <h3>⚙️ プロフィール編集</h3>
+          
+          <div class="form-field-group">
+            <label for="input-name">お名前</label>
+            <input type="text" id="input-name" value="秀広" placeholder="名前を入力">
+          </div>
 
-        <div id="numerology-result-box" style="display: none; margin-top: 14px; font-size: 12px; color: #cbd5e1;">
-          <p>・<strong>ソウルナンバー</strong>：<span id="num-soul" style="color: #fbbf24;"></span></p>
-          <p>・<strong>日干本質</strong>：<span id="num-nikkan" style="color: #34d399;"></span></p>
-          <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="showMatchedUsersModal('陰陽・属性補完マッチ（10名）')">
-            ✨ 属性を補い合えるお相手を見る ➔
+          <div class="form-field-group">
+            <label for="input-nikkan">日干（属性）</label>
+            <input type="text" id="input-nikkan" value="甲（大木）" placeholder="例: 甲（大木）">
+          </div>
+
+          <div class="form-field-group">
+            <label for="input-soul">ソウルナンバー</label>
+            <input type="text" id="input-soul" value="7" placeholder="例: 7">
+          </div>
+
+          <button class="button-save-profile" onclick="onSaveProfile()">
+            設定を保存する
           </button>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- 【モーダル4】ホロスコープ -->
-  <div id="view-fortune-result" class="full-screen-view">
-    <div class="sub-header">
-      <span class="back-btn" onclick="closeView('view-fortune-result')">✕</span>
-      <span style="font-weight: 800; font-size: 14px; color: #fbbf24;">✨ 算術アスペクト鑑定</span>
-      <span></span>
-    </div>
-    <div style="padding: 24px 16px; text-align: center;">
-      <h2 style="font-size: 18px; font-weight: 900;">磁力が合致するお相手</h2>
-      <button class="action-btn-glossy" style="width: 100%; padding: 14px; margin-top: 20px;" onclick="showMatchedUsersModal('アスペクト最適女性一覧（10名）')">
-        ✨ 磁力一致のお相手を見る ➔
+      </section>
+
+    </main>
+
+    <!-- 下部固定ナビゲーションバー -->
+    <nav class="app-bottom-nav">
+      <button class="nav-button active" onclick="switchNavTab('search', this)">
+        <span class="nav-icon-text">🔍</span>
+        <span>さがす</span>
       </button>
-    </div>
-  </div>
 
-  <!-- タイル一覧 -->
-  <div id="view-matched-grid" class="full-screen-view">
-    <div class="sub-header">
-      <span class="back-btn" onclick="closeView('view-matched-grid')">✕</span>
-      <span id="grid-modal-title" style="font-weight: 800; font-size: 14px; color: #34d399;">相性の良いお相手一覧</span>
-      <span></span>
-    </div>
-    <div style="padding: 16px;">
-      <p style="font-size: 11px; color: var(--text-sub);">あなたと相性の良いお相手が10名みつかりました。</p>
-      <div class="user-tile-grid" id="tile-container"></div>
-    </div>
-  </div>
+      <button class="nav-button" onclick="switchNavTab('likes', this)">
+        <span class="nav-icon-text">🤍</span>
+        <span>いいね！</span>
+      </button>
 
-  <!-- プロフィール詳細 -->
-  <div id="view-profile-detail" class="full-screen-view">
-    <div class="sub-header">
-      <span class="back-btn" onclick="closeView('view-profile-detail')">✕</span>
-      <span style="font-weight: 800; font-size: 14px;" id="detail-header-name">詳細</span>
-      <span></span>
-    </div>
-    <div style="padding: 16px;">
-      <div class="glass-card" style="padding: 0; overflow: hidden; margin-bottom: 16px;">
-        <img id="detail-img" src="" style="width: 100%; height: 260px; object-fit: cover;">
-        <div style="padding: 16px;">
-          <h2 style="font-size: 20px;" id="detail-name">あやか (25)</h2>
-          <p style="font-size: 12px; color: #34d399; font-weight: bold; margin-top: 4px;" id="detail-match-score">相性: 98%</p>
-          <p style="font-size: 12px; color: #cbd5e1; margin-top: 12px; line-height: 1.5;" id="detail-bio"></p>
+      <div class="nav-center-button" onclick="switchNavTab('search', document.querySelectorAll('.nav-button')[0])">
+        <span>Lino</span>
+      </div>
+
+      <button class="nav-button" onclick="switchNavTab('messages', this)">
+        <span class="nav-icon-text">💬</span>
+        <span>メッセージ</span>
+      </button>
+
+      <button class="nav-button" onclick="switchNavTab('mypage', this)">
+        <span class="nav-icon-text">👤</span>
+        <span>マイページ</span>
+      </button>
+    </nav>
+
+    <!-- ポップアップモーダル（ht3510.github.ioのAlert再現） -->
+    <div class="alert-modal-overlay" id="custom-alert-modal">
+      <div class="alert-modal-content">
+        <div class="alert-domain">ht3510.github.io の内容</div>
+        <div class="alert-message-text" id="alert-modal-text"></div>
+        <div class="alert-action-row">
+          <button class="alert-confirm-btn" onclick="onCloseAlertModal()">OK</button>
         </div>
       </div>
-      <button id="detail-like-btn" class="action-btn-glossy" style="width: 100%; padding: 14px;" onclick="handleDetailLike();">✨ 運命のいいね！を送る</button>
     </div>
+
   </div>
 
-  <!-- チャット -->
-  <div id="view-chat-detail" class="full-screen-view">
-    <div class="sub-header">
-      <span class="back-btn" onclick="closeView('view-chat-detail')">←</span>
-      <span style="font-weight: 800; font-size: 14px;" id="chat-header-name">あやか</span>
-      <span></span>
-    </div>
-    <div style="padding: 16px;">
-      <div style="background: var(--card-bg); border: 1px solid var(--card-border); padding: 14px; border-radius: 18px; font-size: 13px; max-width: 80%;">今夜サクッと飲みに行けますか？🍻</div>
-    </div>
-  </div>
+  <!-- ==========================================================================
+     9. JavaScript ロジック処理
+     ========================================================================== -->
+  <script>
+    // 内部状態変数
+    let currentTargetName = "";
 
-</div>
-
-<script>
-  /* 👤 ログインユーザー情報 */
-  let myProfile = {
-    name: "秀広",
-    age: 30,
-    img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
-    location: "東京都",
-    job: "製造・M&Aアドバイザリー",
-    income: "1,000万円以上",
-    bio: "目利き力と泥臭い折衝力が強みです。休日はドライブやグルメ開拓をして過ごしています！気軽に話しかけてください。",
-    nikkan: "甲（大木）",
-    soul: "7 (職人・探求者)",
-    face: "深謀遠慮相・誠実眼"
-  };
-
-  /* 👩 10名のサンプル女性データ（Unsplashのリアル高画質画像を使用） */
-  const sampleUsers = [
-    { id: 0, name: "あやか", age: 25, img: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80", tag: "命式相性 [金×水] 98%", preview: "👁️ AI人相: 眉間幅広（オープン・誠実相）", bio: "カフェ巡りとアート鑑賞が好きです！お互いの個性を大事にできる人と出会いたいです✨", liked: false },
-    { id: 1, name: "凛 (りん)", age: 27, img: "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=600&q=80", tag: "金×水属性 96%", preview: "🚗 休日ドライブ＆カフェ巡り好き", bio: "休日によくドライブに出かけます🚗 四柱推命の相性が良いと出て気になりました！", liked: false },
-    { id: 2, name: "まみ", age: 24, img: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=600&q=80", tag: "ソウル 7 / 95%", preview: "🍻 居酒屋開拓＆フットワーク軽め", bio: "美味しい居酒屋を開拓するのが趣味です🍻 フットワーク軽めです！", liked: false },
-    { id: 3, name: "葵 (あおい)", age: 26, img: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=600&q=80", tag: "トライン吉 92%", preview: "🌿 美術館巡り＆自然派ライフ", bio: "のんびり美術館に行ったり自然に触れるのが好き🌿 穏やかな関係が理想です。", liked: false },
-    { id: 4, name: "エレナ", age: 28, img: "https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?auto=format&fit=crop&w=600&q=80", tag: "太陽アスペクト 94%", preview: "🍷 海外旅行＆ワイン愛好家", bio: "海外旅行とワインが好き🍷 直感を大事にしてアプローチしてみました！", liked: false },
-    { id: 5, name: "ひなこ", age: 23, img: "https://images.unsplash.com/photo-1488426862026-3ee34a7d66df?auto=format&fit=crop&w=600&q=80", tag: "相性 94%", preview: "🍳 手料理＆グルメ開拓中", bio: "最近料理にはまってます🍳 一緒に美味しくご飯を食べられる人がいいな。", liked: false },
-    { id: 6, name: "美咲", age: 29, img: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80", tag: "水×木補完 91%", preview: "💻 ITデザイナー＆内面重視", bio: "IT系でデザインの仕事をしてます。価値観や内面の相性を重視してます✨", liked: false },
-    { id: 7, name: "ゆりあ", age: 25, img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80", tag: "ソウル 11 / 97%", preview: "🧘‍♀️ サウナ＆ヨガで整う日々", bio: "ヨガとサウナで整うのが好きです！運命的な引き寄せを感じて登録しました。", liked: false },
-    { id: 8, name: "かのん", age: 24, img: "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?auto=format&fit=crop&w=600&q=80", tag: "感情線整合 93%", preview: "🎶 音楽フェス＆ライブ好き", bio: "音楽フェスやライブによく行きます♪ 一緒に盛り上がれるお相手募集中！", liked: false },
-    { id: 9, name: "さゆり", age: 30, img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80", tag: "相性 96%", preview: "🍶 大人の隠れ家飲み好き", bio: "落ち着いた居酒屋でサクッと飲むのが好きです。大人の心強いパートナー希望。", liked: false }
-  ];
-
-  let currentSearchIndex = 0;
-  let activeDetailUserId = null;
-
-  /* マイプロフィールの描画 */
-  function renderMyProfile() {
-    document.getElementById('my-avatar-display').src = myProfile.img;
-    document.getElementById('my-name-display').innerHTML = `${myProfile.name} <span style="font-size: 14px; font-weight:500; color:var(--text-sub);">(${myProfile.age}歳)</span>`;
-    document.getElementById('my-sub-display').innerText = `📍 ${myProfile.location} / ${myProfile.job}`;
-    document.getElementById('my-bio-display').innerText = myProfile.bio;
-    document.getElementById('my-nikkan-display').innerText = myProfile.nikkan;
-    document.getElementById('my-soul-display').innerText = myProfile.soul;
-    document.getElementById('my-face-display').innerText = myProfile.face;
-    document.getElementById('my-location-display').innerText = myProfile.location;
-    document.getElementById('my-job-display').innerText = myProfile.job;
-    document.getElementById('my-income-display').innerText = myProfile.income;
-  }
-
-  /* 編集モーダル */
-  function openEditProfileModal() {
-    document.getElementById('edit-name').value = myProfile.name;
-    document.getElementById('edit-age').value = myProfile.age;
-    document.getElementById('edit-location').value = myProfile.location;
-    document.getElementById('edit-job').value = myProfile.job;
-    document.getElementById('edit-income').value = myProfile.income;
-    document.getElementById('edit-bio').value = myProfile.bio;
-    document.getElementById('edit-nikkan').value = myProfile.nikkan;
-    document.getElementById('edit-soul').value = myProfile.soul;
-
-    openView('view-edit-profile-modal');
-  }
-
-  function saveProfileChanges() {
-    myProfile.name = document.getElementById('edit-name').value || myProfile.name;
-    myProfile.age = document.getElementById('edit-age').value || myProfile.age;
-    myProfile.location = document.getElementById('edit-location').value || myProfile.location;
-    myProfile.job = document.getElementById('edit-job').value || myProfile.job;
-    myProfile.income = document.getElementById('edit-income').value || myProfile.income;
-    myProfile.bio = document.getElementById('edit-bio').value || myProfile.bio;
-    myProfile.nikkan = document.getElementById('edit-nikkan').value || myProfile.nikkan;
-    myProfile.soul = document.getElementById('edit-soul').value || myProfile.soul;
-
-    renderMyProfile();
-    closeView('view-edit-profile-modal');
-    alert("プロフィールを更新しました！✨");
-  }
-
-  /* ✨ メインカード更新（次へ進むロジック完全修復） */
-  function updateMainCard() {
-    const wrapper = document.getElementById('search-card-wrapper');
-    if (currentSearchIndex >= sampleUsers.length) {
-      wrapper.innerHTML = `
-        <div class="glass-card" style="padding: 40px 20px; text-align: center;">
-          <span style="font-size: 50px;">✨</span>
-          <h3 style="font-size: 16px; margin-top: 10px; color: #34d399;">全員のチェックが完了しました！</h3>
-          <p style="font-size: 12px; color: var(--text-sub); margin-top: 6px;">また新しい運命のお相手が登録されるのをお待ちください。</p>
-          <button class="action-btn-glossy" style="margin-top: 20px;" onclick="resetSearchIndex()">🔁 最初からもう一度見る</button>
-        </div>
-      `;
-      return;
-    }
-
-    const user = sampleUsers[currentSearchIndex];
-
-    wrapper.innerHTML = `
-      <div class="profile-card" onclick="openDetailProfile(${user.id})">
-        <div class="profile-img-container">
-          <img src="${user.img}" class="profile-img-src">
-          <div style="position: absolute; top:12px; left:12px; background: rgba(11,13,27,0.85); color:#fbbf24; padding:6px 12px; border-radius:14px; font-size:11px; font-weight:800; border: 1px solid rgba(251,191,36,0.3);">
-            ✨ ${user.tag}
-          </div>
-        </div>
-        <div style="padding: 16px;">
-          <div style="font-size: 18px; font-weight: 900; color: white;">${user.name} <span style="font-size: 13px; font-weight: 500; color: var(--text-sub);">(${user.age}歳)</span></div>
-          <p style="font-size: 11px; color: #34d399; font-weight: 700; margin-top: 4px;">${user.preview}</p>
-          <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="event.stopPropagation(); handleMainLike();">✨ 運命のいいね！を送る</button>
-        </div>
-      </div>
-    `;
-  }
-
-  /* いいねを押したら「即座に次のカード」へ送る */
-  function handleMainLike() {
-    const user = sampleUsers[currentSearchIndex];
-    user.liked = true;
-    alert(`${user.name}さんに運命のいいね！を送りました！`);
-    currentSearchIndex++; // ★ここが超重要！インデックスを進めて次のカードを表示させる
-    updateMainCard();
-  }
-
-  function resetSearchIndex() {
-    currentSearchIndex = 0;
-    updateMainCard();
-  }
-
-  function switchTab(tabName, el) {
-    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-    document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-    document.getElementById('tab-' + tabName).classList.add('active');
-    if (el) el.classList.add('active');
-  }
-
-  function filterMood(el, moodName) {
-    document.querySelectorAll('.mood-tag').forEach(t => t.classList.remove('active'));
-    el.classList.add('active');
-    alert(`【${moodName}】でお相手を絞り込みました！`);
-  }
-
-  function openView(id) {
-    const el = document.getElementById(id);
-    el.style.display = 'flex';
-    setTimeout(() => el.classList.add('show'), 10);
-  }
-  
-  function closeView(id) {
-    const el = document.getElementById(id);
-    el.classList.remove('show');
-    setTimeout(() => el.style.display = 'none', 300);
-  }
-
-  function openDetailProfile(userId) {
-    const user = sampleUsers.find(u => u.id === userId) || sampleUsers[0];
-    activeDetailUserId = user.id;
-
-    document.getElementById('detail-header-name').innerText = user.name;
-    document.getElementById('detail-img').src = user.img;
-    document.getElementById('detail-name').innerText = `${user.name} (${user.age})`;
-    document.getElementById('detail-match-score').innerText = `✨ ${user.tag}`;
-    document.getElementById('detail-bio').innerText = user.bio;
-
-    const btn = document.getElementById('detail-like-btn');
-    if (user.liked) {
-      btn.className = 'action-btn-outline';
-      btn.innerText = '✔ いいね！送信済み';
-      btn.onclick = null;
-    } else {
-      btn.className = 'action-btn-glossy';
-      btn.innerText = '✨ 運命のいいね！を送る';
-      btn.onclick = handleDetailLike;
-    }
-
-    openView('view-profile-detail');
-  }
-
-  function handleDetailLike() {
-    if (activeDetailUserId === null) return;
-    const user = sampleUsers.find(u => u.id === activeDetailUserId);
-    if (user) {
-      user.liked = true;
-      alert(`${user.name}さんに運命のいいね！を送りました！`);
-      if (currentSearchIndex === user.id) {
-        currentSearchIndex++;
-      }
-      updateMainCard();
-      closeView('view-profile-detail');
-    }
-  }
-
-  function openChatView(name) { 
-    document.getElementById('chat-header-name').innerText = name;
-    openView('view-chat-detail'); 
-  }
-  
-  function startHoroscopeResult() { openView('view-fortune-result'); }
-  function openTarotModal() { 
-    document.getElementById('tarot-card-obj').classList.remove('is-flipped');
-    document.getElementById('tarot-result-card').style.display = 'none';
-    openView('view-tarot-modal'); 
-  }
-  function openNumerologyModal() { openView('view-numerology-modal'); }
-
-  function executeTarotFlip() {
-    const cardObj = document.getElementById('tarot-card-obj');
-    if (!cardObj.classList.contains('is-flipped')) {
-      document.getElementById('tarot-front-content').innerHTML = `
-        <div style="font-size: 36px;">☀️</div>
-        <div style="font-size: 12px; font-weight: 800; margin-top: 6px;">太陽（絶好調）</div>
-      `;
-      document.getElementById('tarot-res-title').innerText = "☀️ 鑑定結果：太陽";
-      document.getElementById('tarot-res-desc').innerText = "エネルギー最高潮！素直なアプローチが幸運を引き寄せます。";
-
-      cardObj.classList.add('is-flipped');
-      setTimeout(() => { document.getElementById('tarot-result-card').style.display = 'block'; }, 650);
-    }
-  }
-
-  function openScanModal(type) {
-    document.getElementById('scan-emoji').innerText = type === 'hand' ? '✋' : '👁️';
-    document.getElementById('scan-header-title').innerText = type === 'hand' ? '📷 AIスマホ手相解析' : '👤 AI顔像・人相解剖学';
-    document.getElementById('scan-status').innerText = '特徴点をリアルタイムスキャン中...';
-    document.getElementById('scan-result-box').style.display = 'none';
-    openView('view-scan-modal');
-
-    setTimeout(() => {
-      document.getElementById('scan-status').innerText = '解析完了！';
-      document.getElementById('scan-result-box').style.display = 'block';
+    /**
+     * 「運命のいいね！」ボタンをクリックした時の処理
+     */
+    function onClickLike(targetName) {
+      currentTargetName = targetName;
+      const modalText = `${targetName}さんに運命のいいね！を送りました！`;
       
-      if (type === 'hand') {
-        document.getElementById('scan-res-title').innerText = '【分析】二重感情線 & 直感的頭脳線';
-        document.getElementById('scan-res-desc').innerText = '情熱的で一途な反面、一度心を開いた相手には執着しやすくなる一面も。';
-      } else {
-        document.getElementById('scan-res-title').innerText = '【分析】眉間幅広（オープン・誠実相）';
-        document.getElementById('scan-res-desc').innerText = '受容力が高く、人の話を聞くのが得意な相です。';
-      }
-    }, 1200);
-  }
-
-  function calculateNumerology() {
-    document.getElementById('num-soul').innerText = "7 (ライフパス 7)";
-    document.getElementById('num-nikkan').innerText = "甲（大木）";
-    document.getElementById('numerology-result-box').style.display = 'block';
-  }
-
-  function showMatchedUsersModal(title) {
-    document.getElementById('grid-modal-title').innerText = title;
-    const container = document.getElementById('tile-container');
-    container.innerHTML = '';
-
-    sampleUsers.forEach(user => {
-      const btnClass = user.liked ? 'action-btn-outline' : 'action-btn-glossy';
-      const btnText = user.liked ? '✔ 送信済' : '✨ いいね';
-      const btnOnClick = user.liked ? '' : `event.stopPropagation(); handleTileLike(${user.id});`;
-
-      const tileHtml = `
-        <div class="user-tile" onclick="openDetailProfile(${user.id})">
-          <div class="user-tile-badge">${user.tag}</div>
-          <img src="${user.img}" class="user-tile-img">
-          <div style="font-weight: 800; font-size: 13px; color: white;">${user.name} <span style="font-size: 10px; color: var(--text-sub); font-weight:400;">(${user.age})</span></div>
-          <button class="${btnClass}" style="width: 100%; margin-top: 6px; padding: 6px; font-size: 10px;" onclick="${btnOnClick}">${btnText}</button>
-        </div>
-      `;
-      container.innerHTML += tileHtml;
-    });
-
-    openView('view-matched-grid');
-  }
-
-  function handleTileLike(userId) {
-    const user = sampleUsers.find(u => u.id === userId);
-    if (user) {
-      user.liked = true;
-      alert(`${user.name}さんにいいね！を送りました！`);
-      showMatchedUsersModal(document.getElementById('grid-modal-title').innerText);
-      updateMainCard();
+      // カスタムモーダルを表示
+      document.getElementById('alert-modal-text').textContent = modalText;
+      document.getElementById('custom-alert-modal').style.display = 'flex';
     }
-  }
 
-  // 初期化実行
-  renderMyProfile();
-  updateMainCard();
-</script>
+    /**
+     * ポップアップの「OK」ボタンを押したときの処理（カード消去）
+     */
+    function onCloseAlertModal() {
+      // モーダルを閉じる
+      document.getElementById('custom-alert-modal').style.display = 'none';
+
+      // 対象のカード（あやかさん）が存在すればアニメーションして消去
+      const cardElement = document.getElementById('user-card-ayaka');
+      if (cardElement) {
+        cardElement.style.opacity = '0';
+        cardElement.style.transform = 'translateY(-20px)';
+
+        setTimeout(() => {
+          cardElement.style.display = 'none';
+          // メッセージを表示
+          document.getElementById('no-cards-msg').style.display = 'block';
+        }, 300);
+      }
+    }
+
+    /**
+     * タブ切り替え処理
+     */
+    function switchNavTab(tabKey, element) {
+      // 全タブページを非表示
+      const tabPages = document.querySelectorAll('.tab-content');
+      tabPages.forEach(page => page.classList.remove('active'));
+
+      // 全ナビボタンのハイライト解除
+      const navButtons = document.querySelectorAll('.nav-button');
+      navButtons.forEach(btn => btn.classList.remove('active'));
+
+      // 選択タブの有効化
+      document.getElementById(`tab-${tabKey}`).classList.add('active');
+
+      if (element) {
+        element.classList.add('active');
+      }
+    }
+
+    /**
+     * マイページの「設定を保存する」ボタンを押したときの処理
+     */
+    function onSaveProfile() {
+      // 入力値の取得
+      const nameVal = document.getElementById('input-name').value;
+      const nikkanVal = document.getElementById('input-nikkan').value;
+      const soulVal = document.getElementById('input-soul').value;
+
+      // カードの表示テキストを更新
+      document.getElementById('display-user-name').textContent = nameVal;
+      document.getElementById('display-user-nikkan').textContent = nikkanVal;
+      document.getElementById('display-user-soul').textContent = soulVal;
+
+      // 保存完了の案内ポップアップ表示
+      document.getElementById('alert-modal-text').textContent = "プロフィール情報を保存・反映しました！";
+      document.getElementById('custom-alert-modal').style.display = 'flex';
+    }
+  </script>
 
 </body>
 </html>
