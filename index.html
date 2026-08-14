@@ -3,26 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>with Clone - Full App</title>
+  <title>Lino - 運命を奏でるマッチングプラットフォーム</title>
   <style>
     :root {
-      --primary: #ff4b6e;
-      --primary-gradient: linear-gradient(135deg, #ff4b6e 0%, #ff85a1 100%);
-      --ai-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-      --bg: #f8fafc;
-      --text: #1e293b;
+      /* エメラルド×運命のゴールド＆ナイトグリーン */
+      --primary: #10b981;
+      --primary-dark: #047857;
+      --primary-gradient: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
+      --fortune-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+      --gold-accent: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      --bg: #f0fdf4;
+      --text: #0f172a;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
     
     body {
-      background-color: #0f172a;
+      background-color: #022c22;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -30,7 +33,7 @@
       margin: 0;
     }
 
-    /* スマホコンテナ（画面サイズに合わせて伸縮、文字潰れ防止） */
+    /* スマホコンテナ（立体感と洗練されたフレーム） */
     .app-container {
       width: 100%;
       max-width: 430px;
@@ -40,41 +43,51 @@
       display: flex;
       flex-direction: column;
       position: relative;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
       overflow: hidden;
     }
 
     @media (min-width: 480px) {
       .app-container {
         height: 88vh;
-        border-radius: 40px;
-        border: 8px solid #334155;
+        border-radius: 44px;
+        border: 8px solid #064e3b;
       }
     }
 
     /* ヘッダー */
     .header {
-      background: #ffffff;
-      padding: 14px 20px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      padding: 16px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #e2e8f0;
+      border-bottom: 1px solid rgba(16, 185, 129, 0.15);
       z-index: 10;
     }
     .logo {
-      color: var(--primary);
-      font-weight: 800;
-      font-size: 22px;
+      color: var(--primary-dark);
+      font-weight: 900;
+      font-size: 24px;
       letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .demo-badge {
-      background: #ffe4e6;
-      color: var(--primary);
+    .logo span {
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .target-badge {
+      background: #ecfdf5;
+      color: var(--primary-dark);
       font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 12px;
+      padding: 4px 12px;
+      border-radius: 20px;
       font-weight: 700;
+      border: 1px solid #a7f3d0;
     }
 
     /* メインコンテンツエリア */
@@ -96,125 +109,139 @@
       display: flex;
     }
 
-    /* 独自改善案：AIトークヒントバナー */
-    .ai-banner {
-      background: var(--ai-gradient);
+    /* 占いヒーローカード（神秘的なグラデーション＋金文字風） */
+    .fortune-hero-card {
+      background: var(--fortune-gradient);
       color: white;
-      padding: 16px;
-      border-radius: 18px;
-      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
-      cursor: pointer;
-      transition: transform 0.2s;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.35);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
-    .ai-banner:active { transform: scale(0.98); }
-    .ai-banner-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
+    .fortune-hero-card::before {
+      content: "✨";
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      font-size: 80px;
+      opacity: 0.15;
     }
-    .ai-tag {
-      background: rgba(255, 255, 255, 0.25);
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 8px;
-      font-weight: 600;
-    }
-    .ai-banner p {
-      font-size: 13px;
-      line-height: 1.5;
-      opacity: 0.95;
-    }
-
-    /* 診断メインカード */
-    .diagnostic-card {
-      background: var(--primary-gradient);
-      color: white;
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow: 0 10px 20px rgba(255, 75, 110, 0.3);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .card-tag {
-      align-self: flex-start;
-      background: rgba(255, 255, 255, 0.25);
-      font-size: 11px;
-      padding: 4px 10px;
-      border-radius: 12px;
-      font-weight: 600;
+    .card-subtitle {
+      color: #fbbf24;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
     .card-title {
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
+      margin: 6px 0 10px;
       line-height: 1.3;
     }
     .card-desc {
-      font-size: 12px;
-      opacity: 0.9;
+      font-size: 13px;
+      color: #cbd5e1;
+      line-height: 1.5;
     }
+
+    /* ボタンデザイン */
     .action-btn {
-      margin-top: 8px;
-      background: white;
-      color: var(--primary);
+      margin-top: 14px;
+      background: var(--gold-accent);
+      color: #0f172a;
       border: none;
-      padding: 12px;
-      border-radius: 25px;
-      font-weight: 700;
+      padding: 14px;
+      border-radius: 30px;
+      font-weight: 800;
       font-size: 14px;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 15px rgba(245, 158, 11, 0.3);
       transition: all 0.2s;
+      width: 100%;
     }
     .action-btn:active { transform: scale(0.97); }
+
+    /* 手相占いサブカード */
+    .palm-card {
+      background: white;
+      border-radius: 24px;
+      padding: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+      border: 1px solid #d1fae5;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .palm-icon {
+      font-size: 40px;
+      background: #ecfdf5;
+      padding: 12px;
+      border-radius: 20px;
+    }
 
     /* さがすカードスタイル */
     .profile-card {
       background: white;
-      border-radius: 20px;
+      border-radius: 24px;
       overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      border: 1px solid rgba(16, 185, 129, 0.1);
     }
     .profile-img {
-      height: 240px;
-      background: #cbd5e1;
+      height: 260px;
+      background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 48px;
+      font-size: 56px;
+      position: relative;
+    }
+    .fortune-tag-badge {
+      position: absolute;
+      bottom: 12px;
+      left: 12px;
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(8px);
+      color: #fbbf24;
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-weight: 700;
     }
     .profile-info {
-      padding: 16px;
+      padding: 18px;
     }
     .profile-name {
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 19px;
+      font-weight: 800;
       color: var(--text);
     }
     .profile-tags {
       display: flex;
       gap: 6px;
-      margin-top: 8px;
+      margin-top: 10px;
       flex-wrap: wrap;
     }
     .tag {
-      background: #f1f5f9;
-      color: #64748b;
+      background: #ecfdf5;
+      color: var(--primary-dark);
       font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 6px;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-weight: 700;
     }
 
     /* ナビゲーションバー */
     .nav {
-      background: white;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
       display: flex;
       justify-content: space-around;
-      padding: 10px 0;
-      border-top: 1px solid #e2e8f0;
+      padding: 12px 0;
+      border-top: 1px solid rgba(16, 185, 129, 0.15);
       z-index: 10;
     }
     .nav-item {
@@ -227,13 +254,14 @@
       cursor: pointer;
       width: 20%;
       position: relative;
+      transition: color 0.2s;
     }
     .nav-item.active {
-      color: var(--primary);
-      font-weight: 700;
+      color: var(--primary-dark);
+      font-weight: 800;
     }
     .nav-icon {
-      font-size: 20px;
+      font-size: 22px;
     }
     .badge {
       position: absolute;
@@ -242,16 +270,17 @@
       background: var(--primary);
       color: white;
       font-size: 10px;
-      padding: 2px 5px;
+      padding: 2px 6px;
       border-radius: 10px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     /* モーダル */
     .modal-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(15, 23, 42, 0.75);
+      backdrop-filter: blur(6px);
       display: none;
       justify-content: center;
       align-items: center;
@@ -260,14 +289,15 @@
     }
     .modal-card {
       background: white;
-      border-radius: 24px;
-      padding: 24px;
+      border-radius: 28px;
+      padding: 26px;
       width: 100%;
-      max-width: 340px;
+      max-width: 350px;
       text-align: center;
       display: flex;
       flex-direction: column;
       gap: 16px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
   </style>
 </head>
@@ -276,8 +306,8 @@
 <div class="app-container">
   <!-- ヘッダー -->
   <div class="header">
-    <div class="logo">♥ with</div>
-    <div class="demo-badge">フル再現・検証モード</div>
+    <div class="logo">✨ <span>Lino</span></div>
+    <div class="target-badge">20-30代向け • 運命の出会い</div>
   </div>
 
   <!-- コンテンツエリア -->
@@ -286,61 +316,66 @@
     <!-- タブ1: さがす -->
     <div id="tab-search" class="tab-content">
       <div class="profile-card">
-        <div class="profile-img">👩🏻‍💼</div>
+        <div class="profile-img">
+          👩🏻‍💼
+          <div class="fortune-tag-badge">🔮 星座相性: 98% (かに座 × うお座)</div>
+        </div>
         <div class="profile-info">
-          <div class="profile-name">あやか (24歳) • 東京</div>
+          <div class="profile-name">あやか (25歳) • 東京</div>
           <div class="profile-tags">
             <span class="tag">カフェ巡り</span>
             <span class="tag">ドライブ</span>
-            <span class="tag">映画鑑賞</span>
+            <span class="tag">ホロスコープ好き</span>
           </div>
-          <button class="action-btn" style="background: var(--primary-gradient); color: white; margin-top: 12px;" onclick="alert('いいね！を送信しました')">👍 いいね！送る</button>
+          <button class="action-btn" style="background: var(--primary-gradient); color: white;" onclick="alert('運命のいいね！を送信しました')">✨ 運命のいいね！を送る</button>
         </div>
       </div>
     </div>
 
-    <!-- タブ2: 診断（初期表示） -->
-    <div id="tab-diagnostic" class="tab-content active">
-      <!-- 独自改善機能バナー -->
-      <div class="ai-banner" onclick="openAiModal()">
-        <div class="ai-banner-header">
-          <span class="ai-tag">💡 独自改善案（クリックで発動）</span>
-          <span>詳細 ＞</span>
+    <!-- タブ2: 占い（メインタブ） -->
+    <div id="tab-fortune" class="tab-content active">
+      <!-- ホロスコープ相性占いカード -->
+      <div class="fortune-hero-card">
+        <div class="card-subtitle">HOROSCOPE MATCHING</div>
+        <h2 class="card-title">本日のホロスコープ<br>星が導く運命の相性</h2>
+        <p class="card-desc">あなたの生年月日と出生時間から、今最も星のバイオリズムが重なるお相手を導き出します。</p>
+        <button class="action-btn" onclick="openHoroscopeModal()">✨ 運命の相手を占う</button>
+      </div>
+
+      <!-- スマホ手相占いカード -->
+      <div class="palm-card" onclick="openPalmModal()" style="cursor: pointer;">
+        <div class="palm-icon">✋</div>
+        <div style="flex: 1;">
+          <h4 style="font-size: 16px; color: var(--text); font-weight: 800;">📷 AIスマホ手相解析</h4>
+          <p style="font-size: 12px; color: #64748b; margin-top: 4px;">手のひらを撮影して「感情線」から恋愛傾向と相性を分析！</p>
         </div>
-        <p><strong>「AIトークヒント」：</strong>マッチ相手のプロフィールに合わせて、盛り上がる話題や初回メッセージ案を自動生成！</p>
       </div>
 
-      <!-- メイン診断カード -->
-      <div class="diagnostic-card">
-        <span class="card-tag">期間限定</span>
-        <h2 class="card-title">恋愛価値観・<br>お悩み回答診断</h2>
-        <p class="card-desc">相性の良いお相手に毎日10人「いいね！」が無料で送れる！</p>
-        <button class="action-btn" onclick="startQuiz()">診断を受ける</button>
-      </div>
-
-      <!-- サブ診断カード -->
-      <div class="diagnostic-card" style="background: linear-gradient(135deg, #10b981 0%, #059669 100%);">
-        <span class="card-tag">超性格分析</span>
-        <h2 class="card-title">ビッグファイブでわかる<br>あなたの裏性格</h2>
-        <button class="action-btn" style="color: #059669;" onclick="alert('性格分析を開始します')">分析をはじめる</button>
+      <!-- 独自AI機能バナー -->
+      <div style="background: white; border-radius: 20px; padding: 16px; border: 1px solid #d1fae5; cursor: pointer;" onclick="openAiModal()">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <span style="font-size: 11px; background: #ecfdf5; color: var(--primary-dark); padding: 3px 8px; border-radius: 6px; font-weight: 700;">💡 AIアシスト</span>
+          <span style="font-size: 12px; color: var(--primary-dark); font-weight: 700;">詳細 ＞</span>
+        </div>
+        <p style="font-size: 13px; color: #334155; font-weight: 600;">「AIトークヒント」：占いの結果を会話のきっかけにするメッセージ案を自動作成！</p>
       </div>
     </div>
 
     <!-- タブ3: いいね -->
     <div id="tab-likes" class="tab-content">
-      <p style="text-align: center; color: #64748b; margin-top: 40px;">あなたに「いいね！」したお相手がここに表示されます。</p>
+      <p style="text-align: center; color: #64748b; margin-top: 40px;">あなたに届いた「運命のいいね！」一覧です。</p>
     </div>
 
     <!-- タブ4: メッセージ -->
     <div id="tab-messages" class="tab-content">
-      <p style="text-align: center; color: #64748b; margin-top: 40px;">マッチングしたお相手とのメッセージ一覧です。</p>
+      <p style="text-align: center; color: #64748b; margin-top: 40px;">マッチングしたお相手とのチャット画面です。</p>
     </div>
 
     <!-- タブ5: マイページ -->
     <div id="tab-mypage" class="tab-content">
-      <div style="background: white; padding: 20px; border-radius: 16px;">
-        <h3>秀広 さんのマイページ</h3>
-        <p style="font-size: 12px; color: #64748b; margin-top: 4px;">残いいね！数: 84個</p>
+      <div style="background: white; padding: 20px; border-radius: 20px; border: 1px solid #d1fae5;">
+        <h3 style="color: var(--primary-dark);">秀広 さんのプロフィール</h3>
+        <p style="font-size: 12px; color: #64748b; margin-top: 4px;">⭐ 太陽星座: いて座 / 月星座: しし座</p>
       </div>
     </div>
 
@@ -352,13 +387,13 @@
       <span class="nav-icon">🔍</span>
       <span>さがす</span>
     </div>
-    <div class="nav-item active" onclick="switchTab('diagnostic', this)">
-      <span class="nav-icon">🧠</span>
-      <span>診断</span>
+    <div class="nav-item active" onclick="switchTab('fortune', this)">
+      <span class="nav-icon">🔮</span>
+      <span>占い</span>
     </div>
     <div class="nav-item" onclick="switchTab('likes', this)">
       <span class="badge">1</span>
-      <span class="nav-icon">👍</span>
+      <span class="nav-icon">💖</span>
       <span>いいね！</span>
     </div>
     <div class="nav-item" onclick="switchTab('messages', this)">
@@ -371,11 +406,11 @@
     </div>
   </div>
 
-  <!-- 体験用モーダル -->
+  <!-- モーダル -->
   <div id="modal" class="modal-overlay">
     <div class="modal-card">
-      <h3 id="modal-title">AIトークヒント</h3>
-      <p id="modal-body" style="font-size: 13px; color: #475569; text-align: left; line-height: 1.6;"></p>
+      <h3 id="modal-title" style="color: var(--text); font-size: 18px; font-weight: 800;"></h3>
+      <div id="modal-body" style="font-size: 13px; color: #475569; text-align: left; line-height: 1.6;"></div>
       <button class="action-btn" style="background: var(--primary-gradient); color: white;" onclick="closeModal()">閉じる</button>
     </div>
   </div>
@@ -390,29 +425,36 @@
     el.classList.add('active');
   }
 
-  function startQuiz() {
+  function openHoroscopeModal() {
     const modal = document.getElementById('modal');
-    document.getElementById('modal-title').innerText = '恋愛価値観診断';
+    document.getElementById('modal-title').innerText = '🔮 ホロスコープ相性診断';
     document.getElementById('modal-body').innerHTML = `
-      <strong>Q1. 休日の過ごし方は？</strong><br><br>
-      <button class="action-btn" style="border:1px solid #cbd5e1; margin-bottom:8px;" onclick="finishQuiz('インドア・映画鑑賞派')">A. 家でゆったり映画やゲーム</button>
-      <button class="action-btn" style="border:1px solid #cbd5e1;" onclick="finishQuiz('アクティブ・ドライブ派')">B. 車で遠出やドライブ</button>
+      <p style="text-align: center; margin-bottom: 12px;"><strong>【今日のあなたと星の配置】</strong></p>
+      金星と木星が調和の配置（トライン）に入っています！<br><br>
+      今日、あなたと最も引き寄せの力が強いお相手は<strong>「うお座・O型」</strong>の女性です。直感を信じてアプローチしてみましょう！
     `;
     modal.style.display = 'flex';
   }
 
-  function finishQuiz(type) {
-    document.getElementById('modal-title').innerText = '診断完了！';
-    document.getElementById('modal-body').innerHTML = `あなたのタイプは【<strong>${type}</strong>】です！<br><br>相性の良いお相手10人をピックアップしました。`;
+  function openPalmModal() {
+    const modal = document.getElementById('modal');
+    document.getElementById('modal-title').innerText = '✋ AIスマホ手相解析';
+    document.getElementById('modal-body').innerHTML = `
+      <div style="background: #f8fafc; border: 2px dashed #cbd5e1; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 10px;">
+        📸 カメラで手相をパシャリ<br><span style="font-size:11px; color:#94a3b8;">（※体験デモ機能）</span>
+      </div>
+      あなたの「感情線」は深く上向きに伸びています！一途で情熱的な恋愛スタイルのお相手と最高の相性です。
+    `;
+    modal.style.display = 'flex';
   }
 
   function openAiModal() {
     const modal = document.getElementById('modal');
-    document.getElementById('modal-title').innerText = '💡 AIトークヒント機能';
+    document.getElementById('modal-title').innerText = '💡 AIトークヒント';
     document.getElementById('modal-body').innerHTML = `
-      相手の趣味「ドライブ」を検出しました。<br><br>
-      <strong>【おすすめの初回メッセージ案】</strong><br>
-      「はじめまして！ドライブ好きなんですね。おすすめのドライブコースとかありますか？」
+      相手の占いプロフィール「かに座」を検出！<br><br>
+      <strong>【おすすめのメッセージ】</strong><br>
+      「はじめまして！ホロスコープ相性98%って出てびっくりしてメッセージしちゃいました！星座占いとかお好きですか？」
     `;
     modal.style.display = 'flex';
   }
