@@ -11,6 +11,7 @@
       --primary-gradient: linear-gradient(135deg, #059669 0%, #10b981 50%, #34d399 100%);
       --fortune-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
       --gold-accent: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+      --lino-btn-gradient: linear-gradient(135deg, #d97706 0%, #fbbf24 50%, #10b981 100%);
       --bg: #f0fdf4;
       --text: #0f172a;
     }
@@ -58,7 +59,7 @@
     .header {
       background: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(12px);
-      padding: 14px 20px;
+      padding: 16px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -72,20 +73,12 @@
       display: flex;
       align-items: center;
       gap: 6px;
+      letter-spacing: 0.5px;
     }
     .logo span {
       background: var(--primary-gradient);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-    }
-    .target-badge {
-      background: #ecfdf5;
-      color: var(--primary-dark);
-      font-size: 11px;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-weight: 700;
-      border: 1px solid #a7f3d0;
     }
 
     /* メインコンテンツエリア */
@@ -122,7 +115,7 @@
     }
     .action-btn:active { transform: scale(0.97); }
 
-    /* 1. おでかけ×マイタグ セクション */
+    /* おでかけ×マイタグ セクション */
     .go-out-box {
       background: white;
       border-radius: 20px;
@@ -192,7 +185,6 @@
       font-size: 56px;
       position: relative;
     }
-    /* 距離バッジ (Tinder風・アドオン) */
     .distance-badge {
       position: absolute;
       top: 12px;
@@ -225,6 +217,39 @@
     .profile-tags { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
     .tag { background: #ecfdf5; color: var(--primary-dark); font-size: 11px; padding: 4px 8px; border-radius: 6px; font-weight: 700; }
 
+    /* マイページ用スタイル */
+    .biorhythm-card {
+      background: var(--fortune-gradient);
+      border-radius: 24px;
+      padding: 20px;
+      color: white;
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.25);
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .gallery-item {
+      aspect-ratio: 1;
+      background: #ecfdf5;
+      border: 1px dashed #a7f3d0;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
     /* メッセージ＆通話ロック機能 */
     .chat-item {
       background: white;
@@ -240,7 +265,6 @@
     .chat-name { font-weight: 800; font-size: 14px; color: var(--text); }
     .chat-msg { font-size: 12px; color: #64748b; margin-top: 2px; }
 
-    /* 通話ロックToggle */
     .lock-btn {
       background: #f1f5f9;
       color: #64748b;
@@ -250,9 +274,6 @@
       font-size: 11px;
       font-weight: 700;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
     }
     .lock-btn.unlocked {
       background: #d1fae5;
@@ -260,15 +281,17 @@
       border-color: #a7f3d0;
     }
 
-    /* ナビゲーションバー */
+    /* ナビゲーションバー (モンスト風Linoメインボタンアレンジ) */
     .nav {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
       display: flex;
       justify-content: space-around;
-      padding: 12px 0;
+      align-items: flex-end;
+      padding: 10px 0 12px;
       border-top: 1px solid rgba(16, 185, 129, 0.15);
       z-index: 10;
+      position: relative;
     }
     .nav-item {
       display: flex;
@@ -278,11 +301,33 @@
       font-size: 10px;
       color: #94a3b8;
       cursor: pointer;
-      width: 20%;
-      position: relative;
+      flex: 1;
     }
     .nav-item.active { color: var(--primary-dark); font-weight: 800; }
-    .nav-icon { font-size: 22px; }
+    .nav-icon { font-size: 20px; }
+
+    /* モンスト風 Linoメインアイコンボタン */
+    .lino-main-btn {
+      position: relative;
+      top: -14px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: var(--lino-btn-gradient);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4), inset 0 2px 4px rgba(255,255,255,0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 900;
+      border: 3px solid white;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .lino-main-btn:active { transform: scale(0.92); }
+    .lino-main-btn .btn-symbol { font-size: 22px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+    .lino-main-btn .btn-text { font-size: 9px; font-weight: 900; letter-spacing: 0.5px; margin-top: -2px; }
 
     /* モーダル */
     .modal-overlay {
@@ -312,55 +357,53 @@
 <body>
 
 <div class="app-container">
-  <!-- ヘッダー -->
+  <!-- ヘッダー (シンプル＆洗練) -->
   <div class="header">
     <div class="logo">✨ <span>Lino</span></div>
-    <div class="target-badge">20-30代向け • 運命の出会い</div>
+    <div style="font-size: 18px; cursor: pointer;">🔔</div>
   </div>
 
   <!-- コンテンツエリア -->
   <div class="content-area">
 
-    <!-- タブ1: さがす（距離表示 & おでかけタグ追加） -->
-    <div id="tab-search" class="tab-content">
-      
-      <!-- 今日の運命おでかけ (マイタグ×今日デート) -->
+    <!-- タブ1: さがす（Linoメイン機能） -->
+    <div id="tab-search" class="tab-content active">
+      <!-- 今日の運命おでかけ -->
       <div class="go-out-box">
-        <div class="section-title">☕ 今日の運命おでかけ（気分で探す）</div>
+        <div class="section-title">☕ 今日の運命おでかけ（目的から引き寄せる）</div>
         <div class="tag-scroll">
           <div class="mood-tag active" onclick="filterMood(this, '今夜サクッと飲み🍻')">今夜サクッと飲み🍻</div>
           <div class="mood-tag" onclick="filterMood(this, '週末カフェ巡り☕')">週末カフェ巡り☕</div>
           <div class="mood-tag" onclick="filterMood(this, 'ドライブデート🚗')">ドライブデート🚗</div>
-          <div class="mood-tag" onclick="filterMood(this, '夜景＆ドライブ星空散歩✨')">夜景＆ドライブ散歩✨</div>
+          <div class="mood-tag" onclick="filterMood(this, '夜景＆星空散歩✨')">夜景＆星空散歩✨</div>
         </div>
       </div>
 
       <!-- プロフィールカード -->
-      <div class="profile-card">
+      <div class="profile-card" onclick="alert('相手の詳細プロフィール画面を開きます')">
         <div class="profile-img">
           👩🏻‍💼
-          <!-- 距離感バッジ (2km表示) -->
           <div class="distance-badge">📍 2.1km先にいます</div>
-          <div class="fortune-tag-badge">🔮 星座相性: 98% (かに座 × うお座)</div>
+          <div class="fortune-tag-badge">🔮 星座相性: 98% (かに座 × いて座)</div>
         </div>
         <div class="profile-info">
           <div class="profile-name">あやか (25歳) • 東京</div>
           <div class="profile-tags">
             <span class="tag">今夜サクッと飲み🍻</span>
             <span class="tag">ドライブ</span>
-            <span class="tag">ホロスコープ好き</span>
+            <span class="tag">夜カフェ</span>
           </div>
-          <button class="action-btn" style="background: var(--primary-gradient); color: white; width: 100%; margin-top: 12px;" onclick="alert('運命のいいね！を送信しました')">✨ 運命のいいね！を送る</button>
+          <button class="action-btn" style="background: var(--primary-gradient); color: white; width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); alert('運命のいいね！を送信しました');">✨ 運命のいいね！を送る</button>
         </div>
       </div>
     </div>
 
-    <!-- タブ2: 占い（メイン） -->
-    <div id="tab-fortune" class="tab-content active">
+    <!-- タブ2: 占い・ホロスコープ -->
+    <div id="tab-fortune" class="tab-content">
       <div class="fortune-hero-card">
         <div class="card-subtitle">HOROSCOPE MATCHING</div>
         <h2 class="card-title">本日のホロスコープ<br>星が導く運命の相性</h2>
-        <p class="card-desc">あなたの生年月日と星のバイオリズムから、今日最も引き寄せられるお相手を導き出します。</p>
+        <p class="card-desc">生年月日と星のバイオリズムから、今日最も引き寄せられるお相手を導き出します。</p>
         <button class="action-btn" style="width: 100%; margin-top: 12px;" onclick="openHoroscopeModal()">✨ 運命の相手を占う</button>
       </div>
 
@@ -386,49 +429,89 @@
       <p style="text-align: center; color: #64748b; margin-top: 40px;">あなたに届いた「運命のいいね！」一覧です。</p>
     </div>
 
-    <!-- タブ4: メッセージ（通話ロック機能付き） -->
+    <!-- タブ4: メッセージ -->
     <div id="tab-messages" class="tab-content">
-      <div class="chat-item">
+      <div class="chat-item" onclick="alert('チャット詳細画面を開きます')">
         <div class="chat-avatar">👩🏻</div>
         <div class="chat-detail">
           <div class="chat-name">あやか</div>
           <div class="chat-msg">今夜サクッと飲みに行けますか？</div>
         </div>
-        <!-- ボイス通話ロック解除スイッチ（相互承認機能） -->
-        <button id="voice-lock-btn" class="lock-btn" onclick="toggleVoiceLock(this)">
+        <button id="voice-lock-btn" class="lock-btn" onclick="event.stopPropagation(); toggleVoiceLock(this);">
           🔒 通話ロック中
         </button>
       </div>
     </div>
 
-    <!-- タブ5: マイページ（距離ON/OFF機能追加） -->
+    <!-- タブ5: 運命のマイページ（新デザイン） -->
     <div id="tab-mypage" class="tab-content">
-      <div style="background: white; padding: 20px; border-radius: 20px; border: 1px solid #d1fae5; display: flex; flex-direction: column; gap: 12px;">
-        <h3 style="color: var(--primary-dark);">秀広 さんの設定</h3>
-        <p style="font-size: 12px; color: #64748b;">⭐ 星座: いて座 / 月星座: しし座</p>
-
-        <hr style="border: none; border-top: 1px solid #e2e8f0;">
-
-        <!-- 距離・位置情報オンオフ設定（アドオン） -->
+      <!-- 1. 運命のバイオリズムカード -->
+      <div class="biorhythm-card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
+            <span style="color: #fbbf24; font-size: 11px; font-weight: 700; letter-spacing: 1px;">MY BIORHYTHM</span>
+            <h3 style="font-size: 20px; font-weight: 900; margin-top: 2px;">秀広 さんの運命ステータス</h3>
+          </div>
+          <span style="font-size: 32px;">♐</span>
+        </div>
+        <div style="margin-top: 14px; background: rgba(255,255,255,0.1); padding: 12px; border-radius: 14px; backdrop-filter: blur(4px);">
+          <div style="font-size: 12px; color: #cbd5e1;">太陽：いて座 ♐ / 月：しし座 ♌</div>
+          <div style="font-size: 13px; font-weight: 700; color: #fbbf24; margin-top: 4px;">✨ 今週の引き寄せ運：88% (絶好調)</div>
+        </div>
+      </div>
+
+      <!-- 2. マイギャラリー＆手相データ -->
+      <div style="background: white; border-radius: 20px; padding: 16px; border: 1px solid #d1fae5;">
+        <div class="section-title">📸 マイギャラリー & 診断カード</div>
+        <div class="gallery-grid">
+          <div class="gallery-item" style="background: #a7f3d0;">🚗</div>
+          <div class="gallery-item" style="background: #fde68a;">✋</div>
+          <div class="gallery-item" onclick="alert('写真を追加できます')">➕</div>
+        </div>
+      </div>
+
+      <!-- 3. My価値観＆今日のおでかけタグ -->
+      <div style="background: white; border-radius: 20px; padding: 16px; border: 1px solid #d1fae5;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+          <div class="section-title" style="margin-bottom:0;">🏷️ My価値観・目的タグ</div>
+          <span style="font-size: 12px; color: var(--primary-dark); font-weight: 700; cursor: pointer;" onclick="alert('タグ編集画面へ')">編集 ＞</span>
+        </div>
+        <div class="profile-tags">
+          <span class="tag">今夜サクッと飲み🍻</span>
+          <span class="tag">ドライブ好き🚗</span>
+          <span class="tag">夜カフェ☕</span>
+          <span class="tag">車好き🏎️</span>
+        </div>
+      </div>
+
+      <!-- 4. プライバシー＆通話セキュリティ設定 -->
+      <div style="background: white; border-radius: 20px; padding: 16px; border: 1px solid #d1fae5;">
+        <div class="section-title">🛡️ セキュリティ & プライバシー</div>
+        
+        <div class="setting-row">
+          <div>
             <div style="font-size: 13px; font-weight: 700; color: var(--text);">📍 位置情報・距離表示</div>
-            <div style="font-size: 11px; color: #64748b;">近くのお相手に2kmなどの距離を表示</div>
+            <div style="font-size: 11px; color: #64748b;">相手に「2km以内」などの距離を表示</div>
           </div>
           <input type="checkbox" checked id="location-toggle" style="width: 20px; height: 20px; accent-color: var(--primary);" onchange="toggleLocation(this)">
         </div>
+
+        <div class="setting-row" style="border-bottom: none;">
+          <div>
+            <div style="font-size: 13px; font-weight: 700; color: var(--text);">🔒 通話相互ロック</div>
+            <div style="font-size: 11px; color: #64748b;">お互いの承認時のみ通話許可</div>
+          </div>
+          <input type="checkbox" checked style="width: 20px; height: 20px; accent-color: var(--primary);">
+        </div>
       </div>
+
     </div>
 
   </div>
 
-  <!-- ナビゲーションバー -->
+  <!-- ナビゲーションバー (モンスト風メインアイコン配置) -->
   <div class="nav">
-    <div class="nav-item" onclick="switchTab('search', this)">
-      <span class="nav-icon">🔍</span>
-      <span>さがす</span>
-    </div>
-    <div class="nav-item active" onclick="switchTab('fortune', this)">
+    <div class="nav-item" onclick="switchTab('fortune', this)">
       <span class="nav-icon">🔮</span>
       <span>占い</span>
     </div>
@@ -436,6 +519,14 @@
       <span class="nav-icon">💖</span>
       <span>いいね！</span>
     </div>
+    
+    <!-- 中央：Lino メインアイコンボタン (さがす) -->
+    <div class="lino-main-btn" onclick="switchTab('search', document.getElementById('nav-search-hidden'))">
+      <span class="btn-symbol">✨</span>
+      <span class="btn-text">Lino</span>
+    </div>
+    <div id="nav-search-hidden" class="nav-item active" style="display:none;"></div>
+
     <div class="nav-item" onclick="switchTab('messages', this)">
       <span class="nav-icon">💬</span>
       <span>メッセージ</span>
@@ -462,7 +553,7 @@
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
     
     document.getElementById('tab-' + tabName).classList.add('active');
-    el.classList.add('active');
+    if (el) el.classList.add('active');
   }
 
   function filterMood(el, moodName) {
@@ -471,7 +562,6 @@
     alert(`【${moodName}】の気分で一緒に行けるお相手を絞り込みました！`);
   }
 
-  /* 通話ロック切り替え機能 */
   function toggleVoiceLock(btn) {
     if (btn.classList.contains('unlocked')) {
       btn.classList.remove('unlocked');
@@ -484,12 +574,11 @@
     }
   }
 
-  /* 位置情報オンオフ機能 */
   function toggleLocation(input) {
     const badges = document.querySelectorAll('.distance-badge');
     if (input.checked) {
       badges.forEach(b => b.style.display = 'flex');
-      alert('位置情報・距離表示を「ON」にしました（2kmなどの距離が表示されます）。');
+      alert('位置情報・距離表示を「ON」にしました。');
     } else {
       badges.forEach(b => b.style.display = 'none');
       alert('位置情報・距離表示を「OFF」にし、プライバシーを保護しました。');
