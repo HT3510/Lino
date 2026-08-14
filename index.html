@@ -146,6 +146,20 @@
     }
     .action-btn-glossy:active { transform: scale(0.96); }
 
+    .action-btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 10px 16px;
+      border-radius: 30px;
+      font-weight: 800;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .action-btn-outline:active { background: rgba(255, 255, 255, 0.15); }
+
     .action-btn-disabled {
       background: rgba(255, 255, 255, 0.1);
       color: #64748b;
@@ -224,6 +238,34 @@
       display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
     }
 
+    /* フォーム要素デザイン */
+    .form-group {
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .form-label {
+      font-size: 11px;
+      font-weight: 800;
+      color: var(--text-sub);
+      margin-bottom: 6px;
+      display: block;
+    }
+    .form-input, .form-textarea, .form-select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: white;
+      font-size: 13px;
+      outline: none;
+    }
+    .form-input:focus, .form-textarea:focus, .form-select:focus {
+      border-color: #34d399;
+      box-shadow: 0 0 10px rgba(52, 211, 153, 0.3);
+    }
+    .form-textarea { resize: vertical; min-height: 90px; }
+
     .nav {
       background: rgba(11, 13, 27, 0.85); backdrop-filter: blur(20px);
       display: flex; justify-content: space-around; align-items: flex-end;
@@ -274,6 +316,25 @@
       animation: scanLaser 1.8s infinite ease-in-out;
     }
     @keyframes scanLaser { 0% { top: 0%; } 50% { top: 95%; } 100% { top: 0%; } }
+
+    /* マイページ用スタイル */
+    .profile-header-bg {
+      height: 120px;
+      background: linear-gradient(135deg, #10b981 0%, #3b82f6 50%, #4c1d95 100%);
+      position: relative;
+    }
+    .profile-avatar-wrap {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: #0b0d1b; border: 3px solid #34d399;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 44px; position: absolute; bottom: -35px; left: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+    .info-row {
+      display: flex; justify-content: space-between; padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06); font-size: 12px;
+    }
+    .info-row:last-child { border-bottom: none; }
   </style>
 </head>
 <body>
@@ -296,22 +357,7 @@
         </div>
       </div>
 
-      <!-- メインのカード表示エリア -->
-      <div id="search-card-wrapper">
-        <div class="profile-card" id="main-profile-card" onclick="openDetailProfile(currentSearchIndex)">
-          <div class="profile-img">
-            <span style="font-size: 60px;" id="main-user-icon">👩🏻</span>
-            <div style="position: absolute; top:10px; left:10px; background: rgba(11,13,27,0.85); color:#fbbf24; padding:4px 10px; border-radius:12px; font-size:10px; font-weight:800;" id="main-user-tag">
-              ✨ 命式相性 [金 × 水] 98%
-            </div>
-          </div>
-          <div style="padding: 16px;">
-            <div style="font-size: 18px; font-weight: 900; color: white;" id="main-user-name">あやか <span style="font-size: 13px; font-weight: 500; color: var(--text-sub);">(25歳)</span></div>
-            <p style="font-size: 11px; color: #34d399; font-weight: 700; margin-top: 2px;" id="main-user-bio-preview">👁️ AI人相判定: 眉間幅広（オープン・誠実相）</p>
-            <button id="main-like-btn" class="action-btn-glossy" style="width: 100%; margin-top: 12px;" onclick="event.stopPropagation(); handleMainLike();">✨ 運命のいいね！を送る</button>
-          </div>
-        </div>
-      </div>
+      <div id="search-card-wrapper"></div>
     </div>
 
     <!-- タブ2: いいね！ -->
@@ -372,11 +418,69 @@
       </div>
     </div>
 
-    <!-- タブ5: マイページ -->
+    <!-- タブ5: 👤 マイページ（表示画面） -->
     <div id="tab-mypage" class="tab-content">
+      <div class="glass-card">
+        <div class="profile-header-bg">
+          <div class="profile-avatar-wrap" id="my-avatar-display">👨🏻‍💻</div>
+        </div>
+        <div style="padding: 42px 16px 16px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+              <h2 style="font-size: 20px; font-weight: 900;" id="my-name-display">秀広 <span style="font-size: 14px; font-weight:500; color:var(--text-sub);" id="my-age-display">(30歳)</span></h2>
+              <p style="font-size: 11px; color: #34d399; font-weight: 700; margin-top:2px;" id="my-sub-display">📍 東京都 / IT・機械製造</p>
+            </div>
+            <button class="action-btn-outline" onclick="openEditProfileModal()">✏️ 編集</button>
+          </div>
+
+          <p style="font-size: 12px; color: #cbd5e1; margin-top: 12px; line-height: 1.6;" id="my-bio-display">
+            目利き力と泥臭い折衝力が強みです。休日はドライブやグルメ開拓をして過ごしています！気軽に話しかけてください。
+          </p>
+        </div>
+      </div>
+
+      <!-- 占い・命式ステータスカード -->
       <div class="biorhythm-card">
-        <h3 style="font-size: 18px; font-weight: 900;">秀広 さんの陰陽五行・命式</h3>
-        <p style="font-size: 12px; color: #cbd5e1; margin-top: 6px;">日干: 甲（大木） | ソウルナンバー: 7</p>
+        <span style="color: #fbbf24; font-size: 10px; font-weight: 800;">YOUR MYSTICAL PROFILE</span>
+        <h3 style="font-size: 16px; font-weight: 900; margin-top: 4px;">陰陽五行 & 鑑定パラメータ</h3>
+        
+        <div class="info-row" style="margin-top: 10px;">
+          <span style="color: #cbd5e1;">日干（本質）</span>
+          <span style="font-weight: 800; color: #34d399;" id="my-nikkan-display">甲（大木）</span>
+        </div>
+        <div class="info-row">
+          <span style="color: #cbd5e1;">ソウルナンバー</span>
+          <span style="font-weight: 800; color: #fbbf24;" id="my-soul-display">7 (職人・探求者)</span>
+        </div>
+        <div class="info-row">
+          <span style="color: #cbd5e1;">AI人相解析</span>
+          <span style="font-weight: 800; color: #a7f3d0;" id="my-face-display">深謀遠慮相・誠実眼</span>
+        </div>
+      </div>
+
+      <!-- 基本詳細スペック -->
+      <div class="glass-card" style="padding: 16px;">
+        <h4 style="font-size: 13px; font-weight: 800; color: #34d399; margin-bottom: 8px;">📋 詳細スペック</h4>
+        <div class="info-row">
+          <span style="color: var(--text-sub);">居住地</span>
+          <span id="my-location-display">東京都</span>
+        </div>
+        <div class="info-row">
+          <span style="color: var(--text-sub);">職種</span>
+          <span id="my-job-display">製造・M&Aアドバイザリー</span>
+        </div>
+        <div class="info-row">
+          <span style="color: var(--text-sub);">年収</span>
+          <span id="my-income-display">1,000万円以上</span>
+        </div>
+        <div class="info-row">
+          <span style="color: var(--text-sub);">休日</span>
+          <span>土日祝休み</span>
+        </div>
+        <div class="info-row">
+          <span style="color: var(--text-sub);">お酒</span>
+          <span>時々飲む 🍻</span>
+        </div>
       </div>
     </div>
 
@@ -406,6 +510,79 @@
     <div class="nav-item" onclick="switchTab('mypage', this)">
       <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span>マイページ</span>
+    </div>
+  </div>
+
+  <!-- 【新設】✏️ プロフィール編集モーダル -->
+  <div id="view-edit-profile-modal" class="full-screen-view">
+    <div class="sub-header">
+      <span class="back-btn" onclick="closeView('view-edit-profile-modal')">✕</span>
+      <span style="font-weight: 800; font-size: 14px; color: #34d399;">✏️ プロフィール編集</span>
+      <span style="font-size: 12px; color: #fbbf24; font-weight: 800; cursor: pointer;" onclick="saveProfileChanges()">保存</span>
+    </div>
+    <div style="padding: 20px 16px;">
+      
+      <!-- アイコン選択 -->
+      <div class="form-group" style="text-align: center;">
+        <label class="form-label">アバターアイコンを選択</label>
+        <div style="display: flex; justify-content: center; gap: 12px; margin-top: 8px;">
+          <div class="mood-tag" onclick="selectAvatar('👨🏻‍💻', this)">👨🏻‍💻</div>
+          <div class="mood-tag" onclick="selectAvatar('🏎️', this)">🏎️</div>
+          <div class="mood-tag" onclick="selectAvatar('🕺🏻', this)">🕺🏻</div>
+          <div class="mood-tag" onclick="selectAvatar('👔', this)">👔</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">お名前 (表示名)</label>
+        <input type="text" id="edit-name" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">年齢</label>
+        <input type="number" id="edit-age" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">居住地</label>
+        <input type="text" id="edit-location" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">職業</label>
+        <input type="text" id="edit-job" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">年収</label>
+        <select id="edit-income" class="form-select">
+          <option value="500万円〜700万円">500万円〜700万円</option>
+          <option value="700万円〜1,000万円">700万円〜1,000万円</option>
+          <option value="1,000万円以上">1,000万円以上</option>
+          <option value="1,500万円以上">1,500万円以上</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">自己紹介文</label>
+        <textarea id="edit-bio" class="form-textarea"></textarea>
+      </div>
+
+      <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin: 20px 0;">
+
+      <h4 style="font-size: 13px; font-weight: 800; color: #fbbf24; margin-bottom: 12px;">☯️ 命式・鑑定ステータス設定</h4>
+
+      <div class="form-group">
+        <label class="form-label">日干（四柱推命の本質）</label>
+        <input type="text" id="edit-nikkan" class="form-input">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">ソウルナンバー</label>
+        <input type="text" id="edit-soul" class="form-input">
+      </div>
+
+      <button class="action-btn-glossy" style="width: 100%; margin-top: 20px; padding: 14px;" onclick="saveProfileChanges()">✨ 変更内容を保存する</button>
     </div>
   </div>
 
@@ -513,12 +690,11 @@
     </div>
     <div style="padding: 16px;">
       <p style="font-size: 11px; color: var(--text-sub);">あなたと相性の良いお相手が10名みつかりました。</p>
-      
       <div class="user-tile-grid" id="tile-container"></div>
     </div>
   </div>
 
-  <!-- プロフィール詳細 -->
+  <!-- プロフィール詳細（女性用） -->
   <div id="view-profile-detail" class="full-screen-view">
     <div class="sub-header">
       <span class="back-btn" onclick="closeView('view-profile-detail')">✕</span>
@@ -551,7 +727,21 @@
 </div>
 
 <script>
-  /* 👩 10名のサンプル女性データ（liked状態を追加） */
+  /* 👤 自分（ログインユーザー）のデータState */
+  let myProfile = {
+    name: "秀広",
+    age: 30,
+    icon: "👨🏻‍💻",
+    location: "東京都",
+    job: "製造・M&Aアドバイザリー",
+    income: "1,000万円以上",
+    bio: "目利き力と泥臭い折衝力が強みです。休日はドライブやグルメ開拓をして過ごしています！気軽に話しかけてください。",
+    nikkan: "甲（大木）",
+    soul: "7 (職人・探求者)",
+    face: "深謀遠慮相・誠実眼"
+  };
+
+  /* 👩 10名のサンプル女性データ */
   const sampleUsers = [
     { id: 0, name: "あやか", age: 25, icon: "👩🏻", tag: "相性 98%", preview: "👁️ AI人相判定: 眉間幅広（オープン・誠実相）", bio: "カフェ巡りとアート鑑賞が好きです！お互いの個性を大事にできる人と出会いたいです✨", liked: false },
     { id: 1, name: "凛 (りん)", age: 27, icon: "👩🏻‍💼", tag: "金×水属性 96%", preview: "🚗 休日ドライブ＆カフェ巡り好き", bio: "休日によくドライブに出かけます🚗 四柱推命の相性が良いと出て気になりました！", liked: false },
@@ -567,6 +757,59 @@
 
   let currentSearchIndex = 0;
   let activeDetailUserId = null;
+  let tempSelectedAvatar = "";
+
+  /* 🔄 プロフィール画面のレンダリング */
+  function renderMyProfile() {
+    document.getElementById('my-avatar-display').innerText = myProfile.icon;
+    document.getElementById('my-name-display').innerHTML = `${myProfile.name} <span style="font-size: 14px; font-weight:500; color:var(--text-sub);">(${myProfile.age}歳)</span>`;
+    document.getElementById('my-sub-display').innerText = `📍 ${myProfile.location} / ${myProfile.job}`;
+    document.getElementById('my-bio-display').innerText = myProfile.bio;
+    document.getElementById('my-nikkan-display').innerText = myProfile.nikkan;
+    document.getElementById('my-soul-display').innerText = myProfile.soul;
+    document.getElementById('my-face-display').innerText = myProfile.face;
+    document.getElementById('my-location-display').innerText = myProfile.location;
+    document.getElementById('my-job-display').innerText = myProfile.job;
+    document.getElementById('my-income-display').innerText = myProfile.income;
+  }
+
+  /* ✏️ 編集モーダルを開く＆既存値をセット */
+  function openEditProfileModal() {
+    tempSelectedAvatar = myProfile.icon;
+    document.getElementById('edit-name').value = myProfile.name;
+    document.getElementById('edit-age').value = myProfile.age;
+    document.getElementById('edit-location').value = myProfile.location;
+    document.getElementById('edit-job').value = myProfile.job;
+    document.getElementById('edit-income').value = myProfile.income;
+    document.getElementById('edit-bio').value = myProfile.bio;
+    document.getElementById('edit-nikkan').value = myProfile.nikkan;
+    document.getElementById('edit-soul').value = myProfile.soul;
+
+    openView('view-edit-profile-modal');
+  }
+
+  function selectAvatar(icon, el) {
+    tempSelectedAvatar = icon;
+    document.querySelectorAll('#view-edit-profile-modal .mood-tag').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  /* 💾 編集内容の保存処理 */
+  function saveProfileChanges() {
+    myProfile.name = document.getElementById('edit-name').value || myProfile.name;
+    myProfile.age = document.getElementById('edit-age').value || myProfile.age;
+    myProfile.location = document.getElementById('edit-location').value || myProfile.location;
+    myProfile.job = document.getElementById('edit-job').value || myProfile.job;
+    myProfile.income = document.getElementById('edit-income').value || myProfile.income;
+    myProfile.bio = document.getElementById('edit-bio').value || myProfile.bio;
+    myProfile.nikkan = document.getElementById('edit-nikkan').value || myProfile.nikkan;
+    myProfile.soul = document.getElementById('edit-soul').value || myProfile.soul;
+    if (tempSelectedAvatar) myProfile.icon = tempSelectedAvatar;
+
+    renderMyProfile();
+    closeView('view-edit-profile-modal');
+    alert("プロフィールを更新しました！✨");
+  }
 
   function updateMainCard() {
     const wrapper = document.getElementById('search-card-wrapper');
@@ -608,8 +851,6 @@
     const user = sampleUsers[currentSearchIndex];
     user.liked = true;
     alert(`${user.name}さんに運命のいいね！を送りました！`);
-    
-    // 次の人へ進む！
     currentSearchIndex++;
     updateMainCard();
   }
@@ -674,8 +915,6 @@
     if (user) {
       user.liked = true;
       alert(`${user.name}さんに運命のいいね！を送りました！`);
-      
-      // もし現在さがす画面で表示されていた人物なら、次の人へ送る
       if (currentSearchIndex === user.id) {
         currentSearchIndex++;
       }
@@ -690,13 +929,11 @@
   }
   
   function startHoroscopeResult() { openView('view-fortune-result'); }
-  
   function openTarotModal() { 
     document.getElementById('tarot-card-obj').classList.remove('is-flipped');
     document.getElementById('tarot-result-card').style.display = 'none';
     openView('view-tarot-modal'); 
   }
-  
   function openNumerologyModal() { openView('view-numerology-modal'); }
 
   function executeTarotFlip() {
@@ -727,10 +964,10 @@
       
       if (type === 'hand') {
         document.getElementById('scan-res-title').innerText = '【分析】二重感情線 & 直感的頭脳線';
-        document.getElementById('scan-res-desc').innerText = '情熱的で一途な反面、一度心を開いた相手には執着しやすくなる一面も。お互いのパーソナルスペースを尊重することが長続きの秘訣です。';
+        document.getElementById('scan-res-desc').innerText = '情熱的で一途な反面、一度心を開いた相手には執着しやすくなる一面も。';
       } else {
         document.getElementById('scan-res-title').innerText = '【分析】眉間幅広（オープン・誠実相）';
-        document.getElementById('scan-res-desc').innerText = '受容力が高く、人の話を聞くのが得意な相です。相手の感情の変化に敏感で、きめ細やかな配慮ができます。';
+        document.getElementById('scan-res-desc').innerText = '受容力が高く、人の話を聞くのが得意な相です。';
       }
     }, 1200);
   }
@@ -770,12 +1007,13 @@
     if (user) {
       user.liked = true;
       alert(`${user.name}さんにいいね！を送りました！`);
-      showMatchedUsersModal(document.getElementById('grid-modal-title').innerText); // 一覧再描画
-      updateMainCard(); // さがす画面も更新
+      showMatchedUsersModal(document.getElementById('grid-modal-title').innerText);
+      updateMainCard();
     }
   }
 
   // 初期化実行
+  renderMyProfile();
   updateMainCard();
 </script>
 
