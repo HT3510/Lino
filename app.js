@@ -1,4 +1,3 @@
-// ユーザーの登録写真（最大10枚、初期状態：1枚目がメインアイコン候補）
 let userPhotos = ['👨‍💼', '📸', '✨', null, null, null, null, null, null, null];
 
 function renderPhotoGrid() {
@@ -7,12 +6,10 @@ function renderPhotoGrid() {
     const mainAvatarEmoji = document.getElementById('main-avatar-emoji');
     if (!grid) return;
 
-    // 1枚目をメインアイコンに反映
     if (userPhotos[0]) {
         mainAvatarEmoji.innerText = userPhotos[0];
     }
 
-    // 10枚のスロットを生成 (編集用グリッド)
     grid.innerHTML = '';
     for (let i = 0; i < 10; i++) {
         const hasImg = userPhotos[i] !== null;
@@ -26,10 +23,9 @@ function renderPhotoGrid() {
         grid.appendChild(slot);
     }
 
-    // サブ写真のミニプレビュー生成 (ビューモード用)
     if (miniGrid) {
         miniGrid.innerHTML = '';
-        userPhotos.forEach((p, idx) => {
+        userPhotos.forEach((p) => {
             if (p !== null) {
                 const thumb = document.createElement('div');
                 thumb.className = 'sub-mini-thumb';
@@ -41,15 +37,12 @@ function renderPhotoGrid() {
 }
 
 function handlePhotoSlotClick(index) {
-    // サンプルとして、クリックされたらアイコンの種類を切り替える・追加するインタラクション
     const samples = ['👨‍💼', '📸', '🌟', '🍷', '☕', '🚗', '🐱', '🕶️'];
     const current = userPhotos[index];
     
     if (current === null) {
-        // 空きスロットなら新しいサンプルを追加
         userPhotos[index] = samples[index % samples.length];
     } else {
-        // すでに埋まっていればクリア（ただし1枚目は最低1枚キープの仕様に配慮）
         if (index === 0) {
             openCustomAlert("メインアイコン（1枚目）は削除できません。別のアイコンに変更してください。");
             return;
@@ -78,19 +71,28 @@ function switchLikesTab(btn, type) {
 
 function toggleEditMode(isEdit) {
     const container = document.getElementById('mypage-container');
+    const toggleBtn = document.getElementById('modeToggleBtn');
     if (isEdit) {
         container.classList.add('is-editing');
+        if (toggleBtn) toggleBtn.style.display = 'none';
     } else {
         container.classList.remove('is-editing');
+        if (toggleBtn) toggleBtn.style.display = 'block';
     }
 }
 
 function saveProfileData() {
-    document.getElementById('display-user-name').innerText = document.getElementById('input-name').value;
-    document.getElementById('display-user-residence').innerText = document.getElementById('input-residence').value;
+    // 編集内容をビューモードに反映
+    document.getElementById('v-birth').innerText = document.getElementById('input-birth').value;
+    document.getElementById('v-body-size').innerText = document.getElementById('input-body-size').value;
+    document.getElementById('v-build').innerText = document.getElementById('input-build').value;
+    document.getElementById('v-income').innerText = document.getElementById('input-income').value;
+    document.getElementById('v-residence').innerText = document.getElementById('input-residence').value;
+    document.getElementById('v-intro').innerText = document.getElementById('input-intro').value;
+
     toggleEditMode(false);
     renderPhotoGrid();
-    openCustomAlert("プロフィールと写真を正常に更新しました！");
+    openCustomAlert("プロフィールを正常に更新しました！");
 }
 
 function openCustomAlert(msg) {
