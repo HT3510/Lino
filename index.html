@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lino - 運命を奏でるマッチングプラットフォーム</title>
+  
+  <!-- 筆記体フォント (Great Vibes) ＆ メインフォント読み込み -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;600;800;900&display=swap" rel="stylesheet">
@@ -39,6 +41,7 @@
       margin: 0;
     }
 
+    /* アプリ外枠容器 */
     .app-container {
       width: 100%;
       max-width: 430px;
@@ -58,7 +61,7 @@
       position: absolute;
       top: -100px; left: -50px;
       width: 300px; height: 300px;
-      background: radial-gradient(circle, rgba(16, 185, 129, 0.25) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
       border-radius: 50%;
       pointer-events: none;
       z-index: 0;
@@ -72,12 +75,12 @@
       }
     }
 
-    /* ヘッダー (Great Vibes 筆記体) */
+    /* 🖋️ ヘッダー (Great Vibes 筆記体仕様) */
     .header {
-      background: rgba(11, 13, 27, 0.65);
+      background: rgba(11, 13, 27, 0.75);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      padding: 14px 20px;
+      padding: 12px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -85,9 +88,10 @@
       z-index: 10;
       flex-shrink: 0;
     }
+    
     .logo {
-      font-family: 'Great Vibes', cursive;
-      font-size: 38px;
+      font-family: 'Great Vibes', cursive !important;
+      font-size: 40px !important;
       font-weight: 500;
       background: var(--gold-glossy);
       -webkit-background-clip: text;
@@ -106,6 +110,7 @@
       z-index: 1;
     }
 
+    /* タブコンテンツ制御 */
     .tab-content {
       display: none;
       flex-direction: column;
@@ -119,6 +124,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    /* カード・汎用コンポーネント */
     .glass-card {
       background: var(--card-bg);
       backdrop-filter: blur(16px);
@@ -145,6 +151,7 @@
     }
     .action-btn-glossy:active { transform: scale(0.96); opacity: 0.9; }
 
+    /* ムードタグ */
     .tag-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
     .mood-tag {
       background: rgba(255, 255, 255, 0.05); color: var(--text-sub);
@@ -156,6 +163,7 @@
       box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
     }
 
+    /* プロフィールカード */
     .profile-card {
       background: var(--card-bg); border-radius: 24px; overflow: hidden;
       border: 1px solid var(--card-border); cursor: pointer;
@@ -209,13 +217,14 @@
     }
     .lino-btn-text { font-family: 'Great Vibes', cursive; font-size: 18px; font-weight: bold; line-height: 1; }
 
-    /* モーダル */
+    /* モーダル表示（IF・トランジション演出） */
     .full-screen-view {
       position: absolute; inset: 0; background: #0b0d1b; z-index: 50;
       display: none; flex-direction: column; overflow-y: auto;
-      opacity: 0; transform: translateY(20px); transition: all 0.3s ease-out;
+      opacity: 0; transform: translateY(20px); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .full-screen-view.show { display: flex; opacity: 1; transform: translateY(0); }
+    
     .sub-header {
       background: rgba(11, 13, 27, 0.8); backdrop-filter: blur(16px);
       padding: 16px; display: flex; align-items: center; justify-content: space-between;
@@ -223,11 +232,11 @@
     }
     .back-btn { font-size: 18px; cursor: pointer; color: white; font-weight: 800; }
 
-    /* 🎴 3D タロットフリップアニメーション (核心部分) */
+    /* 🎴 3D タロットフリップアニメーション (回転演出) */
     .tarot-scene {
       perspective: 1000px;
-      width: 160px;
-      height: 250px;
+      width: 170px;
+      height: 260px;
       margin: 24px auto;
       cursor: pointer;
     }
@@ -236,7 +245,7 @@
       height: 100%;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
     .tarot-card-object.is-flipped {
       transform: rotateY(180deg);
@@ -246,17 +255,17 @@
       inset: 0;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
-      border-radius: 18px;
+      border-radius: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-      border: 2px solid #fbbf24;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+      border: 2px solid #ffd700;
     }
     .tarot-face-back {
       background: linear-gradient(135deg, #17153b 0%, #2e236c 100%);
-      color: #fbbf24;
+      color: #ffd700;
     }
     .tarot-face-back::after {
       content: '';
@@ -273,11 +282,11 @@
       text-align: center;
     }
 
-    /* 📷 AIスキャンアニメーション (カメラ風) */
+    /* 📷 AIスキャンアニメーション (カメラ風緑レーザー) */
     .scan-window {
       position: relative;
-      width: 200px;
-      height: 200px;
+      width: 220px;
+      height: 220px;
       margin: 20px auto;
       border-radius: 24px;
       background: #05070e;
@@ -287,20 +296,20 @@
       align-items: center;
       justify-content: center;
       font-size: 64px;
-      box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.35);
     }
     .scan-laser-line {
       position: absolute;
       width: 100%;
-      height: 4px;
+      height: 5px;
       background: linear-gradient(90deg, transparent, #34d399, transparent);
-      box-shadow: 0 0 15px #34d399;
+      box-shadow: 0 0 15px #34d399, 0 0 25px #34d399;
       top: 0;
-      animation: scanLaser 2s infinite ease-in-out;
+      animation: scanLaser 1.8s infinite ease-in-out;
     }
     @keyframes scanLaser {
       0% { top: 0%; }
-      50% { top: 95%; }
+      50% { top: 96%; }
       100% { top: 0%; }
     }
     
@@ -308,8 +317,8 @@
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.2);
       color: white;
-      padding: 10px 14px;
-      border-radius: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
       outline: none;
       font-size: 14px;
       width: 100%;
@@ -320,13 +329,13 @@
 <body>
 
 <div class="app-container">
-  <!-- ヘッダー -->
+  <!-- ヘッダー ( Great Vibes 筆記体ロゴ ) -->
   <div class="header">
     <div class="logo">Lino</div>
     <div style="cursor: pointer; color: #f8fafc; font-size: 18px;">🔔</div>
   </div>
 
-  <!-- メインエリア -->
+  <!-- メインコンテンツエリア -->
   <div class="content-area">
 
     <!-- タブ1: さがす -->
@@ -362,7 +371,7 @@
       <p style="text-align: center; color: var(--text-sub); margin-top: 50px; font-size: 13px;">あなたに届いた「運命のいいね！」一覧です。</p>
     </div>
 
-    <!-- タブ3: ✨ 占い -->
+    <!-- タブ3: ✨ 占い (インタラクティブメニュー) -->
     <div id="tab-fortune" class="tab-content">
       <div class="biorhythm-card">
         <span style="color: #fbbf24; font-size: 10px; font-weight: 800; letter-spacing: 2px;">ASTROLOGY & LOGIC DIAGNOSIS</span>
@@ -375,7 +384,7 @@
         <div class="fortune-icon-box">✋</div>
         <div>
           <h4 style="font-size: 14px; color: white; font-weight: 800;">📷 AIスマホ手相解析</h4>
-          <p style="font-size: 11px; color: var(--text-sub); margin-top: 2px;">感情線・頭脳線の走りをAIスキャンラインでビジュアル解析</p>
+          <p style="font-size: 11px; color: var(--text-sub); margin-top: 2px;">感情線・頭脳線の走りを緑のレーザーラインでビジュアルスキャン</p>
         </div>
       </div>
 
@@ -391,7 +400,7 @@
         <div class="fortune-icon-box">🃏</div>
         <div>
           <h4 style="font-size: 14px; color: white; font-weight: 800;">🃏 1日1回 3D引き寄せタロット</h4>
-          <p style="font-size: 11px; color: var(--text-sub); margin-top: 2px;">大アルカナ22枚から今日の課題と対策を引き寄せる</p>
+          <p style="font-size: 11px; color: var(--text-sub); margin-top: 2px;">タップで180度くるっとフリップするカードアニメーション</p>
         </div>
       </div>
 
@@ -437,8 +446,9 @@
       <span>いいね！</span>
     </div>
 
+    <!-- Lino 筆記体メインボタン -->
     <div class="lino-main-btn" onclick="switchTab('fortune', document.getElementById('nav-fortune-hidden'))">
-      <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg>
+      <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 2L14.5 9.5L22 12L14.5 14.5L12 22L9.5 14.5L2 12L9.5 9.5L12 2Z"/></svg>
       <span class="lino-btn-text">Lino</span>
     </div>
     <div id="nav-fortune-hidden" class="nav-item" style="display:none;"></div>
@@ -453,17 +463,17 @@
     </div>
   </div>
 
-  <!-- 【モーダル1】3Dタロット（カードくるっと翻る演出） -->
+  <!-- 【モーダル1】3Dタロット（カードくるっとひっくり返る演出） -->
   <div id="view-tarot-modal" class="full-screen-view">
     <div class="sub-header">
       <span class="back-btn" onclick="closeView('view-tarot-modal')">✕</span>
-      <span style="font-weight: 800; font-size: 14px; color: #fbbf24;">🃏 AI 3D引き寄せタロット</span>
+      <span style="font-weight: 800; font-size: 14px; color: #fbbf24;">🃏 3D引き寄せタロット</span>
       <span></span>
     </div>
     <div style="padding: 20px 16px; text-align: center;">
       <p style="font-size: 12px; color: var(--text-sub);">心を鎮めて、直感でカードをタップしてください。</p>
       
-      <!-- 3D回転オブジェクト -->
+      <!-- 3D回転ステージ -->
       <div class="tarot-scene" onclick="executeTarotFlip()">
         <div class="tarot-card-object" id="tarot-card-obj">
           <div class="tarot-face tarot-face-back">
@@ -471,7 +481,7 @@
             <span style="font-size: 11px; margin-top: 10px; opacity: 0.8;">TAP TO REVEAL</span>
           </div>
           <div class="tarot-face tarot-face-front" id="tarot-front-content">
-            <!-- JSで動的に表面を生成 -->
+            <!-- JSで動的に結果表面を生成 -->
           </div>
         </div>
       </div>
@@ -483,7 +493,7 @@
     </div>
   </div>
 
-  <!-- 【モーダル2】AIスキャン（緑のレーザーが動く） -->
+  <!-- 【モーダル2】AIスキャン（緑のレーザー光が走る演出） -->
   <div id="view-scan-modal" class="full-screen-view">
     <div class="sub-header">
       <span class="back-btn" onclick="closeView('view-scan-modal')">✕</span>
@@ -504,7 +514,7 @@
     </div>
   </div>
 
-  <!-- 【モーダル3】四柱推命・数秘術の計算機 -->
+  <!-- 【モーダル3】四柱推命・数秘術の厳密アルゴリズム計算機 -->
   <div id="view-numerology-modal" class="full-screen-view">
     <div class="sub-header">
       <span class="back-btn" onclick="closeView('view-numerology-modal')">✕</span>
@@ -514,15 +524,15 @@
     <div style="padding: 20px 16px;">
       <div class="glass-card" style="padding: 20px;">
         <h3 style="font-size: 16px; color: #fbbf24;">生年月日を入力してください</h3>
-        <p style="font-size: 11px; color: var(--text-sub); margin-top: 4px;">数理法則に基づき、あなたの本音と運命の相手の属性を導き出します。</p>
+        <p style="font-size: 11px; color: var(--text-sub); margin-top: 4px;">数理法則に基づき、あなたの本音と短所・注意点を提示します。</p>
         <input type="date" id="user-birthdate" value="1995-05-15">
         <button class="action-btn-glossy" style="width: 100%; margin-top: 14px;" onclick="calculateNumerology()">✨ 命式を解析する</button>
 
         <div id="numerology-result-box" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 12px; line-height: 1.7; color: #cbd5e1;">
           <p>・<strong>あなたのソウルナンバー</strong>：<span id="num-soul" style="color: #fbbf24; font-weight: bold;"></span></p>
           <p>・<strong>四柱推命・日干本質</strong>：<span id="num-nikkan" style="color: #34d399; font-weight: bold;"></span></p>
-          <p style="margin-top: 8px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; border-left: 3px solid #fbbf24;">
-            <strong>【警告・注意点（真実の鑑定）】</strong><br>
+          <p style="margin-top: 8px; background: rgba(239, 68, 68, 0.15); padding: 12px; border-radius: 12px; border-left: 3px solid #ef4444;">
+            <strong style="color: #fca5a5;">【リアル注意点・バーナム型警告】</strong><br>
             <span id="num-warning"></span>
           </p>
         </div>
@@ -530,7 +540,7 @@
     </div>
   </div>
 
-  <!-- プロフィール・チャット等のその他モーダル -->
+  <!-- 【モーダル4】プロフィール詳細 -->
   <div id="view-profile-detail" class="full-screen-view">
     <div class="sub-header">
       <span class="back-btn" onclick="closeView('view-profile-detail')">✕</span>
@@ -538,10 +548,16 @@
       <span></span>
     </div>
     <div style="padding: 16px;">
+      <div class="glass-card" style="padding: 20px; text-align: center; margin-bottom: 16px;">
+        <div style="font-size: 60px;">👩🏻</div>
+        <h2 style="font-size: 20px; margin-top: 8px;">あやか (25)</h2>
+        <p style="font-size: 12px; color: #34d399; margin-top: 4px;">相性指数: 94% (相互補完関係)</p>
+      </div>
       <button class="action-btn-glossy" style="width: 100%; padding: 16px;" onclick="alert('運命のいいね！を送信しました！'); closeView('view-profile-detail');">✨ 運命のいいね！を送る</button>
     </div>
   </div>
 
+  <!-- 【モーダル5】チャット画面 -->
   <div id="view-chat-detail" class="full-screen-view">
     <div class="sub-header">
       <span class="back-btn" onclick="closeView('view-chat-detail')">←</span>
@@ -553,6 +569,7 @@
     </div>
   </div>
 
+  <!-- 【モーダル6】ホロスコープ鑑定画面 -->
   <div id="view-fortune-result" class="full-screen-view">
     <div class="sub-header">
       <span class="back-btn" onclick="closeView('view-fortune-result')">✕</span>
@@ -569,6 +586,7 @@
 </div>
 
 <script>
+  /* タブ切り替え処理 */
   function switchTab(tabName, el) {
     document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
@@ -576,12 +594,14 @@
     if (el) el.classList.add('active');
   }
 
+  /* ムードタグフィルター */
   function filterMood(el, moodName) {
     document.querySelectorAll('.mood-tag').forEach(t => t.classList.remove('active'));
     el.classList.add('active');
     alert(`【${moodName}】でお相手を絞り込みました！`);
   }
 
+  /* モーダル表示・非表示アニメーション制御 */
   function openView(id) {
     const el = document.getElementById(id);
     el.style.display = 'flex';
@@ -596,31 +616,31 @@
   function openDetailProfile() { openView('view-profile-detail'); }
   function openChatView() { openView('view-chat-detail'); }
   function startHoroscopeResult() { openView('view-fortune-result'); }
+  
   function openTarotModal() { 
     const cardObj = document.getElementById('tarot-card-obj');
     cardObj.classList.remove('is-flipped');
     document.getElementById('tarot-result-card').style.display = 'none';
     openView('view-tarot-modal'); 
   }
+  
   function openNumerologyModal() { openView('view-numerology-modal'); }
 
-  /* 🎴 3Dタロットフリップのロジック */
+  /* 🃏 3Dタロットフリップの完全演出 */
   const tarotDatabase = [
-    { name: "正義（Justice）- 逆位置", emoji: "⚖️", warning: "感情と条件のバランスが崩れやすい日。相手に都合よく合わせすぎると後で後悔します。自分の『これだけは譲れない軸』を1つ提示することが大切です。" },
-    { name: "塔（The Tower）- 警戒", emoji: "⚡", warning: "思い込みや先入観が覆される予兆。一見ショックな出来事も『本当の自分に合わない縁が切れただけ』と捉えることで運気が爆上がりします。" },
-    { name: "隠者（The Hermit）", emoji: "🕯️", warning: "考えすぎて行動力が鈍りやすい状態。直感で『良い』と思ったなら、理屈でブレーキをかけずに素直に乗っかってみるのが吉。" }
+    { name: "太陽（The Sun）- 絶好調", emoji: "☀️", warning: "エネルギーは最高潮ですが、周囲への主張が強くなりすぎると空回りする危険性アリ。相手の話を6割聞く姿勢が吉。" },
+    { name: "塔（The Tower）- 観念打破", emoji: "⚡", warning: "先入観が覆される予兆。一見ショックな出来事も『不要な縁が切れただけ』と捉えることで次の幸運を引き寄せます。" },
+    { name: "隠者（The Hermit）- 思慮過深", emoji: "🕯️", warning: "考えすぎて行動力が鈍りやすい状態。直感で『良い』と思ったなら、理屈でブレーキをかけずに素直に乗っかるのが正解。" }
   ];
 
   function executeTarotFlip() {
     const cardObj = document.getElementById('tarot-card-obj');
     if (!cardObj.classList.contains('is-flipped')) {
-      // ランダム結果をピックアップ
       const selected = tarotDatabase[Math.floor(Math.random() * tarotDatabase.length)];
       
-      // 表面のHTMLを流し込み
       document.getElementById('tarot-front-content').innerHTML = `
-        <div style="font-size: 40px;">${selected.emoji}</div>
-        <div style="font-size: 13px; font-weight: 800; margin-top: 8px;">${selected.name}</div>
+        <div style="font-size: 46px;">${selected.emoji}</div>
+        <div style="font-size: 14px; font-weight: 800; margin-top: 10px;">${selected.name}</div>
       `;
       
       document.getElementById('tarot-res-title').innerText = `${selected.emoji} 鑑定結果：${selected.name}`;
@@ -629,14 +649,14 @@
       // 3Dひっくり返し実行
       cardObj.classList.add('is-flipped');
 
-      // ひっくり返りきったあとに解説カードをふんわり表示
+      // ひっくり返ったあとに解説カードを浮かび上がらせる
       setTimeout(() => {
         document.getElementById('tarot-result-card').style.display = 'block';
-      }, 600);
+      }, 650);
     }
   }
 
-  /* 📷 AIレーザースキャン演出 */
+  /* 📷 AIスキャン演出（緑の光線） */
   function openScanModal(type) {
     const isHand = type === 'hand';
     document.getElementById('scan-emoji').innerText = isHand ? '✋' : '👁️';
@@ -656,10 +676,10 @@
         document.getElementById('scan-res-title').innerText = '【分析】眉間幅広 ＆ 口角上昇相';
         document.getElementById('scan-res-desc').innerText = 'オープンで親しみやすいオーラがありますが、お人好しになりすぎて断れなくなる点に注意。嫌なものは嫌と言える境界線（バウンダリー）を持ちましょう。';
       }
-    }, 2000);
+    }, 1800);
   }
 
-  /* 🔢 四柱推命・数秘の動的計算 */
+  /* 🔢 四柱推命・数秘の動的計算アルゴリズム */
   function calculateNumerology() {
     const val = document.getElementById('user-birthdate').value;
     if(!val) return;
@@ -675,7 +695,7 @@
 
     document.getElementById('num-soul').innerText = `${sum} （ライフパスナンバー ${sum}）`;
     document.getElementById('num-nikkan').innerText = nikkan;
-    document.getElementById('num-warning').innerText = `本質は非常に芯が強いものの、頑固になりすぎると相手に『隙がない』と思われがち。たまに弱みや隙を見せることが運命を引き寄せる最大のカギです。`;
+    document.getElementById('num-warning').innerText = `芯が強く自分の世界観をしっかりと持つ反面、頑固になりすぎると相手に『隙がない』と思われがち。あえて弱みや素を見せることが、運命の引き寄せを起こす最大のカギです。`;
 
     document.getElementById('numerology-result-box').style.display = 'block';
   }
